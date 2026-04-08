@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Structural AI Benchmark - LinkedIn Visual</title>
+  <style>
+    :root{
+      --ink:#12202d;
+      --muted:#4d6174;
+      --paper:#f5f7fa;
+      --card:#ffffff;
+      --line:#d6dce4;
+      --a:#1f6da8;
+      --b:#c87218;
+      --c:#1f8351;
+      --accent:#0d3f66;
+      --shadow:0 14px 30px rgba(16,34,51,.10);
+      --r:16px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:
+        radial-gradient(circle at 86% 8%, #dde8f4 0%, transparent 36%),
+        radial-gradient(circle at 14% 0%, #eaf0f7 0%, transparent 25%),
+        var(--paper);
+      color:var(--ink);
+      font-family:"Avenir Next","Gill Sans Nova","Trebuchet MS",sans-serif;
+      line-height:1.4;
+      padding:22px;
+    }
+
+    .wrap{max-width:1320px;margin:0 auto;display:grid;gap:16px}
+
+    .hero{
+      background:linear-gradient(130deg,#173c61 0%,#0f2f4d 48%,#0f4f4d 100%);
+      color:#f8fbff;
+      border-radius:20px;
+      padding:26px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .hero:before{
+      content:"";
+      position:absolute;
+      inset:auto -80px -110px auto;
+      width:280px;height:280px;border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,.26), rgba(255,255,255,0));
+    }
+    .kicker{letter-spacing:.14em;text-transform:uppercase;font-size:.76rem;opacity:.86}
+    h1{margin:.4rem 0 .6rem 0;font-size:2rem;line-height:1.15;font-family:"Rockwell","Georgia",serif}
+    .hero p{margin:0;font-size:1rem;max-width:840px;color:#d9e9f8}
+
+    .modelchips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+    .chip{padding:4px 10px;border-radius:999px;font-size:.8rem;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.12)}
+
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:12px}
+    .tile{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--r);
+      box-shadow:var(--shadow);
+      padding:14px;
+      animation:enter .45s ease both;
+    }
+    .tile:nth-child(2){animation-delay:.05s}
+    .tile:nth-child(3){animation-delay:.1s}
+    .tile h2{margin:0 0 8px 0;font-size:.95rem;color:#234765;text-transform:uppercase;letter-spacing:.04em}
+    .big{font-size:2rem;font-weight:800;line-height:1;color:#163650}
+    .small{font-size:.85rem;color:var(--muted)}
+
+    .rank li{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px dashed #d9e0e8;font-size:.9rem}
+    .rank li:last-child{border-bottom:0}
+
+    .panel{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--r);
+      box-shadow:var(--shadow);
+      padding:15px;
+    }
+    .panel h2{margin:0 0 10px 0;font-size:1.02rem;color:#1f405d}
+
+    table{width:100%;border-collapse:collapse;font-size:.87rem}
+    th,td{border:1px solid #d6dde5;padding:8px 9px;vertical-align:top}
+    th{background:#edf2f8;color:#284766;text-align:left}
+
+    .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.76rem;font-weight:700;border:1px solid}
+    .a{background:#e6f1fb;color:#1d5f93;border-color:#b8d3ec}
+    .b{background:#fff0df;color:#995a14;border-color:#f1d0ad}
+    .c{background:#e8f6ee;color:#1d6f43;border-color:#bfe3cf}
+
+    .bars{display:grid;gap:9px}
+    .barrow{display:grid;grid-template-columns:130px 1fr 52px;gap:8px;align-items:center;font-size:.88rem}
+    .track{height:11px;border-radius:999px;background:#e6ecf3;border:1px solid #d4dde7;overflow:hidden}
+    .fill{height:100%}
+    .fa{background:linear-gradient(90deg,#2a6ea2,#62a4d8)}
+    .fb{background:linear-gradient(90deg,#bf721f,#de9b53)}
+    .fc{background:linear-gradient(90deg,#1e8050,#4fb279)}
+    .score{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+
+    .cards{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:12px}
+    .story{
+      background:linear-gradient(180deg,#fff,#f8fbfd);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      min-height:160px;
+    }
+    .story h3{margin:0 0 8px 0;color:#224563;font-size:.92rem}
+    .story p{margin:5px 0;font-size:.86rem;color:#344b61}
+
+    .final{
+      background:linear-gradient(115deg,#133853,#0f2f4a 46%,#0f3c36 100%);
+      color:#ebf6ff;
+      border-radius:18px;
+      padding:18px;
+      box-shadow:var(--shadow);
+    }
+    .final h2{margin:0 0 8px 0;font-size:1.05rem;color:#ffffff}
+    .final p{margin:6px 0;color:#dcecf8}
+
+    .foot{font-size:.8rem;color:#5c6f82}
+
+    @keyframes enter{
+      from{opacity:0;transform:translateY(8px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    @media (max-width:980px){
+      .grid{grid-template-columns:1fr}
+      .cards{grid-template-columns:1fr}
+    }
+
+    @media (max-width:760px){
+      body{padding:10px}
+      h1{font-size:1.55rem}
+      .barrow{grid-template-columns:100px 1fr 46px}
+      th,td{padding:7px}
+    }
+
+    @media print{
+      body{background:#fff;padding:0}
+      .tile,.panel,.hero,.final{box-shadow:none}
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <div class="kicker">Structural Engineering AI Benchmark</div>
+      <h1>3 Models. 6 Tasks. One clear pattern.</h1>
+      <p>Technical reliability still decides winners, but clarity and communication strongly shape overall perception. This version is optimized for quick team and LinkedIn sharing.</p>
+      <div class="modelchips">
+        <span class="chip">A: Qwen3.5 27B</span>
+        <span class="chip">B: Qwen3-Coder-Next</span>
+        <span class="chip">C: gemma4:31b-cloud</span>
+        <span class="chip">Scale: 1-5</span>
+        <span class="chip">Tasks: 6</span>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="tile">
+        <h2>Overall Leader</h2>
+        <div class="big">gemma4:31b-cloud</div>
+        <p class="small">Composite average: <strong>3.93</strong></p>
+      </article>
+      <article class="tile">
+        <h2>Top Reliability Signal</h2>
+        <div class="big">Qwen3.5</div>
+        <p class="small">Strongest consistency in core engineering checks.</p>
+      </article>
+      <article class="tile">
+        <h2>Ranking</h2>
+        <ul class="rank" style="margin:0;padding:0;list-style:none">
+          <li><span>1) gemma4:31b-cloud</span><strong>3.93</strong></li>
+          <li><span>2) Qwen3.5 27B</span><strong>3.86</strong></li>
+          <li><span>3) Qwen3-Coder-Next</span><strong>3.18</strong></li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>At-a-Glance Score Bars</h2>
+      <div class="bars">
+        <div class="barrow"><div>Qwen3.5 27B</div><div class="track"><div class="fill fa" style="width:77.2%"></div></div><div class="score">3.86</div></div>
+        <div class="barrow"><div>Qwen3-Coder-Next</div><div class="track"><div class="fill fb" style="width:63.6%"></div></div><div class="score">3.18</div></div>
+        <div class="barrow"><div>gemma4:31b-cloud</div><div class="track"><div class="fill fc" style="width:78.6%"></div></div><div class="score">3.93</div></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Task Winners (Consensus)</h2>
+      <table>
+        <thead>
+          <tr><th>Task</th><th>Winner</th><th>Difference</th><th>One-line interpretation</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Task 1 - Results cleanup</td><td><span class="badge a">Qwen3.5 27B</span></td><td>Moderate</td><td>Best edge-case data safety.</td></tr>
+          <tr><td>Task 2 - Slab check</td><td><span class="badge a">Qwen3.5 27B</span></td><td>Large</td><td>Most aligned with requested EC2 logic.</td></tr>
+          <tr><td>Task 3 - Geometry assignment</td><td><span class="badge c">gemma4:31b-cloud</span></td><td>Large</td><td>Avoided summary-stage runtime defects.</td></tr>
+          <tr><td>Task 4 - Rules engine</td><td><span class="badge b">Qwen3-Coder-Next</span></td><td>Minor-Moderate</td><td>Strongest maintainable rule structure.</td></tr>
+          <tr><td>Task 5 - Summary and plotting</td><td><span class="badge c">gemma4:31b-cloud</span></td><td>Minor</td><td>Strong combined technical + clarity profile.</td></tr>
+          <tr><td>Task 6 - EC3 trap test</td><td><span class="badge c">gemma4:31b-cloud</span></td><td>Moderate</td><td>Cleanly caught both planted errors.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="cards">
+      <article class="story">
+        <h3>Story 1: Reliability vs Presentation</h3>
+        <p>Model B often looked best at first glance, but technical misses affected benchmark outcomes.</p>
+        <p>Model A stayed dependable on engineering correctness in core checks.</p>
+      </article>
+      <article class="story">
+        <h3>Story 2: Why Model C Moved Ahead</h3>
+        <p>Model C combined high clarity with stronger task execution in Tasks 3, 5, and 6.</p>
+        <p>That was enough to push the final composite average to first place.</p>
+      </article>
+      <article class="story">
+        <h3>Story 3: Practical Team Takeaway</h3>
+        <p>Use model routing: reliability-first tasks to A/C, high-speed drafting tasks to B.</p>
+        <p>Keep a fixed engineering review checklist regardless of model.</p>
+      </article>
+    </section>
+
+    <section class="final">
+      <h2>Post-Ready Summary</h2>
+      <p><strong>Winner:</strong> gemma4:31b-cloud (3.93) by a small margin over Qwen3.5 27B (3.86).</p>
+      <p><strong>Most important insight:</strong> polished outputs are not a proxy for engineering correctness.</p>
+      <p><strong>Operational recommendation:</strong> adopt benchmark-driven model selection + mandatory unit/assumption checks.</p>
+    </section>
+
+    <p class="foot">Source: `structural_engineering_benchmark_report.md` (Tasks 1-6, 3 models). This is a communication-focused visual variant.</p>
+  </main>
+</body>
+</html>

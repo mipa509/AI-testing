@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Structural Engineering AI Benchmark - 3 Model Presentation (Tasks 1-6)</title>
+  <style>
+    :root {
+      --bg: #f2f5f9;
+      --panel: #ffffff;
+      --ink: #1f2935;
+      --muted: #5f6e7d;
+      --line: #d7dde5;
+      --shadow: 0 10px 24px rgba(17, 31, 46, 0.08);
+      --radius: 12px;
+
+      --a: #2b6fa3;
+      --a-soft: #e5f1fc;
+      --b: #bf6e1a;
+      --b-soft: #fff0e1;
+      --c: #237a4a;
+      --c-soft: #e7f6ee;
+      --tie: #657789;
+      --tie-soft: #eff3f7;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 84% 8%, #e2ebf5 0%, transparent 36%),
+        radial-gradient(circle at 12% 2%, #eaf0f7 0%, transparent 27%),
+        var(--bg);
+      font-family: "Aptos", "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+      line-height: 1.45;
+      padding: 22px;
+    }
+
+    main { max-width: 1320px; margin: 0 auto; display: grid; gap: 16px; }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 18px;
+    }
+
+    h1, h2, h3 { margin: 0; line-height: 1.25; }
+    h1 { font-size: 1.56rem; color: #1a4a74; }
+    h2 { font-size: 1.06rem; color: #244b6d; margin-bottom: 10px; }
+    h3 { font-size: 0.95rem; color: #2d4f70; margin-bottom: 7px; }
+    p { margin: 5px 0; }
+    .muted { color: var(--muted); }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 8px; }
+    .chip {
+      border: 1px solid #c8d5e4;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.81rem;
+      color: #294c6b;
+      background: #ecf3f9;
+      white-space: nowrap;
+    }
+    .chip.a { background: var(--a-soft); border-color: #b8d4ee; }
+    .chip.b { background: var(--b-soft); border-color: #f2d3b1; }
+    .chip.c { background: var(--c-soft); border-color: #bee5d0; }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(190px, 1fr));
+      gap: 10px;
+    }
+
+    .kpi {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fbfcfe;
+      padding: 11px;
+      min-height: 148px;
+    }
+
+    .kpi-title {
+      color: #51657a;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      font-size: 0.8rem;
+      margin-bottom: 8px;
+    }
+
+    .k-row {
+      display: grid;
+      grid-template-columns: 96px 1fr 46px;
+      gap: 8px;
+      align-items: center;
+      margin: 7px 0;
+      font-size: 0.84rem;
+    }
+
+    .bar {
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid #dbe3ec;
+      background: #e8edf3;
+      overflow: hidden;
+    }
+
+    .fill { height: 100%; border-radius: 999px; }
+    .fill-a { background: linear-gradient(90deg, #2b6fa3, #5ea2d8); }
+    .fill-b { background: linear-gradient(90deg, #bf6e1a, #de9a52); }
+    .fill-c { background: linear-gradient(90deg, #237a4a, #4eb177); }
+
+    .score { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    .count {
+      border: 1px solid #cad6e3;
+      border-radius: 8px;
+      padding: 5px 8px;
+      margin: 4px 0;
+      font-size: 0.84rem;
+      color: #2d4f6d;
+      background: #f3f7fb;
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th, td { border: 1px solid #d7dde5; padding: 8px 9px; vertical-align: top; }
+    th { background: #eef3f8; color: #2a4b6b; text-align: left; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.77rem;
+      font-weight: 700;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+    .ba { background: var(--a-soft); color: #1f5685; border-color: #b8d4ee; }
+    .bb { background: var(--b-soft); color: #91530f; border-color: #f2d3b1; }
+    .bc { background: var(--c-soft); color: #1f6a40; border-color: #bee5d0; }
+    .bt { background: var(--tie-soft); color: #4e6072; border-color: #d2dbe4; }
+
+    .legend { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 9px; font-size: 0.8rem; color: #486079; }
+    .lg {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid #d1d9e3;
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: #f4f7fa;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .dot.a { background: var(--a); }
+    .dot.b { background: var(--b); }
+    .dot.c { background: var(--c); }
+    .dot.t { background: var(--tie); }
+
+    .heat {
+      border-radius: 8px;
+      border: 1px solid #d4dde6;
+      padding: 6px 7px;
+      min-width: 172px;
+      font-size: 0.77rem;
+      line-height: 1.28;
+      font-variant-numeric: tabular-nums;
+    }
+    .heat strong { display: block; margin-top: 3px; }
+    .w-a { background: #e6f1fb; }
+    .w-b { background: #fff0e1; }
+    .w-c { background: #e7f6ee; }
+    .w-t { background: #eff3f7; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(170px, 1fr));
+      gap: 10px;
+    }
+
+    .card {
+      border: 1px solid #d4dde6;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #ffffff, #f9fbfd);
+      padding: 10px;
+      min-height: 208px;
+    }
+
+    .meta { margin: 5px 0; font-size: 0.82rem; color: #334e67; }
+
+    .qa {
+      border: 1px solid #d7dfe8;
+      border-radius: 9px;
+      padding: 10px;
+      background: #fcfdff;
+      margin: 8px 0;
+    }
+    .qa strong { color: #274b6b; display: block; margin-bottom: 4px; }
+
+    .foot { color: #617284; font-size: 0.8rem; }
+
+    @media (max-width: 1280px) {
+      .grid-4 { grid-template-columns: repeat(2, minmax(190px, 1fr)); }
+      .cards { grid-template-columns: repeat(3, minmax(180px, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      body { padding: 10px; }
+      .grid-4, .cards { grid-template-columns: 1fr; }
+      .k-row { grid-template-columns: 80px 1fr 42px; }
+      th, td { padding: 7px; }
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .panel { box-shadow: none; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="panel">
+      <div class="header">
+        <div>
+          <h1>Structural Engineering AI Benchmark - 3 Model Presentation (Tasks 1-6)</h1>
+          <p class="muted">Updated to include Task 6 (EC3 planted-error trap test) and full 6-task averages.</p>
+          <div class="chips">
+            <span class="chip a">Model A: Qwen3.5 27B</span>
+            <span class="chip b">Model B: Qwen3-Coder-Next</span>
+            <span class="chip c">Model C: gemma4:31b-cloud</span>
+            <span class="chip">Scale: 1-5</span>
+            <span class="chip">Tasks: 6</span>
+          </div>
+        </div>
+        <div class="panel" style="margin:0; padding:9px 11px; box-shadow:none;">
+          <h3>Evaluation Basis</h3>
+          <p class="muted" style="margin:2px 0;">Same rubric across all models</p>
+          <p class="muted" style="margin:2px 0;">Task 6 weighted equally with Tasks 1-5</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Executive KPI Cards</h2>
+      <div class="grid-4">
+        <article class="kpi">
+          <div class="kpi-title">Overall Average (6 Tasks)</div>
+          <div class="k-row"><div>Qwen3.5</div><div class="bar"><div class="fill fill-a" style="width:77.2%"></div></div><div class="score">3.86</div></div>
+          <div class="k-row"><div>QwenNext</div><div class="bar"><div class="fill fill-b" style="width:63.6%"></div></div><div class="score">3.18</div></div>
+          <div class="k-row"><div>gemma4</div><div class="bar"><div class="fill fill-c" style="width:78.6%"></div></div><div class="score">3.93</div></div>
+        </article>
+
+        <article class="kpi">
+          <div class="kpi-title">Task Winners (6 Tasks)</div>
+          <div class="count">Qwen3.5 27B wins: <strong>2</strong></div>
+          <div class="count">Qwen3-Coder-Next wins: <strong>1</strong></div>
+          <div class="count">gemma4:31b-cloud wins: <strong>3</strong></div>
+          <p class="muted" style="font-size:0.81rem;">Model C leads task-count after Task 6.</p>
+        </article>
+
+        <article class="kpi">
+          <div class="kpi-title">Technical Composite</div>
+          <p class="muted" style="font-size:0.8rem; margin-top:0;">Correctness + Robustness + Engineering suitability</p>
+          <div class="k-row"><div>Qwen3.5</div><div class="bar"><div class="fill fill-a" style="width:73.3%"></div></div><div class="score">3.67</div></div>
+          <div class="k-row"><div>QwenNext</div><div class="bar"><div class="fill fill-b" style="width:47.2%"></div></div><div class="score">2.36</div></div>
+          <div class="k-row"><div>gemma4</div><div class="bar"><div class="fill fill-c" style="width:71.1%"></div></div><div class="score">3.56</div></div>
+        </article>
+
+        <article class="kpi">
+          <div class="kpi-title">Communication Composite</div>
+          <p class="muted" style="font-size:0.8rem; margin-top:0;">Readability + Maintainability + Clarity</p>
+          <div class="k-row"><div>Qwen3.5</div><div class="bar"><div class="fill fill-a" style="width:81.1%"></div></div><div class="score">4.06</div></div>
+          <div class="k-row"><div>QwenNext</div><div class="bar"><div class="fill fill-b" style="width:80.0%"></div></div><div class="score">4.00</div></div>
+          <div class="k-row"><div>gemma4</div><div class="bar"><div class="fill fill-c" style="width:85.8%"></div></div><div class="score">4.29</div></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Consensus Summary Table</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Winner</th>
+            <th>Difference size</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Task 1 - Results cleanup</td>
+            <td><span class="badge ba">Qwen3.5 27B</span></td>
+            <td>Moderate</td>
+            <td>A strongest technical reliability; C strongest explanatory clarity.</td>
+          </tr>
+          <tr>
+            <td>Task 2 - Slab check</td>
+            <td><span class="badge ba">Qwen3.5 27B</span></td>
+            <td>Large</td>
+            <td>A best EC2-aligned implementation; C second-best.</td>
+          </tr>
+          <tr>
+            <td>Task 3 - Geometry assignment</td>
+            <td><span class="badge bc">gemma4:31b-cloud</span></td>
+            <td>Large</td>
+            <td>A/B summary-stage defects; C functionally clean.</td>
+          </tr>
+          <tr>
+            <td>Task 4 - Rules engine</td>
+            <td><span class="badge bb">Qwen3-Coder-Next</span></td>
+            <td>Minor to Moderate</td>
+            <td>B best maintainability/readability structure.</td>
+          </tr>
+          <tr>
+            <td>Task 5 - Summary and plotting</td>
+            <td><span class="badge bc">gemma4:31b-cloud</span></td>
+            <td>Minor</td>
+            <td>C edges A on clarity with strong technical coverage.</td>
+          </tr>
+          <tr>
+            <td>Task 6 - EC3 trap test</td>
+            <td><span class="badge bc">gemma4:31b-cloud</span></td>
+            <td>Moderate</td>
+            <td>C cleanly catches both planted errors and restates adequacy clearly.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <h2>Criteria Heatmap Matrix (Tasks 1-6)</h2>
+      <div class="legend">
+        <span class="lg"><span class="dot a"></span>Winner A</span>
+        <span class="lg"><span class="dot b"></span>Winner B</span>
+        <span class="lg"><span class="dot c"></span>Winner C</span>
+        <span class="lg"><span class="dot t"></span>Tie</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Correctness</th>
+            <th>Robustness</th>
+            <th>Readability</th>
+            <th>Maintainability</th>
+            <th>Engineering suitability</th>
+            <th>Clarity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>T1</td>
+            <td><div class="heat w-a">A 4.0 | B 3.0 | C 3.0<strong>A</strong></div></td>
+            <td><div class="heat w-a">A 4.0 | B 3.0 | C 3.0<strong>A</strong></div></td>
+            <td><div class="heat w-t">A 4.0 | B 4.0 | C 4.0<strong>Tie</strong></div></td>
+            <td><div class="heat w-t">A 4.0 | B 4.0 | C 4.0<strong>Tie</strong></div></td>
+            <td><div class="heat w-a">A 4.0 | B 3.0 | C 3.0<strong>A</strong></div></td>
+            <td><div class="heat w-c">A 4.0 | B 4.5 | C 5.0<strong>C</strong></div></td>
+          </tr>
+          <tr>
+            <td>T2</td>
+            <td><div class="heat w-a">A 4.0 | B 2.0 | C 3.0<strong>A</strong></div></td>
+            <td><div class="heat w-a">A 4.0 | B 3.0 | C 3.0<strong>A</strong></div></td>
+            <td><div class="heat w-t">A 4.0 | B 3.5 | C 4.0<strong>Tie (A/C)</strong></div></td>
+            <td><div class="heat w-t">A 4.0 | B 3.5 | C 4.0<strong>Tie (A/C)</strong></div></td>
+            <td><div class="heat w-a">A 4.0 | B 2.0 | C 3.0<strong>A</strong></div></td>
+            <td><div class="heat w-c">A 4.0 | B 4.5 | C 5.0<strong>C</strong></div></td>
+          </tr>
+          <tr>
+            <td>T3</td>
+            <td><div class="heat w-c">A 2.0 | B 2.0 | C 4.0<strong>C</strong></div></td>
+            <td><div class="heat w-t">A 3.0 | B 2.0 | C 3.0<strong>Tie (A/C)</strong></div></td>
+            <td><div class="heat w-t">A 4.0 | B 4.0 | C 4.0<strong>Tie</strong></div></td>
+            <td><div class="heat w-t">A 4.0 | B 3.5 | C 4.0<strong>Tie (A/C)</strong></div></td>
+            <td><div class="heat w-c">A 3.0 | B 3.0 | C 4.0<strong>C</strong></div></td>
+            <td><div class="heat w-t">A 4.0 | B 5.0 | C 5.0<strong>Tie (B/C)</strong></div></td>
+          </tr>
+          <tr>
+            <td>T4</td>
+            <td><div class="heat w-t">A 4.0 | B 4.0 | C 4.0<strong>Tie</strong></div></td>
+            <td><div class="heat w-t">A 3.0 | B 3.0 | C 3.0<strong>Tie</strong></div></td>
+            <td><div class="heat w-b">A 4.0 | B 5.0 | C 4.0<strong>B</strong></div></td>
+            <td><div class="heat w-b">A 4.0 | B 5.0 | C 4.0<strong>B</strong></div></td>
+            <td><div class="heat w-t">A 4.0 | B 4.0 | C 4.0<strong>Tie</strong></div></td>
+            <td><div class="heat w-t">A 4.0 | B 5.0 | C 5.0<strong>Tie (B/C)</strong></div></td>
+          </tr>
+          <tr>
+            <td>T5</td>
+            <td><div class="heat w-t">A 4.0 | B 1.0 | C 4.0<strong>Tie (A/C)</strong></div></td>
+            <td><div class="heat w-t">A 3.0 | B 2.0 | C 3.0<strong>Tie (A/C)</strong></div></td>
+            <td><div class="heat w-b">A 4.0 | B 5.0 | C 4.0<strong>B</strong></div></td>
+            <td><div class="heat w-b">A 3.5 | B 4.0 | C 3.0<strong>B</strong></div></td>
+            <td><div class="heat w-t">A 4.0 | B 2.0 | C 4.0<strong>Tie (A/C)</strong></div></td>
+            <td><div class="heat w-c">A 4.0 | B 4.5 | C 5.0<strong>C</strong></div></td>
+          </tr>
+          <tr>
+            <td>T6</td>
+            <td><div class="heat w-c">A 4.0 | B 1.0 | C 4.5<strong>C</strong></div></td>
+            <td><div class="heat w-t">A 4.0 | B 1.5 | C 4.0<strong>Tie (A/C)</strong></div></td>
+            <td><div class="heat w-t">A 4.5 | B 2.5 | C 4.5<strong>Tie (A/C)</strong></div></td>
+            <td><div class="heat w-t">A 4.0 | B 2.0 | C 4.0<strong>Tie (A/C)</strong></div></td>
+            <td><div class="heat w-c">A 4.0 | B 1.0 | C 4.5<strong>C</strong></div></td>
+            <td><div class="heat w-t">A 5.0 | B 2.0 | C 5.0<strong>Tie (A/C)</strong></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <h2>Task Scorecards</h2>
+      <div class="cards">
+        <article class="card"><h3>Task 1</h3><div class="meta">Winner: <span class="badge ba">Qwen3.5 27B</span></div><div class="meta">A: best technical safety.</div><div class="meta">C: best clarity.</div></article>
+        <article class="card"><h3>Task 2</h3><div class="meta">Winner: <span class="badge ba">Qwen3.5 27B</span></div><div class="meta">A: strongest EC2 alignment.</div><div class="meta">C: solid second place.</div></article>
+        <article class="card"><h3>Task 3</h3><div class="meta">Winner: <span class="badge bc">gemma4:31b-cloud</span></div><div class="meta">C avoids A/B summary defects.</div><div class="meta">A still best defensive cleaning.</div></article>
+        <article class="card"><h3>Task 4</h3><div class="meta">Winner: <span class="badge bb">Qwen3-Coder-Next</span></div><div class="meta">Best readability + maintainability.</div><div class="meta">All three mostly correct.</div></article>
+        <article class="card"><h3>Task 5</h3><div class="meta">Winner: <span class="badge bc">gemma4:31b-cloud</span></div><div class="meta">C edges A in combined score.</div><div class="meta">B remains style-strong but reliability-weaker.</div></article>
+        <article class="card"><h3>Task 6</h3><div class="meta">Winner: <span class="badge bc">gemma4:31b-cloud</span></div><div class="meta">C catches both planted errors cleanly.</div><div class="meta">A strong, but introduces extra assumption path.</div></article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Final Questions and Updated Answers</h2>
+      <div class="qa">
+        <strong>1) Did Qwen3-Coder-Next feel materially better than Qwen3.5 27B on actual work?</strong>
+        Not on correctness-critical engineering checks; it remains stronger in polished presentation.
+      </div>
+      <div class="qa">
+        <strong>2) Was the difference only in polish, or also in correctness and usefulness?</strong>
+        Both. Correctness and reliability differences remain material on multiple tasks, including Task 6.
+      </div>
+      <div class="qa">
+        <strong>3) Would this gap justify hardware investment around larger models from this test alone?</strong>
+        Not from this benchmark alone. Better process control and verification workflows still provide larger gains.
+      </div>
+      <div class="qa">
+        <strong>4) Is Qwen3.5 27B already good enough for daily structural coding tasks?</strong>
+        Yes, with review checks. It remains technically strong.
+      </div>
+      <div class="qa">
+        <strong>Additional takeaway after Task 6:</strong>
+        gemma4:31b-cloud is the current overall leader in this benchmark set, combining strong task outcomes with top clarity.
+      </div>
+    </section>
+
+    <section class="panel">
+      <p class="foot">Source files: `Evaluation 1.md` to `Evaluation 6.md` and `structural_engineering_benchmark_report.md`.</p>
+      <p class="foot">This HTML is presentation-only and does not change the benchmark data model.</p>
+    </section>
+  </main>
+</body>
+</html>
