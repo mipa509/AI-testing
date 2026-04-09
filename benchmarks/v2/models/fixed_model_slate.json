@@ -1,0 +1,30 @@
+[
+  {
+    "model_id": "gemma4:31b-cloud",
+    "display_name": "Gemma 4 31B Cloud",
+    "role": "continuity baseline",
+    "provider": "Ollama cloud",
+    "notes": "Carry-forward baseline from v1."
+  },
+  {
+    "model_id": "glm-5.1:cloud",
+    "display_name": "GLM 5.1 Cloud",
+    "role": "new candidate",
+    "provider": "Ollama cloud",
+    "notes": "Larger-context cloud candidate for independent primary-model work."
+  },
+  {
+    "model_id": "kimi-k2-thinking",
+    "display_name": "Kimi K2 Thinking",
+    "role": "new candidate",
+    "provider": "Ollama cloud",
+    "notes": "Reasoning-oriented cloud candidate."
+  },
+  {
+    "model_id": "deepseek-v3.2",
+    "display_name": "DeepSeek V3.2",
+    "role": "new candidate",
+    "provider": "Ollama cloud",
+    "notes": "Larger-context cloud candidate with strong coding expectations."
+  }
+]
