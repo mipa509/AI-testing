@@ -172,3 +172,17 @@ For a fair rerun:
 - benchmarking larger cloud models on repo-context reading and multi-file reasoning
 - sharing benchmark outcomes with a technical team
 - creating presentation-ready summary outputs from the same benchmark data
+
+## Dashboard
+
+Generate the interactive benchmark dashboard:
+
+```bash
+pip install -r dashboard/requirements.txt
+python dashboard/build.py
+# Opens dashboard.html in any browser
+```
+
+The dashboard auto-discovers all benchmark rounds in `benchmarks/`. Run it again after adding new rounds or scorecards.
+
+To deploy to GitHub Pages: commit `dashboard.html` and enable Pages on `main`.
