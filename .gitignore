@@ -11,3 +11,6 @@ Thumbs.db
 *.tmp
 *.temp
 
+# Personal presentation variants
+benchmark_presentation_linkedin_3slides.html
+

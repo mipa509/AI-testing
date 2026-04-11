@@ -1,0 +1,22 @@
+# Anchor Task 6 Comparison
+
+This file covers the unchanged v1 EC3 trap test only. It is separate from the six-task v2 composite.
+
+## Historical Comparison
+
+| Model | v1 score/notes | v2 anchor score/notes | Change observed |
+|---|---|---|---|
+| `gemma4:31b-cloud` | Old baseline answer caught the axis and unit issues, but used `Wpl_y = 354e3 mm3` and concluded the section was adequate (`PASS`). | v2 anchor result also caught the axis and unit issues, used `Wpl_x = 324e3 mm3`, and still concluded `PASS` with utilisation about `0.998`. | Better than the `307e3 mm3` answers on final adequacy direction, but still below `kimi` and `qwen` because the chosen modulus is not as close to the better section-property source. |
+| `glm-5.1:cloud` | `n/a` | Clear and well-structured anchor answer. Corrected the wrong-axis and unit trap, used `Wpl_y = 307e3 mm3`, and concluded `FAIL` with utilisation about `1.052`. | New entrant. Good on the planted fault isolation, but no longer top-tier once the corrected adequacy result is judged against the better section-property source, because the final verdict should be `PASS`. |
+| `gpt5.4-xhigh` | `n/a` | Best anchor result in the current set. Corrected the wrong-axis and unit issues, used `Wpl_y = 353e3 mm3`, concluded `PASS` with utilisation about `0.916`, and added a proportionate buckling note without replacing the requested check. | New entrant. Strongest combination of corrected engineering answer, defensible property source, and assistant-like contextual warning. |
+| `qwen-3.6plus` | `n/a` | Strong anchor result on the revised standard. Correctly identified the wrong-axis and unit issues, used `Wpl_y = 358e3 mm3`, and concluded `PASS` with utilisation about `0.903`, but drifted into invented file/tool actions. | New entrant. Near-Blue-Book section-property choice and correct adequacy outcome; loses first place mainly on auditability and operational behaviour. |
+| `minimax-m2.7-cloud` | `n/a` | Weak anchor result on revision. It reaches `FAIL`, but with `Wpl_y = 106e3 mm3`, extra load-factor assumptions, and a resistance path that is not credible. | New entrant. Downgraded materially: the `FAIL` outcome is not enough when it is reached through the wrong section-property logic. |
+| `kimi-k2-thinking` | `n/a` | Best anchor result on the revised standard. Correctly identified the wrong-axis and unit issues, used `Wpl_y = 354e3 mm3`, concluded `PASS` with utilisation about `0.913`, and added a proportionate buckling caveat. | New entrant. Closest combination of planted-fault correction, defensible property source, correct adequacy outcome, and assistant-like engineering judgement. |
+| `deepseek-v3.2` | `n/a` | Clear planted-fault answer. Corrected the wrong-axis and unit trap, used `Wpl_y = 307e3 mm3`, and concluded `FAIL` with utilisation about `1.053`. | New entrant. Similar to `glm`: good trap isolation, but not top-tier once the corrected adequacy result is judged against the better section-property source. |
+
+## Anchor Result
+
+- Winner: `gpt5.4-xhigh`
+- Difference size: `Small over kimi-k2-thinking; moderate over qwen-3.6plus and gemma4:31b-cloud; large over glm-5.1:cloud, deepseek-v3.2, and minimax-m2.7-cloud.`
+- Did the result align with the new larger-context ranking: `Partly. GPT-5.4 now tops the primary six-task ranking and also produces the best revised anchor answer, while gemma still leads the free/cloud group and kimi/qwen remain strong on the corrected anchor standard.`
+- Did any model overcomplicate the planted-error objective: `Yes. The revised lesson still holds: extra caveats are useful only when they stay subordinate to the correction task. GPT-5.4 and kimi added proportionate buckling context, qwen hurt auditability with invented tool/file narration, and minimax overcomplicated the task most by introducing new load-factor assumptions and an indefensible section-property value.`

@@ -1,0 +1,51 @@
+[
+  {
+    "model_id": "gemma4:31b-cloud",
+    "display_name": "Gemma 4 31B Cloud",
+    "role": "continuity baseline",
+    "provider": "Ollama cloud",
+    "notes": "Carry-forward baseline from v1."
+  },
+  {
+    "model_id": "glm-5.1:cloud",
+    "display_name": "GLM 5.1 Cloud",
+    "role": "new candidate",
+    "provider": "Ollama cloud",
+    "notes": "Larger-context cloud candidate for independent primary-model work."
+  },
+  {
+    "model_id": "gpt5.4-xhigh",
+    "display_name": "GPT-5.4 XHigh",
+    "role": "premium reference",
+    "provider": "OpenAI / subscription or API",
+    "notes": "Premium reference model added after the initial free/cloud slate."
+  },
+  {
+    "model_id": "qwen-3.6plus",
+    "display_name": "Qwen 3.6 Plus",
+    "role": "new candidate",
+    "provider": "OpenRouter API",
+    "notes": "Paid API middle-tier comparator added after the initial free/cloud slate."
+  },
+  {
+    "model_id": "kimi-k2-thinking",
+    "display_name": "Kimi K2 Thinking",
+    "role": "new candidate",
+    "provider": "Ollama cloud",
+    "notes": "Reasoning-oriented cloud candidate."
+  },
+  {
+    "model_id": "deepseek-v3.2",
+    "display_name": "DeepSeek V3.2",
+    "role": "new candidate",
+    "provider": "Ollama cloud",
+    "notes": "Larger-context cloud candidate with strong coding expectations."
+  },
+  {
+    "model_id": "minimax-m2.7-cloud",
+    "display_name": "MiniMax M2.7 Cloud",
+    "role": "new candidate",
+    "provider": "Ollama cloud",
+    "notes": "Cloud candidate for the current benchmark pass."
+  }
+]

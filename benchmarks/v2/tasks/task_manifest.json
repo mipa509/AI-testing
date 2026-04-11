@@ -1,0 +1,51 @@
+[
+  {
+    "task_id": "v2-deep-01",
+    "title": "Multi-file bug hunt in a member check pipeline",
+    "group": "primary",
+    "depth": "deep",
+    "folder": "tasks/deep_01_multifile_bug_hunt"
+  },
+  {
+    "task_id": "v2-deep-02",
+    "title": "Repo review with unit, combination, and reporting traps",
+    "group": "primary",
+    "depth": "deep",
+    "folder": "tasks/deep_02_repo_review_traps"
+  },
+  {
+    "task_id": "v2-deep-03",
+    "title": "Scoped feature design on an existing package",
+    "group": "primary",
+    "depth": "deep",
+    "folder": "tasks/deep_03_scoped_feature_design"
+  },
+  {
+    "task_id": "v2-deep-04",
+    "title": "Safe refactor with behaviour preservation constraints",
+    "group": "primary",
+    "depth": "deep",
+    "folder": "tasks/deep_04_safe_refactor"
+  },
+  {
+    "task_id": "v2-medium-05",
+    "title": "Large dataset engineering summary pipeline",
+    "group": "primary",
+    "depth": "medium",
+    "folder": "tasks/medium_05_large_dataset_pipeline"
+  },
+  {
+    "task_id": "v2-medium-06",
+    "title": "Review plus targeted test design",
+    "group": "primary",
+    "depth": "medium",
+    "folder": "tasks/medium_06_review_plus_tests"
+  },
+  {
+    "task_id": "v2-anchor-07",
+    "title": "Unchanged v1 EC3 planted-error trap test",
+    "group": "anchor",
+    "depth": "anchor",
+    "folder": "tasks/anchor_07_v1_task6_ec3"
+  }
+]
