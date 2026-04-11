@@ -20,3 +20,5 @@ Context files to provide:
 - `context/analysis_pipeline.py`
 - `context/section_library.py`
 - `context/reporting.py`
+
+Wait for me to provide you with the py files code before proceeding to answer.

@@ -6,7 +6,7 @@ Models compared:
 - gemma4:31b-cloud
 
 Scope:
-- Tasks 1-6 from `structural_engineering_model_benchmark.md` and `Evaluation 6.md`
+- Tasks 1-6 from `benchmarks/v1/structural_engineering_model_benchmark.md` and `benchmarks/v1/Evaluation 6.md`
 - Raw first-pass outputs only (no post-hoc fixes in model code)
 
 Review context:

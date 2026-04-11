@@ -19,3 +19,5 @@ Context files to provide:
 - `context/io_contract.py`
 - `context/design_engine.py`
 - `context/report_writer.py`
+
+Wait for me to provide you with the py files code before proceeding to answer.

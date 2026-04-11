@@ -17,3 +17,5 @@ Context files to provide:
 - `context/concrete_checks.py`
 - `context/steel_checks.py`
 - `context/common_formatting.py`
+
+Wait for me to provide you with the py files code before proceeding to answer.

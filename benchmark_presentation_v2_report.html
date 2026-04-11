@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Structural Engineering AI Benchmark - V2 Larger-Context Presentation</title>
+  <style>
+    :root{--bg:#f2f5f9;--panel:#fff;--ink:#1f2935;--muted:#5f6e7d;--line:#d7dde5;--shadow:0 10px 24px rgba(17,31,46,.08);--radius:12px;--a:#237a4a;--a-soft:#e7f6ee;--b:#2b6fa3;--b-soft:#e5f1fc;--c:#7b5ad6;--c-soft:#efe8fb;--d:#bf6e1a;--d-soft:#fff0e1;--e:#b54d38;--e-soft:#faece7;--f:#2b7a78;--f-soft:#e6f6f5;--g:#6a7691;--g-soft:#edf1f7}
+    *{box-sizing:border-box} body{margin:0;color:var(--ink);background:radial-gradient(circle at 84% 8%,#e2ebf5 0%,transparent 36%),radial-gradient(circle at 12% 2%,#eaf0f7 0%,transparent 27%),var(--bg);font-family:"Aptos","Segoe UI","Trebuchet MS",Arial,sans-serif;line-height:1.45;padding:22px}
+    main{max-width:1440px;margin:0 auto;display:grid;gap:16px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px}
+    h1,h2,h3{margin:0;line-height:1.25} h1{font-size:1.58rem;color:#1a4a74} h2{font-size:1.06rem;color:#244b6d;margin-bottom:10px} h3{font-size:.95rem;color:#2d4f70;margin-bottom:7px} p{margin:5px 0}.muted{color:var(--muted)}
+    .header{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+    .chip,.note-pill{border:1px solid #c8d5e4;border-radius:999px;padding:4px 10px;font-size:.81rem;color:#294c6b;background:#ecf3f9;white-space:nowrap}
+    .chip.a{background:var(--a-soft);border-color:#bee5d0}.chip.b{background:var(--b-soft);border-color:#b8d4ee}.chip.c{background:var(--c-soft);border-color:#d6c5f3}.chip.d{background:var(--d-soft);border-color:#f2d3b1}.chip.e{background:var(--e-soft);border-color:#ebc7be}.chip.f{background:var(--f-soft);border-color:#bce4e1}.chip.g{background:var(--g-soft);border-color:#d2d9e5}
+    .grid-4,.cards,.split-2,.scatter-wrap{display:grid;gap:10px}.grid-4{grid-template-columns:repeat(4,minmax(230px,1fr))}.cards{grid-template-columns:repeat(6,minmax(180px,1fr))}.split-2{grid-template-columns:minmax(0,1.25fr) minmax(320px,.95fr);gap:14px;align-items:start}.scatter-wrap{grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:16px;align-items:start}
+    .kpi,.card,.chart-card,.qa{border:1px solid var(--line);border-radius:10px;background:#fbfcfe;padding:11px}.kpi{min-height:272px}.card{background:linear-gradient(180deg,#fff,#f9fbfd);min-height:210px}.chart-card{background:linear-gradient(180deg,#fff,#f8fbfe);padding:14px 14px 10px}.qa{background:#fcfdff;margin:8px 0}
+    .kpi-title{color:#51657a;text-transform:uppercase;letter-spacing:.3px;font-size:.8rem;margin-bottom:8px}.k-row{display:grid;grid-template-columns:106px 1fr 54px;gap:8px;align-items:center;margin:7px 0;font-size:.84rem}.bar{height:10px;border-radius:999px;border:1px solid #dbe3ec;background:#e8edf3;overflow:hidden}.fill{height:100%;border-radius:999px}.fill-a{background:linear-gradient(90deg,#237a4a,#4eb177)}.fill-b{background:linear-gradient(90deg,#2b6fa3,#5ea2d8)}.fill-c{background:linear-gradient(90deg,#7b5ad6,#a58aeb)}.fill-d{background:linear-gradient(90deg,#bf6e1a,#de9a52)}.fill-e{background:linear-gradient(90deg,#b54d38,#d97760)}.fill-f{background:linear-gradient(90deg,#2b7a78,#59aaa6)}.fill-g{background:linear-gradient(90deg,#6a7691,#96a3bf)}.score{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}.note-pill{border-style:dashed;padding:2px 8px;background:#f7f9fc;text-align:center;font-size:.78rem;color:#4e647a}
+    .count{border:1px solid #cad6e3;border-radius:8px;padding:5px 8px;margin:4px 0;font-size:.84rem;color:#2d4f6d;background:#f3f7fb}
+    table{width:100%;border-collapse:collapse;font-size:.88rem} th,td{border:1px solid #d7dde5;padding:8px 9px;vertical-align:top} th{background:#eef3f8;color:#2a4b6b;text-align:left}
+    .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.77rem;font-weight:700;border:1px solid;white-space:nowrap}.ba{background:var(--a-soft);color:#1f6a40;border-color:#bee5d0}.bb{background:var(--b-soft);color:#1f5685;border-color:#b8d4ee}.bc{background:var(--c-soft);color:#624494;border-color:#d6c5f3}.bd{background:var(--d-soft);color:#91530f;border-color:#f2d3b1}.be{background:var(--e-soft);color:#8e3c2b;border-color:#ebc7be}.bf{background:var(--f-soft);color:#245f5d;border-color:#bce4e1}.bg{background:var(--g-soft);color:#4f5b74;border-color:#d2d9e5}
+    .meta{margin:5px 0;font-size:.82rem;color:#334e67}.chart-title{font-size:.95rem;color:#284a69;margin-bottom:10px;font-weight:700}.premium-box{border:1px dashed #cfd8e5;border-radius:10px;padding:10px;background:linear-gradient(180deg,#fbf9ff,#f7f4fd);margin-bottom:10px;color:#4f5e74;font-size:.82rem}
+    .scatter{position:relative;height:320px;border:1px solid #d8e1ea;border-radius:10px;background:linear-gradient(to right,rgba(216,225,234,.7) 1px,transparent 1px),linear-gradient(to top,rgba(216,225,234,.7) 1px,transparent 1px),linear-gradient(180deg,#fcfdff,#f4f8fc);background-size:25% 100%,100% 25%,auto;overflow:hidden}
+    .axis-label-x,.axis-label-y,.point-label{position:absolute;font-size:.74rem;padding:3px 7px;border-radius:999px;border:1px solid;white-space:nowrap;font-weight:700}.axis-label-x,.axis-label-y{font-weight:400;border:none;background:rgba(255,255,255,.85);color:#58708a;padding:2px 6px;font-size:.78rem}.axis-label-x{bottom:6px;left:50%;transform:translateX(-50%)}.axis-label-y{left:6px;top:50%;transform:translateY(-50%) rotate(-90deg);transform-origin:left top}
+    .x-tick,.y-tick{position:absolute;font-size:.74rem;color:#60778f;font-variant-numeric:tabular-nums}.x-tick{bottom:28px;transform:translateX(-50%)}.y-tick{left:12px;transform:translateY(50%)}.point{position:absolute;width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 2px rgba(30,48,68,.12)}.point.a{background:var(--a)}.point.b{background:var(--b)}.point.d{background:var(--d)}.point.e{background:var(--e)}.point.f{background:var(--f)}.point.g{background:var(--g)}
+    .point-label.a{background:var(--a-soft);color:#1f6a40;border-color:#bee5d0}.point-label.b{background:var(--b-soft);color:#1f5685;border-color:#b8d4ee}.point-label.d{background:var(--d-soft);color:#91530f;border-color:#f2d3b1}.point-label.e{background:var(--e-soft);color:#8e3c2b;border-color:#ebc7be}.point-label.f{background:var(--f-soft);color:#245f5d;border-color:#bce4e1}.point-label.g{background:var(--g-soft);color:#4f5b74;border-color:#d2d9e5}
+    .qa strong{color:#274b6b;display:block;margin-bottom:4px}.foot{color:#607286;font-size:.8rem;margin:0}
+    @media (max-width:1200px){.grid-4,.cards,.split-2,.scatter-wrap{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main>
+    <section class="panel">
+      <div class="header">
+        <div>
+          <h1>Structural Engineering AI Benchmark - V2 Larger-Context Presentation</h1>
+          <p class="muted">Seven models, six primary engineering tasks, plus a separate revised historical anchor.</p>
+          <div class="chips">
+            <span class="chip a">Model A: gemma4:31b-cloud</span><span class="chip b">Model B: glm-5.1:cloud</span><span class="chip c">Model C: gpt5.4-xhigh</span><span class="chip d">Model D: qwen-3.6plus</span><span class="chip e">Model E: minimax-m2.7-cloud</span><span class="chip f">Model F: kimi-k2-thinking</span><span class="chip g">Model G: deepseek-v3.2</span><span class="chip">Scale: 1-5</span><span class="chip">Primary Tasks: 6</span><span class="chip">Anchor scored separately</span>
+          </div>
+        </div>
+        <div class="panel" style="margin:0;padding:9px 11px;box-shadow:none;">
+          <h3>Evaluation Basis</h3>
+          <p class="muted" style="margin:2px 0;">Repo-grounded larger-context review and coding tasks</p>
+          <p class="muted" style="margin:2px 0;">Composite excludes the historical anchor</p>
+          <p class="muted" style="margin:2px 0;">Anchor now judged on corrected engineering outcome</p>
+          <p class="muted" style="margin:2px 0;">Price table shows API pricing only; subscription access is called out separately</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Executive KPI Cards</h2>
+      <div class="grid-4">
+        <article class="kpi">
+          <div class="kpi-title">Benchmark Average (All 7 Criteria)</div>
+          <div class="k-row"><div>gpt5.4</div><div class="bar"><div class="fill fill-c" style="width:82.8%"></div></div><div class="score">4.14</div></div>
+          <div class="k-row"><div>gemma4</div><div class="bar"><div class="fill fill-a" style="width:82%"></div></div><div class="score">4.10</div></div>
+          <div class="k-row"><div>glm</div><div class="bar"><div class="fill fill-b" style="width:77.6%"></div></div><div class="score">3.88</div></div>
+          <div class="k-row"><div>qwen</div><div class="bar"><div class="fill fill-d" style="width:74.8%"></div></div><div class="score">3.74</div></div>
+          <div class="k-row"><div>minimax</div><div class="bar"><div class="fill fill-e" style="width:74.4%"></div></div><div class="score">3.72</div></div>
+          <div class="k-row"><div>kimi</div><div class="bar"><div class="fill fill-f" style="width:73.4%"></div></div><div class="score">3.67</div></div>
+          <div class="k-row"><div>deepseek</div><div class="bar"><div class="fill fill-g" style="width:53%"></div></div><div class="score">2.65</div></div>
+        </article>
+        <article class="kpi">
+          <div class="kpi-title">Task Winners (Primary 6)</div>
+          <div class="count">gemma4 wins: <strong>2</strong></div><div class="count">glm wins: <strong>1</strong></div><div class="count">gpt5.4 wins: <strong>1</strong></div><div class="count">qwen wins: <strong>0</strong></div><div class="count">minimax wins: <strong>0</strong></div><div class="count">kimi wins: <strong>2</strong></div><div class="count">deepseek wins: <strong>0</strong></div>
+          <p class="muted" style="font-size:.81rem;">Wins are split across the top of the slate. GPT leads overall, gemma remains the best free/cloud value winner, and kimi still takes two individual tasks.</p>
+        </article>
+        <article class="kpi">
+          <div class="kpi-title">Technical Composite</div>
+          <p class="muted" style="font-size:.8rem;margin-top:0;">Correctness + repo comprehension + change safety + engineering judgement</p>
+          <div class="k-row"><div>gpt5.4</div><div class="bar"><div class="fill fill-c" style="width:85.8%"></div></div><div class="score">4.29</div></div>
+          <div class="k-row"><div>gemma4</div><div class="bar"><div class="fill fill-a" style="width:79.2%"></div></div><div class="score">3.96</div></div>
+          <div class="k-row"><div>qwen</div><div class="bar"><div class="fill fill-d" style="width:75.8%"></div></div><div class="score">3.79</div></div>
+          <div class="k-row"><div>glm</div><div class="bar"><div class="fill fill-b" style="width:74.2%"></div></div><div class="score">3.71</div></div>
+          <div class="k-row"><div>minimax</div><div class="bar"><div class="fill fill-e" style="width:73.4%"></div></div><div class="score">3.67</div></div>
+          <div class="k-row"><div>kimi</div><div class="bar"><div class="fill fill-f" style="width:68.4%"></div></div><div class="score">3.42</div></div>
+          <div class="k-row"><div>deepseek</div><div class="bar"><div class="fill fill-g" style="width:51.6%"></div></div><div class="score">2.58</div></div>
+        </article>
+        <article class="kpi">
+          <div class="kpi-title">Pricing-Based Value Rating</div>
+          <p class="muted" style="font-size:.8rem;margin-top:0;">Separate pricing layer, not part of the benchmark score</p>
+          <div class="k-row"><div>gemma4</div><div class="bar"><div class="fill fill-a" style="width:100%"></div></div><div class="score">5.0</div></div>
+          <div class="k-row"><div>glm</div><div class="bar"><div class="fill fill-b" style="width:20%"></div></div><div class="score">1.0</div></div>
+          <div class="k-row"><div>gpt5.4</div><div class="bar"><div class="fill fill-c" style="width:20%"></div></div><div class="score">1.0</div></div>
+          <div class="k-row"><div>qwen</div><div class="bar"><div class="fill fill-d" style="width:60%"></div></div><div class="score">3.0</div></div>
+          <div class="k-row"><div>minimax</div><div class="bar"><div class="fill fill-e" style="width:80%"></div></div><div class="score">4.0</div></div>
+          <div class="k-row"><div>kimi</div><div class="bar"><div class="fill fill-f" style="width:60%"></div></div><div class="score">3.0</div></div>
+          <div class="k-row"><div>deepseek</div><div class="bar"><div class="fill fill-g" style="width:60%"></div></div><div class="score">3.0</div></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Primary Ranking</h2>
+      <div class="split-2">
+        <div>
+          <table>
+            <thead><tr><th>Rank</th><th>Model</th><th>Overall average</th><th>Technical composite</th><th>Communication/practicality</th><th>Read</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td><span class="badge bc">gpt5.4-xhigh</span></td><td>4.14</td><td>4.29</td><td>3.94</td><td>Best premium reference model: top composite, top technical composite, and best revised anchor.</td></tr>
+              <tr><td>2</td><td><span class="badge ba">gemma4:31b-cloud</span></td><td>4.10</td><td>3.96</td><td>4.28</td><td>Best free/cloud balance of technical quality, usability, and confirmed value.</td></tr>
+              <tr><td>3</td><td><span class="badge bb">glm-5.1:cloud</span></td><td>3.88</td><td>3.71</td><td>4.11</td><td>Strong narrow reviewer; less economical than the leaders.</td></tr>
+              <tr><td>4</td><td><span class="badge bd">qwen-3.6plus</span></td><td>3.74</td><td>3.79</td><td>3.67</td><td>Strong grounded paid/API middle option with better overall quality than minimax.</td></tr>
+              <tr><td>5</td><td><span class="badge be">minimax-m2.7-cloud</span></td><td>3.72</td><td>3.67</td><td>3.78</td><td>Respectable middle performer, but slower and less crisp than qwen or glm.</td></tr>
+              <tr><td>6</td><td><span class="badge bf">kimi-k2-thinking</span></td><td>3.67</td><td>3.42</td><td>4.00</td><td>Wins two primary tasks, but repeated context-fidelity failures hurt trust.</td></tr>
+              <tr><td>7</td><td><span class="badge bg">deepseek-v3.2</span></td><td>2.65</td><td>2.58</td><td>2.67</td><td>Dragged down by repeated hallucinated-repo failures.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <table>
+            <thead><tr><th>Criterion</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th></tr></thead>
+            <tbody>
+              <tr><td>Correctness</td><td>4.00</td><td>3.83</td><td>4.33</td><td>4.00</td><td>3.67</td><td>3.50</td><td>2.67</td></tr>
+              <tr><td>Repo comprehension</td><td>4.00</td><td>3.83</td><td>4.50</td><td>4.17</td><td>4.00</td><td>3.50</td><td>2.83</td></tr>
+              <tr><td>Change safety</td><td>3.83</td><td>3.50</td><td>4.00</td><td>3.33</td><td>3.50</td><td>3.33</td><td>2.33</td></tr>
+              <tr><td>Engineering judgement</td><td>4.00</td><td>3.67</td><td>4.33</td><td>3.67</td><td>3.50</td><td>3.33</td><td>2.50</td></tr>
+              <tr><td>Maintainability</td><td>4.00</td><td>4.00</td><td>4.17</td><td>4.00</td><td>4.17</td><td>3.50</td><td>2.86</td></tr>
+              <tr><td>Clarity</td><td>4.17</td><td>4.50</td><td>4.83</td><td>4.00</td><td>4.17</td><td>4.17</td><td>3.17</td></tr>
+              <tr><td>Economics/practicality</td><td>4.67</td><td>3.83</td><td>2.83</td><td>3.00</td><td>3.00</td><td>4.33</td><td>2.17</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Per-Task Winner Snapshot</h2>
+      <div class="cards">
+        <article class="card"><h3>Task 1</h3><div class="meta">Winner: <span class="badge ba">gemma4</span></div><div class="meta">Best real-bug diagnosis plus strongest repo-grounded secondary risk.</div><div class="meta">GPT was also strong, but gemma kept the sharper secondary risk framing.</div></article>
+        <article class="card"><h3>Task 2</h3><div class="meta">Winner: <span class="badge ba">gemma4</span></div><div class="meta">Most concise and proportionate review of all three blockers.</div><div class="meta">GPT, qwen, and kimi were also strong; minimax missed the real unit defect.</div></article>
+        <article class="card"><h3>Task 3</h3><div class="meta">Winner: <span class="badge bc">gpt5.4</span></div><div class="meta">Strongest scoped design judgement and clearest additive compatibility path.</div><div class="meta">All seven were usable here, but GPT was the cleanest on scope control.</div></article>
+        <article class="card"><h3>Task 4</h3><div class="meta">Winner: <span class="badge bf">kimi</span></div><div class="meta">Six-way near-tie technically among kimi, glm, gemma, gpt, qwen, and minimax.</div><div class="meta">Winner edge is mostly presentation and practicality.</div></article>
+        <article class="card"><h3>Task 5</h3><div class="meta">Winner: <span class="badge bf">kimi</span></div><div class="meta">Best vectorisation plus stable-contract balance.</div><div class="meta">All seven recognised the performance problem; GPT was strong but broader than necessary.</div></article>
+        <article class="card"><h3>Task 6</h3><div class="meta">Winner: <span class="badge bb">glm</span></div><div class="meta">No ideal answer, but glm drifted least from the helper semantics overall.</div><div class="meta">GPT was grounded and clear, but still broader than the minimum safe fix path.</div></article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Pricing and Value Snapshot</h2>
+      <p class="muted" style="margin-bottom:12px;">This pricing layer mirrors the markdown report and leaves all task winners and rankings unchanged. It reflects API pricing only. In this benchmark setup, `gemma4`, `glm`, `minimax`, and `kimi` were also available through the free Ollama cloud route, `qwen` required paid API/OpenRouter access, and `gpt5.4` should be read through two lenses: very expensive via API, but potentially attractive if you already operate inside a subscription workflow.</p>
+      <div class="split-2">
+        <div>
+          <table>
+            <thead><tr><th>Model</th><th>Input $/1M</th><th>Output $/1M</th><th>Combined $/1M</th><th>Value rating</th><th>Pricing note</th></tr></thead>
+            <tbody>
+              <tr><td><span class="badge ba">gemma4:31b-cloud</span></td><td>0.14</td><td>0.40</td><td>0.54</td><td>5.0</td><td>Clear price outlier on the low-cost side.</td></tr>
+              <tr><td><span class="badge bb">glm-5.1:cloud</span></td><td>1.26</td><td>3.96</td><td>5.22</td><td>1.0</td><td>Highest combined price in the set.</td></tr>
+              <tr><td><span class="badge bc">gpt5.4-xhigh</span></td><td>2.50 / 5.00</td><td>15.00 / 22.50</td><td>17.50 / 27.50</td><td>1.0</td><td>Tiered OpenRouter API pricing: lower band at `<=272K` input, upper band above that.</td></tr>
+              <tr><td><span class="badge bd">qwen-3.6plus</span></td><td>0.571</td><td>3.00</td><td>3.571</td><td>3.0</td><td>Weighted average provider pricing over the past hour.</td></tr>
+              <tr><td><span class="badge be">minimax-m2.7-cloud</span></td><td>0.30</td><td>1.20</td><td>1.50</td><td>4.0</td><td>Strong nominal value position: second-lowest confirmed combined price.</td></tr>
+              <tr><td><span class="badge bf">kimi-k2-thinking</span></td><td>0.60</td><td>2.50</td><td>3.10</td><td>3.0</td><td>Mid-pack pricing, materially above gemma.</td></tr>
+              <tr><td><span class="badge bg">deepseek-v3.2</span></td><td>2.60</td><td>0.38</td><td>2.98</td><td>3.0</td><td>Similar combined cost band to kimi, with a different input/output split.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Quality vs Value</div>
+          <div class="premium-box"><strong style="display:block;margin-bottom:4px;color:#4f3e74;">Premium reference note</strong>`gpt5.4-xhigh` now has API pricing in the table and it is expensive. The separate subscription-user section explains why it can still be the best practical choice in a different access model.</div>
+          <div class="scatter">
+            <div class="axis-label-y">Value rating</div><div class="axis-label-x">Quality average (Criteria 1-6)</div>
+            <div class="y-tick" style="bottom:2%;">1</div><div class="y-tick" style="bottom:25%;">2</div><div class="y-tick" style="bottom:50%;">3</div><div class="y-tick" style="bottom:75%;">4</div><div class="y-tick" style="bottom:98%;">5</div>
+            <div class="x-tick" style="left:2%;">2.5</div><div class="x-tick" style="left:27%;">3.0</div><div class="x-tick" style="left:52%;">3.5</div><div class="x-tick" style="left:77%;">4.0</div><div class="x-tick" style="left:96%;">4.4</div>
+            <div class="point a" style="left:76%;bottom:96%;"></div><div class="point-label a" style="left:71%;bottom:86%;">A gemma4</div>
+            <div class="point b" style="left:70%;bottom:4%;"></div><div class="point-label b" style="left:63%;bottom:7%;">B glm</div>
+            <div class="point c" style="left:94%;bottom:4%;background:var(--c);"></div><div class="point-label c" style="left:82%;bottom:11%;background:var(--c-soft);color:#624494;border-color:#d6c5f3">C gpt5.4</div>
+            <div class="point d" style="left:69%;bottom:50%;"></div><div class="point-label d" style="left:60%;bottom:58%;">D qwen</div>
+            <div class="point e" style="left:67%;bottom:73%;"></div><div class="point-label e" style="left:57%;bottom:79%;">E minimax</div>
+            <div class="point f" style="left:54%;bottom:50%;"></div><div class="point-label f" style="left:46%;bottom:58%;">F kimi</div>
+            <div class="point g" style="left:13%;bottom:50%;"></div><div class="point-label g" style="left:16%;bottom:40%;">G deepseek</div>
+          </div>
+          <ul style="margin:12px 0 0 18px;padding:0;color:#38536f;font-size:.84rem;">
+            <li><strong>gemma4</strong> is still the clear top-right outlier on confirmed quality plus value.</li>
+            <li><strong>gpt5.4</strong> sits furthest right on quality, but also in the weakest API value band.</li>
+            <li><strong>qwen</strong> sits in the same value band as `kimi` and `deepseek`, but with materially better quality.</li>
+            <li><strong>minimax</strong> keeps the strongest confirmed price position in the middle of the pack.</li>
+            <li><strong>glm</strong> remains high quality, but its pricing still pushes it into the weakest confirmed value band.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Subscription-User View</h2>
+      <div class="split-2">
+        <div>
+          <table>
+            <thead><tr><th>Measure</th><th>gpt5.4-xhigh</th><th>gemma4:31b-cloud</th></tr></thead>
+            <tbody>
+              <tr><td>Primary composite</td><td>4.14</td><td>4.10</td></tr>
+              <tr><td>Quality-only average (Criteria 1-6)</td><td>4.36</td><td>4.00</td></tr>
+              <tr><td>Technical composite (Criteria 1-4)</td><td>4.29</td><td>3.96</td></tr>
+              <tr><td>Historical anchor</td><td>Winner</td><td>Middle tier</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Practical Reading</div>
+          <p class="muted">If per-token API pricing is not the binding constraint, `gpt5.4-xhigh` is the strongest overall model in the current set.</p>
+          <ul style="margin:10px 0 0 18px;padding:0;color:#38536f;font-size:.85rem;">
+            <li><strong>Best premium reference:</strong> `gpt5.4-xhigh`</li>
+            <li><strong>Best free/cloud winner:</strong> `gemma4:31b-cloud`</li>
+            <li><strong>Best grounded paid/API middle option:</strong> `qwen-3.6plus`</li>
+            <li><strong>Main operational warning:</strong> models that answer before the supplied files are truly grounded remain unsafe regardless of raw capability.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Historical Anchor (Separate from Composite)</h2>
+      <table>
+        <thead><tr><th>Model</th><th>Anchor result</th><th>Interpretation</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge ba">gemma4:31b-cloud</span></td><td>`PASS`, util about `0.998`</td><td>Fixes the core logic and lands on the right adequacy direction, but the modulus is weaker than the best section-property source.</td></tr>
+          <tr><td><span class="badge bb">glm-5.1:cloud</span></td><td>`FAIL`, util about `1.052`</td><td>Clear and structured on the planted trap itself, but the conservative modulus choice drives the wrong final adequacy verdict under the revised standard.</td></tr>
+          <tr><td><span class="badge bc">gpt5.4-xhigh</span></td><td><strong>`PASS`, util about `0.916`</strong></td><td>Best revised anchor answer: fixes axis and units, uses `Wpl_y = 353e3 mm3`, reaches `PASS`, and adds a proportionate buckling caveat.</td></tr>
+          <tr><td><span class="badge bd">qwen-3.6plus</span></td><td>`PASS`, util about `0.903`</td><td>Very close to the best answer: fixes the main faults and uses a near-Blue-Book modulus, but loses auditability by narrating invented file/tool actions.</td></tr>
+          <tr><td><span class="badge be">minimax-m2.7-cloud</span></td><td>`FAIL`</td><td>Clearly weakest. It reaches `FAIL` through an indefensible section-property path and extra load-factor assumptions.</td></tr>
+          <tr><td><span class="badge bf">kimi-k2-thinking</span></td><td>`PASS`, util about `0.913`</td><td>Very close behind GPT: fixes axis and units, uses a near-correct modulus, reaches `PASS`, and adds a useful buckling caveat.</td></tr>
+          <tr><td><span class="badge bg">deepseek-v3.2</span></td><td>`FAIL`, util about `1.053`</td><td>Similar to glm: strong on the planted trap mechanics, but the conservative modulus choice leads to the wrong adequacy result.</td></tr>
+        </tbody>
+      </table>
+      <p class="muted" style="margin-top:10px;">Anchor winner: <strong>gpt5.4-xhigh</strong>. On the corrected engineering standard, GPT edges `kimi`, `qwen` stays close on property fidelity, `gemma` sits in the middle with a weaker modulus choice, `glm` and `deepseek` fall back because they end on the wrong adequacy verdict, and `minimax` drops out because its resistance path is not defensible.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Final Questions and Updated Answers</h2>
+      <div class="qa"><strong>1) Did the larger free/cloud models materially outperform the earlier smaller-model benchmark?</strong>At the top end, yes. `gemma4` clearly does on the free/cloud side. Once premium models are included, `gpt5.4-xhigh` pushes the ceiling higher again.</div>
+      <div class="qa"><strong>2) Was the difference mainly about bigger context windows, or about correctness and usefulness?</strong>Both. Bigger context only helps when the model stays grounded. The decisive differences were still correctness, repo comprehension, change safety, and proportionate judgement.</div>
+      <div class="qa"><strong>3) Does model size translate cleanly into engineering reliability?</strong>Not by itself. `gemma4` shows that a 31B-class model can be excellent. `gpt5.4-xhigh` shows what the premium ceiling looks like when technical control is consistently strong. `kimi` shows that a model can still win individual tasks while suffering severe context-fidelity failures elsewhere.</div>
+      <div class="qa"><strong>4) Is gemma4:31b-cloud unusually strong for the size/output tradeoff?</strong>Yes. It remains the clearest efficiency outlier in this set: near-top primary-composite score, strong practical usability, and a very credible local-feasible model class.</div>
+      <div class="qa"><strong>5) What remains the biggest operational warning from the v2 run?</strong>Hallucinating or answering before the supplied files are truly grounded. That failure mode remains benchmark-killing for engineering review tasks, regardless of raw model capability.</div>
+      <div class="qa"><strong>Headline takeaway</strong>If pricing is not the binding constraint, `gpt5.4-xhigh` is now the strongest overall model in the set. If the goal is strong larger-context engineering assistance on a realistic free/cloud route, `gemma4:31b-cloud` remains the practical headline result, while `qwen-3.6plus` stands out as the strongest grounded paid/API middle option.</div>
+      <div class="qa"><strong>Practical access note</strong>The pricing table here is API pricing, not total usability cost. In your current workflow, `gemma4`, `glm`, `minimax`, and `kimi` can also be run free via the Ollama cloud route, `qwen-3.6plus` is the only model in this set that still requires paid API credits to use, and `gpt5.4-xhigh` should be read through two separate lenses: very expensive through API, but potentially the best access path if you already operate inside a subscription workflow.</div>
+    </section>
+
+    <section class="panel">
+      <p class="foot">Source files: `structural_engineering_benchmark_report_v2.md`, `benchmarks/v2/results/v2_overall_ranking.md`, `benchmarks/v2/results/v2_per_task_results.md`, and `benchmarks/v2/results/anchor_task6_comparison.md`.</p>
+      <p class="foot">This HTML is presentation-only and reflects the current seven-model primary benchmark plus the revised anchor interpretation.</p>
+    </section>
+  </main>
+</body>
+</html>

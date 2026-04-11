@@ -26,5 +26,12 @@
     "role": "new candidate",
     "provider": "Ollama cloud",
     "notes": "Larger-context cloud candidate with strong coding expectations."
+  },
+  {
+    "model_id": "minimax-m2.7:cloud",
+    "display_name": "MiniMax M2.7 Cloud",
+    "role": "new candidate",
+    "provider": "Ollama cloud",
+    "notes": "Cloud candidate for the current benchmark pass."
   }
 ]
