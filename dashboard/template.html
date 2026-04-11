@@ -119,7 +119,7 @@ const DATA = {{ data_json }};
 <div id="tab-profiles" class="tab-content">
   <div class="controls">
     <div><label for="profile-round">Round:</label>
-      <select id="profile-round" onchange="renderProfiles()"></select></div>
+      <select id="profile-round"></select></div>
     <div><label for="profile-model">Model:</label>
       <select id="profile-model" onchange="renderProfiles()"></select></div>
   </div>
@@ -152,9 +152,14 @@ const DATA = {{ data_json }};
 <script>
 // ── Helpers ────────────────────────────────────────────────────────────────
 
+function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 function scoreClass(v) {
   if (v === null || v === undefined) return '';
   const n = parseFloat(v);
+  if (isNaN(n)) return '';
   if (n >= 4.5) return 's5';
   if (n >= 3.5) return 's4';
   if (n >= 2.5) return 's3';
@@ -252,7 +257,10 @@ function updateProfileModelSelect() {
   ).join('') : '');
 }
 
-document.getElementById('profile-round').addEventListener('change', updateProfileModelSelect);
+document.getElementById('profile-round').addEventListener('change', () => {
+  updateProfileModelSelect();
+  renderProfiles();
+});
 
 const RADAR_COLORS = [
   'rgba(56,189,248,0.7)', 'rgba(74,222,128,0.7)', 'rgba(251,191,36,0.7)',
@@ -319,8 +327,13 @@ function renderTaskList() {
       btn.className = 'task-btn';
       btn.dataset.roundId = round.round_id;
       btn.dataset.taskId  = task.task_id;
-      btn.innerHTML = task.task_title +
-        (task.depth ? `<span class="badge">${task.depth}</span>` : '');
+      btn.textContent = task.task_title;
+      if (task.depth) {
+        const badge = document.createElement('span');
+        badge.className = 'badge';
+        badge.textContent = task.depth;
+        btn.appendChild(badge);
+      }
       btn.onclick = () => {
         document.querySelectorAll('.task-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -346,23 +359,23 @@ function showTaskDetail(round, task) {
   });
 
   let html = `
-    <h2>${task.task_title}</h2>
+    <h2>${esc(task.task_title)}</h2>
     <div class="task-meta">
-      <span>Round: <b>${round.label}</b></span>
-      <span>Winner: <b style="color:#4ade80">${task.winner || '—'}</b></span>
-      ${task.difference_size ? `<span>Difference: <b>${task.difference_size}</b></span>` : ''}
+      <span>Round: <b>${esc(round.label)}</b></span>
+      <span>Winner: <b style="color:#4ade80">${esc(task.winner) || '—'}</b></span>
+      ${task.difference_size ? `<span>Difference: <b>${esc(task.difference_size)}</b></span>` : ''}
     </div>
     <table>
       <thead><tr>
         <th>Model</th>
-        ${criteria.map(c => `<th>${c}</th>`).join('')}
+        ${criteria.map(c => `<th>${esc(c)}</th>`).join('')}
       </tr></thead>
       <tbody>
         ${sorted.map(model => {
           const sc = task.scores[model.model_id] || {};
           const isWinner = model.model_id === task.winner;
           return `<tr${isWinner ? ' class="winner-row"' : ''}>
-            <td>${model.display_name}${isWinner ? ' <span style="color:#4ade80;font-size:.75rem">★</span>' : ''}</td>
+            <td>${esc(model.display_name)}${isWinner ? ' <span style="color:#4ade80;font-size:.75rem">★</span>' : ''}</td>
             ${criteria.map(c => {
               const v = sc[c];
               return `<td class="score-cell ${scoreClass(v)}">${v !== null && v !== undefined ? v : '—'}</td>`;
@@ -371,7 +384,7 @@ function showTaskDetail(round, task) {
         }).join('')}
       </tbody>
     </table>
-    ${task.commentary ? `<div class="commentary">${task.commentary}</div>` : ''}
+    ${task.commentary ? `<div class="commentary">${esc(task.commentary)}</div>` : ''}
   `;
   panel.innerHTML = html;
 }
@@ -407,7 +420,12 @@ function renderCost() {
 
   const dataset = {
     label: round.label + ' models',
-    data: points.map(p => ({ x: p.x + (Math.random() - 0.5) * 0.15, y: p.y, meta: p })),
+    data: points.map(p => {
+      // Stable jitter from label hash so points don't jump on redraw
+      let h = 0; for (const c of p.label) h = (h * 31 + c.charCodeAt(0)) & 0xffff;
+      const jitter = ((h % 100) / 100 - 0.5) * 0.15;
+      return { x: p.x + jitter, y: p.y, meta: p };
+    }),
     backgroundColor: points.map(p => tierColors[p.x] || '#94a3b8'),
     pointRadius: 10,
     pointHoverRadius: 13,
