@@ -121,7 +121,7 @@ const DATA = {{ data_json }};
     <div><label for="profile-round">Round:</label>
       <select id="profile-round"></select></div>
     <div><label for="profile-model">Model:</label>
-      <select id="profile-model" onchange="renderProfiles()"></select></div>
+      <select id="profile-model"></select></div>
   </div>
   <div class="chart-wrap" style="max-width:520px;">
     <canvas id="radarChart" height="380"></canvas>
@@ -261,6 +261,8 @@ document.getElementById('profile-round').addEventListener('change', () => {
   updateProfileModelSelect();
   renderProfiles();
 });
+
+document.getElementById('profile-model').addEventListener('change', renderProfiles);
 
 const RADAR_COLORS = [
   'rgba(56,189,248,0.7)', 'rgba(74,222,128,0.7)', 'rgba(251,191,36,0.7)',
