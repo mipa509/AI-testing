@@ -2,14 +2,22 @@
 
 This benchmark extends the repository from short prompt coding tasks to larger-context repo reading, review, and scoped-change work.
 
-## Fixed Model Slate
+## Current Scored Model Slate
 
 - `gemma4:31b-cloud` - continuity baseline from v1
 - `glm-5.1:cloud`
+- `gpt5.4-xhigh` - premium reference model
+- `qwen-3.6plus` - paid API middle-tier comparator
+- `minimax-m2.7-cloud`
 - `kimi-k2-thinking`
 - `deepseek-v3.2`
 
 Record the exact model string used in every run, even though execution is manual.
+
+Access note:
+- `gemma4`, `glm`, `minimax`, and `kimi` fit the free/cloud route used in this benchmark.
+- `qwen-3.6plus` requires paid API access.
+- `gpt5.4-xhigh` should be interpreted separately as the premium reference path.
 
 ## Execution Protocol
 

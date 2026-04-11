@@ -14,6 +14,20 @@
     "notes": "Larger-context cloud candidate for independent primary-model work."
   },
   {
+    "model_id": "gpt5.4-xhigh",
+    "display_name": "GPT-5.4 XHigh",
+    "role": "premium reference",
+    "provider": "OpenAI / subscription or API",
+    "notes": "Premium reference model added after the initial free/cloud slate."
+  },
+  {
+    "model_id": "qwen-3.6plus",
+    "display_name": "Qwen 3.6 Plus",
+    "role": "new candidate",
+    "provider": "OpenRouter API",
+    "notes": "Paid API middle-tier comparator added after the initial free/cloud slate."
+  },
+  {
     "model_id": "kimi-k2-thinking",
     "display_name": "Kimi K2 Thinking",
     "role": "new candidate",
@@ -28,7 +42,7 @@
     "notes": "Larger-context cloud candidate with strong coding expectations."
   },
   {
-    "model_id": "minimax-m2.7:cloud",
+    "model_id": "minimax-m2.7-cloud",
     "display_name": "MiniMax M2.7 Cloud",
     "role": "new candidate",
     "provider": "Ollama cloud",

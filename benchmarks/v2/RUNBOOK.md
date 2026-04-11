@@ -19,9 +19,12 @@ Do not open or paste any `_evaluator_notes.md` file into the model.
 
 ## 2. Fixed Model Slate
 
-Use these exact model IDs:
+Use these exact model IDs for the current scored slate:
+- `gpt5.4-xhigh`
 - `gemma4:31b-cloud`
 - `glm-5.1:cloud`
+- `qwen-3.6plus`
+- `minimax-m2.7-cloud`
 - `kimi-k2-thinking`
 - `deepseek-v3.2`
 
@@ -118,9 +121,9 @@ Copy `templates/run_record_template.md` to `benchmarks/v2/runs/run_records/` and
 - `latency_notes`
 - `manual_observations`
 
-### Step D - Repeat for all four models
+### Step D - Repeat for the full current model slate
 
-Do not score the task until all four raw outputs are captured.
+Do not score the task until all model raw outputs for the current slate are captured.
 
 ## 6. Scoring Workflow For One Task
 
@@ -175,7 +178,7 @@ Fill:
 
 Use:
 - the old v1 Task 6 result for `gemma4:31b-cloud`
-- the new v2 anchor outputs for all four models
+- the new v2 anchor outputs for the current scored slate
 
 ## 8. Task-Specific Notes
 
@@ -194,8 +197,8 @@ Keep it verbatim. Do not simplify, modernise, or “improve” the prompt before
 ## 9. Minimum Quality Checks Before You Call The Round Finished
 
 Before treating the benchmark as complete, check:
-1. every task has four raw output files
-2. every task has four run records
+1. every task has one raw output file per model in the current slate
+2. every task has one run record per model in the current slate
 3. every task has one completed scorecard
 4. the six primary tasks are present in the per-task and overall ranking files
 5. the anchor task is present only in the anchor comparison file
