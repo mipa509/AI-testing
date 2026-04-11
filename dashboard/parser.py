@@ -32,7 +32,7 @@ def parse_md_table(md_text: str, start_marker: str = None):
                 break
             continue
         # Skip separator rows: |---|  |---:|  |:---:|
-        if re.match(r"^\|[\s\-:|]+\|", stripped):
+        if re.match(r"^\|(\s*:?-+:?\s*\|)+\s*$", stripped):
             continue
         in_table = True
         table_lines.append(stripped)
@@ -65,6 +65,8 @@ def parse_ranking_table(md_path: Path):
     text = Path(md_path).read_text(encoding="utf-8")
     header, rows = parse_md_table(text, start_marker="Cross-Task Average Scores")
     if not header:
+        import warnings
+        warnings.warn(f"No 'Cross-Task Average Scores' table found in {md_path}", stacklevel=2)
         return {}, [], []
 
     model_ids = header[1:]  # first col is "Criterion"
@@ -113,6 +115,10 @@ def parse_scorecard(md_path: Path):
     # header = ["Model", "Criterion1", ..., "CriterionN", "Overall notes"]
     criteria = header[1:-1] if header and len(header) > 2 else []
 
+    if not criteria:
+        import warnings
+        warnings.warn(f"No '## Scores' table found in {md_path}", stacklevel=2)
+
     scores: dict = {}
     notes: dict = {}
     for row in rows:
@@ -131,8 +137,10 @@ def parse_scorecard(md_path: Path):
         notes[model_id] = row[len(criteria) + 1] if len(row) > len(criteria) + 1 else ""
 
     # --- Winner block ---
-    winner_m = re.search(r"Winner:\s*`(.+?)`", text)
-    diff_m = re.search(r"Difference size:\s*`(.+?)`", text)
+    winner_block_m = re.search(r"##\s+Winner\b.*?(?=\n##|\Z)", text, re.DOTALL)
+    search_text = winner_block_m.group(0) if winner_block_m else text
+    winner_m = re.search(r"Winner:\s*`(.+?)`", search_text)
+    diff_m   = re.search(r"Difference size:\s*`(.+?)`", search_text)
     winner = winner_m.group(1) if winner_m else ""
     difference_size = diff_m.group(1) if diff_m else ""
 
@@ -184,17 +192,20 @@ def discover_rounds(repo_root: Path):
             models = json.load(f)
 
         # Augment models with cost tier
+        PREMIUM_KEYWORDS = {"openai", "subscription"}
+        FREE_KEYWORDS    = {"ollama"}
+
         for model in models:
-            provider = model.get("provider", "").lower()
-            if "openai" in provider or "subscription" in provider:
+            provider_lower = model.get("provider", "").lower()
+            if any(kw in provider_lower for kw in PREMIUM_KEYWORDS):
                 model["cost_tier"] = 3
                 model["cost_label"] = "Premium"
-            elif "api" in provider and "ollama" not in provider:
-                model["cost_tier"] = 2
-                model["cost_label"] = "Paid API"
-            else:
+            elif any(kw in provider_lower for kw in FREE_KEYWORDS):
                 model["cost_tier"] = 1
                 model["cost_label"] = "Free/Cloud"
+            else:
+                model["cost_tier"] = 2   # everything else assumed paid API
+                model["cost_label"] = "Paid API"
 
         # Task manifest (optional)
         manifest_path = item / "tasks" / "task_manifest.json"
