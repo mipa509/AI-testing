@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Structural Engineering AI Benchmark Dashboard</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+         background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+  header { padding: 1.5rem 2rem; border-bottom: 1px solid #1e293b; }
+  header h1 { font-size: 1.4rem; font-weight: 700; color: #f8fafc; }
+  header p  { font-size: 0.85rem; color: #94a3b8; margin-top: 0.25rem; }
+  nav { display: flex; gap: 0.5rem; padding: 1rem 2rem 0; border-bottom: 1px solid #1e293b; }
+  nav button {
+    padding: 0.5rem 1.25rem; border: none; border-radius: 6px 6px 0 0;
+    background: transparent; color: #94a3b8; cursor: pointer; font-size: 0.9rem;
+    border-bottom: 3px solid transparent; transition: all .15s;
+  }
+  nav button.active { color: #38bdf8; border-bottom-color: #38bdf8; background: #1e293b; }
+  nav button:hover:not(.active) { color: #cbd5e1; background: #1e293b88; }
+  .tab-content { display: none; padding: 1.5rem 2rem; }
+  .tab-content.active { display: block; }
+
+  /* KPI cards */
+  .kpi-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .kpi-card {
+    flex: 1; min-width: 140px; background: #1e293b; border-radius: 10px;
+    padding: 1rem 1.25rem; border: 1px solid #334155;
+  }
+  .kpi-card .value { font-size: 2rem; font-weight: 700; color: #38bdf8; }
+  .kpi-card .label { font-size: 0.78rem; color: #94a3b8; margin-top: 0.25rem; text-transform: uppercase; letter-spacing: .05em; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { text-align: left; padding: 0.5rem 0.75rem; color: #94a3b8;
+       border-bottom: 1px solid #334155; font-weight: 600; white-space: nowrap; }
+  td { padding: 0.45rem 0.75rem; border-bottom: 1px solid #1e293b; }
+  tr:hover td:not(.score-cell) { background: #1e293b99; }
+  tr:hover td:first-child { border-left: 3px solid #38bdf8; padding-left: calc(0.75rem - 3px); }
+  .score-cell { text-align: right; font-weight: 600; border-radius: 4px; }
+  .winner-row td { background: #0f2a1a88; }
+  tr.winner-row:hover td:first-child { border-left: 3px solid #4ade80; padding-left: calc(0.75rem - 3px); }
+
+  /* Score colour scale (1–5) */
+  .s5 { background: #16a34a33; color: #4ade80; }
+  .s4 { background: #15803d22; color: #86efac; }
+  .s3 { background: #71717a22; color: #a1a1aa; }
+  .s2 { background: #b4521722; color: #fdba74; }
+  .s1 { background: #dc262622; color: #f87171; }
+
+  /* Task drill-down layout */
+  .drill-layout { display: flex; gap: 1rem; }
+  .task-list { width: 260px; flex-shrink: 0; }
+  .task-list h3 { font-size: 0.75rem; color: #94a3b8; text-transform: uppercase;
+                  letter-spacing: .06em; padding: 0.5rem 0; }
+  .task-btn {
+    display: block; width: 100%; text-align: left; padding: 0.5rem 0.75rem;
+    background: transparent; border: none; border-radius: 6px; color: #cbd5e1;
+    cursor: pointer; font-size: 0.82rem; margin-bottom: 2px;
+  }
+  .task-btn:hover { background: #1e293b; }
+  .task-btn.active { background: #1e3a5f; color: #38bdf8; }
+  .task-btn .badge {
+    display: inline-block; font-size: 0.68rem; padding: 1px 6px; border-radius: 9px;
+    background: #334155; color: #94a3b8; margin-left: 4px; vertical-align: middle;
+  }
+  .task-detail { flex: 1; min-width: 0; }
+  .task-detail h2 { font-size: 1rem; color: #f8fafc; margin-bottom: 0.25rem; }
+  .task-meta { font-size: 0.8rem; color: #94a3b8; margin-bottom: 1rem; }
+  .task-meta span { margin-right: 1rem; }
+  .commentary { font-size: 0.82rem; color: #94a3b8; line-height: 1.6;
+                background: #1e293b; padding: 0.75rem 1rem; border-radius: 8px;
+                margin-top: 1rem; white-space: pre-wrap; }
+
+  /* Chart containers */
+  .chart-wrap { background: #1e293b; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
+  .controls { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
+  select {
+    background: #1e293b; color: #e2e8f0; border: 1px solid #334155;
+    padding: 0.4rem 0.75rem; border-radius: 6px; font-size: 0.85rem;
+  }
+  label { font-size: 0.82rem; color: #94a3b8; margin-right: 0.25rem; }
+  /* Model chips (Profile tab) */
+  .model-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-top: 0.25rem; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.3rem 0.75rem; border-radius: 20px; border: 1px solid #475569;
+    background: #1e293b; color: #64748b; cursor: pointer; font-size: 0.82rem;
+    transition: all .15s; user-select: none;
+  }
+  .chip.active { background: #1e3a5f; color: #e2e8f0; }
+  .chip .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .chip-shortcut {
+    padding: 0.25rem 0.6rem; border-radius: 4px; border: 1px solid #334155;
+    background: transparent; color: #64748b; cursor: pointer; font-size: 0.78rem;
+    transition: color .15s;
+  }
+  .chip-shortcut:hover { color: #94a3b8; }
+  .section-title { font-size: 1rem; font-weight: 600; color: #f8fafc; margin-bottom: 1rem; }
+</style>
+</head>
+<body>
+
+<script>
+{{ chartjs_source }}
+</script>
+
+<script>
+const DATA = {{ data_json }};
+</script>
+
+<header>
+  <h1>Structural Engineering AI Model Benchmark</h1>
+  <p>Auto-generated dashboard · {{ rounds|length }} benchmark round(s)</p>
+</header>
+
+<nav>
+  <button class="active" onclick="switchTab('overview', this)">Overview</button>
+  <button onclick="switchTab('profiles', this)">Model Profiles</button>
+  <button onclick="switchTab('tasks', this)">Task Drill-Down</button>
+  <button onclick="switchTab('cost', this)">Cost vs Performance</button>
+</nav>
+
+<!-- ===== TAB 1: OVERVIEW ===== -->
+<div id="tab-overview" class="tab-content active">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="value">{{ kpis.total_rounds }}</div><div class="label">Benchmark Rounds</div></div>
+    <div class="kpi-card"><div class="value">{{ kpis.total_models }}</div><div class="label">Models Tested</div></div>
+    <div class="kpi-card"><div class="value">{{ kpis.total_tasks }}</div><div class="label">Total Tasks</div></div>
+    <div class="kpi-card"><div class="value" style="font-size:1.1rem">{{ kpis.overall_leader }}</div><div class="label">Overall Leader</div></div>
+  </div>
+  <div id="overview-tables"></div>
+</div>
+
+<!-- ===== TAB 2: MODEL PROFILES ===== -->
+<div id="tab-profiles" class="tab-content">
+  <div class="controls">
+    <div><label for="profile-round">Round:</label>
+      <select id="profile-round"></select></div>
+    <div id="model-chips-container"></div>
+  </div>
+  <div class="chart-wrap" style="max-width:720px;">
+    <canvas id="radarChart" height="500"></canvas>
+  </div>
+</div>
+
+<!-- ===== TAB 3: TASK DRILL-DOWN ===== -->
+<div id="tab-tasks" class="tab-content">
+  <div class="drill-layout">
+    <div class="task-list" id="task-list-panel"></div>
+    <div class="task-detail" id="task-detail-panel">
+      <p style="color:#94a3b8">Select a task from the left.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB 4: COST vs PERFORMANCE ===== -->
+<div id="tab-cost" class="tab-content">
+  <div class="controls">
+    <div><label for="cost-round">Round:</label>
+      <select id="cost-round" onchange="renderCost()"></select></div>
+  </div>
+  <div class="chart-wrap" style="max-width:640px;">
+    <canvas id="scatterChart" height="400"></canvas>
+  </div>
+</div>
+
+<script>
+// ── Helpers ────────────────────────────────────────────────────────────────
+
+function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function scoreClass(v) {
+  if (v === null || v === undefined) return '';
+  const n = parseFloat(v);
+  if (isNaN(n)) return '';
+  if (n >= 4.5) return 's5';
+  if (n >= 3.5) return 's4';
+  if (n >= 2.5) return 's3';
+  if (n >= 1.5) return 's2';
+  return 's1';
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'profiles') renderProfiles();
+  if (name === 'cost')     renderCost();
+}
+
+function getRound(id) {
+  return DATA.rounds.find(r => r.round_id === id);
+}
+
+// ── Tab 1: Overview tables ─────────────────────────────────────────────────
+
+function renderOverview() {
+  const container = document.getElementById('overview-tables');
+  container.innerHTML = '';
+
+  DATA.rounds.forEach(round => {
+    const criteria = round.criteria;
+    const models   = round.models;
+    const ranking  = round.ranking;
+    if (!criteria.length) return;
+
+    const h2 = document.createElement('h2');
+    h2.style.cssText = 'font-size:1rem;color:#f8fafc;margin:1.5rem 0 0.75rem';
+    h2.textContent = round.label + ' — Cross-Task Averages';
+    container.appendChild(h2);
+
+    // Sort models by Overall average descending
+    const sorted = [...models].sort((a, b) => {
+      const sa = (ranking[a.model_id] || {})['Overall average'] || 0;
+      const sb = (ranking[b.model_id] || {})['Overall average'] || 0;
+      return sb - sa;
+    });
+
+    const table = document.createElement('table');
+    // Header
+    const thead = table.createTHead();
+    const hr = thead.insertRow();
+    ['Model', ...criteria].forEach(h => {
+      const th = document.createElement('th');
+      th.textContent = h;
+      hr.appendChild(th);
+    });
+
+    // Rows
+    const tbody = table.createTBody();
+    sorted.forEach((model, idx) => {
+      const tr = tbody.insertRow();
+      if (idx === 0) tr.classList.add('winner-row');
+      const tdName = tr.insertCell();
+      tdName.textContent = model.display_name;
+      criteria.forEach(c => {
+        const td = tr.insertCell();
+        const scores = ranking[model.model_id] || {};
+        const v = scores[c];
+        td.className = 'score-cell ' + scoreClass(v);
+        td.textContent = v !== null && v !== undefined ? v.toFixed(2) : '—';
+      });
+    });
+
+    container.appendChild(table);
+  });
+}
+
+// ── Tab 2: Model Profiles (radar) ──────────────────────────────────────────
+
+let radarChart = null;
+let selectedModels = new Set(); // model_ids currently toggled on
+
+function populateProfileSelects() {
+  const roundSel = document.getElementById('profile-round');
+  roundSel.innerHTML = DATA.rounds.map(r =>
+    `<option value="${r.round_id}">${r.label}</option>`
+  ).join('');
+  updateModelChips();
+}
+
+const RADAR_COLORS = [
+  'rgba(56,189,248,0.7)', 'rgba(74,222,128,0.7)', 'rgba(251,191,36,0.7)',
+  'rgba(248,113,113,0.7)', 'rgba(192,132,252,0.7)', 'rgba(251,146,60,0.7)',
+  'rgba(167,243,208,0.7)'
+];
+
+function updateModelChips() {
+  const roundId = document.getElementById('profile-round').value;
+  const round   = getRound(roundId);
+  const container = document.getElementById('model-chips-container');
+  if (!round) { container.innerHTML = ''; return; }
+
+  // Default: all models selected
+  selectedModels = new Set(round.models.map(m => m.model_id));
+
+  let html = '<div class="model-chips">';
+  html += '<button type="button" class="chip-shortcut" onclick="selectAllModels()">All</button>';
+  html += '<button type="button" class="chip-shortcut" onclick="selectNoModels()">None</button>';
+  round.models.forEach((model, idx) => {
+    const color = RADAR_COLORS[idx % RADAR_COLORS.length];
+    html += `<button type="button" class="chip active" data-model-id="${esc(model.model_id)}"
+      onclick="toggleModel(this)" style="border-color:${color}">
+      <span class="dot" style="background:${color}"></span>
+      ${esc(model.display_name)}
+    </button>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function toggleModel(btn) {
+  const modelId = btn.dataset.modelId;
+  if (selectedModels.has(modelId)) {
+    selectedModels.delete(modelId);
+    btn.classList.remove('active');
+  } else {
+    selectedModels.add(modelId);
+    btn.classList.add('active');
+  }
+  renderProfiles();
+}
+
+function selectAllModels() {
+  const roundId = document.getElementById('profile-round').value;
+  const round   = getRound(roundId);
+  if (!round) return;
+  selectedModels = new Set(round.models.map(m => m.model_id));
+  document.querySelectorAll('#model-chips-container .chip').forEach(c => c.classList.add('active'));
+  renderProfiles();
+}
+
+function selectNoModels() {
+  selectedModels.clear();
+  document.querySelectorAll('#model-chips-container .chip').forEach(c => c.classList.remove('active'));
+  renderProfiles();
+}
+
+document.getElementById('profile-round').addEventListener('change', () => {
+  updateModelChips();
+  renderProfiles();
+});
+
+function renderProfiles() {
+  const roundId = document.getElementById('profile-round').value;
+  const round   = getRound(roundId);
+  if (!round) return;
+
+  // Criteria: exclude 'Overall average'
+  const criteria = round.criteria.filter(c => c !== 'Overall average');
+
+  let datasets = [];
+  round.models.forEach((model, idx) => {
+    if (!selectedModels.has(model.model_id)) return;
+    const scores = round.ranking[model.model_id] || {};
+    datasets.push({
+      label: model.display_name,
+      data:  criteria.map(c => scores[c] ?? 0),
+      backgroundColor: RADAR_COLORS[idx % RADAR_COLORS.length].replace('0.7', '0.15'),
+      borderColor:     RADAR_COLORS[idx % RADAR_COLORS.length],
+      pointBackgroundColor: RADAR_COLORS[idx % RADAR_COLORS.length],
+      borderWidth: 2,
+    });
+  });
+
+  if (radarChart) radarChart.destroy();
+  radarChart = new Chart(document.getElementById('radarChart'), {
+    type: 'radar',
+    data: { labels: criteria, datasets },
+    options: {
+      responsive: true,
+      scales: {
+        r: {
+          min: 0, max: 5, ticks: { stepSize: 1, color: '#64748b', backdropColor: 'transparent' },
+          grid: { color: '#334155' },
+          pointLabels: { color: '#94a3b8', font: { size: 11 } },
+          angleLines: { color: '#334155' },
+        }
+      },
+      plugins: { legend: { labels: { color: '#e2e8f0', font: { size: 11 } } } }
+    }
+  });
+}
+
+// ── Tab 3: Task Drill-Down ─────────────────────────────────────────────────
+
+function renderTaskList() {
+  const panel = document.getElementById('task-list-panel');
+  panel.innerHTML = '';
+
+  DATA.rounds.forEach(round => {
+    const h3 = document.createElement('h3');
+    h3.textContent = round.label;
+    panel.appendChild(h3);
+
+    round.tasks.forEach(task => {
+      const btn = document.createElement('button');
+      btn.className = 'task-btn';
+      btn.dataset.roundId = round.round_id;
+      btn.dataset.taskId  = task.task_id;
+      btn.textContent = task.task_title;
+      if (task.depth) {
+        const badge = document.createElement('span');
+        badge.className = 'badge';
+        badge.textContent = task.depth;
+        btn.appendChild(badge);
+      }
+      btn.onclick = () => {
+        document.querySelectorAll('.task-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        showTaskDetail(round, task);
+      };
+      panel.appendChild(btn);
+    });
+  });
+}
+
+function showTaskDetail(round, task) {
+  const panel = document.getElementById('task-detail-panel');
+  const criteria = task.criteria || [];
+  const models   = round.models;
+
+  // Sort models: winner first, then by avg score
+  const sorted = [...models].sort((a, b) => {
+    if (a.model_id === task.winner) return -1;
+    if (b.model_id === task.winner) return  1;
+    const sa = criteria.reduce((s, c) => s + (task.scores[a.model_id]?.[c] || 0), 0);
+    const sb = criteria.reduce((s, c) => s + (task.scores[b.model_id]?.[c] || 0), 0);
+    return sb - sa;
+  });
+
+  let html = `
+    <h2>${esc(task.task_title)}</h2>
+    <div class="task-meta">
+      <span>Round: <b>${esc(round.label)}</b></span>
+      <span>Winner: <b style="color:#4ade80">${esc(task.winner) || '—'}</b></span>
+      ${task.difference_size ? `<span>Difference: <b>${esc(task.difference_size)}</b></span>` : ''}
+    </div>
+    <table>
+      <thead><tr>
+        <th>Model</th>
+        ${criteria.map(c => `<th>${esc(c)}</th>`).join('')}
+      </tr></thead>
+      <tbody>
+        ${sorted.map(model => {
+          const sc = task.scores[model.model_id] || {};
+          const isWinner = model.model_id === task.winner;
+          return `<tr${isWinner ? ' class="winner-row"' : ''}>
+            <td>${esc(model.display_name)}${isWinner ? ' <span style="color:#4ade80;font-size:.75rem">★</span>' : ''}</td>
+            ${criteria.map(c => {
+              const v = sc[c];
+              return `<td class="score-cell ${scoreClass(v)}">${v !== null && v !== undefined ? v : '—'}</td>`;
+            }).join('')}
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+    ${task.commentary ? `<div class="commentary">${esc(task.commentary)}</div>` : ''}
+  `;
+  panel.innerHTML = html;
+}
+
+// ── Tab 4: Cost vs Performance ─────────────────────────────────────────────
+
+let scatterChart = null;
+
+function populateCostSelect() {
+  const sel = document.getElementById('cost-round');
+  sel.innerHTML = DATA.rounds.map(r =>
+    `<option value="${r.round_id}">${r.label}</option>`
+  ).join('');
+}
+
+function renderCost() {
+  const roundId = document.getElementById('cost-round').value;
+  const round   = getRound(roundId);
+  if (!round) return;
+
+  const points = round.models.map(model => {
+    const scores = round.ranking[model.model_id] || {};
+    return {
+      x:     model.cost_tier,
+      y:     scores['Overall average'] ?? null,
+      label: model.display_name,
+      tier:  model.cost_label,
+    };
+  }).filter(p => p.y !== null);
+
+  // Group by cost tier for colour
+  const tierColors = { 1: 'rgba(74,222,128,0.8)', 2: 'rgba(251,191,36,0.8)', 3: 'rgba(248,113,113,0.8)' };
+
+  const dataset = {
+    label: round.label + ' models',
+    data: points.map(p => {
+      // Stable jitter from label hash so points don't jump on redraw
+      let h = 0; for (const c of p.label) h = (h * 31 + c.charCodeAt(0)) & 0xffff;
+      const jitter = ((h % 100) / 100 - 0.5) * 0.15;
+      return { x: p.x + jitter, y: p.y, meta: p };
+    }),
+    backgroundColor: points.map(p => tierColors[p.x] || '#94a3b8'),
+    pointRadius: 10,
+    pointHoverRadius: 13,
+  };
+
+  if (scatterChart) scatterChart.destroy();
+  scatterChart = new Chart(document.getElementById('scatterChart'), {
+    type: 'scatter',
+    data: { datasets: [dataset] },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          min: 0.5, max: 3.5,
+          ticks: {
+            callback: v => ({ 1: 'Free/Cloud', 2: 'Paid API', 3: 'Premium' }[v] || ''),
+            color: '#94a3b8',
+          },
+          grid: { color: '#1e293b' },
+          title: { display: true, text: 'Cost Tier', color: '#94a3b8' },
+        },
+        y: {
+          min: 1, max: 5,
+          ticks: { color: '#94a3b8' },
+          grid: { color: '#1e293b' },
+          title: { display: true, text: 'Overall Average Score', color: '#94a3b8' },
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const p = ctx.raw.meta;
+              return `${p.label} (${p.tier}): ${p.y.toFixed(2)}`;
+            }
+          }
+        }
+      }
+    },
+    plugins: [{
+      // Draw model labels next to each point
+      afterDraw(chart) {
+        const ctx = chart.ctx;
+        ctx.save();
+        ctx.font = '11px sans-serif';
+        ctx.fillStyle = '#e2e8f0';
+        ctx.textAlign = 'left';
+        chart.data.datasets[0].data.forEach((pt, i) => {
+          const meta = chart.getDatasetMeta(0).data[i];
+          if (!meta) return;
+          ctx.fillText(pt.meta.label, meta.x + 14, meta.y + 4);
+        });
+        ctx.restore();
+      }
+    }]
+  });
+}
+
+// ── Boot ───────────────────────────────────────────────────────────────────
+
+renderOverview();
+populateProfileSelects();
+renderTaskList();
+populateCostSelect();
+</script>
+</body>
+</html>
