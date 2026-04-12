@@ -81,6 +81,22 @@
     padding: 0.4rem 0.75rem; border-radius: 6px; font-size: 0.85rem;
   }
   label { font-size: 0.82rem; color: #94a3b8; margin-right: 0.25rem; }
+  /* Model chips (Profile tab) */
+  .model-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-top: 0.25rem; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.3rem 0.75rem; border-radius: 20px; border: 1px solid #475569;
+    background: #1e293b; color: #64748b; cursor: pointer; font-size: 0.82rem;
+    transition: all .15s; user-select: none;
+  }
+  .chip.active { background: #1e3a5f; color: #e2e8f0; }
+  .chip .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .chip-shortcut {
+    padding: 0.25rem 0.6rem; border-radius: 4px; border: 1px solid #334155;
+    background: transparent; color: #64748b; cursor: pointer; font-size: 0.78rem;
+    transition: color .15s;
+  }
+  .chip-shortcut:hover { color: #94a3b8; }
   .section-title { font-size: 1rem; font-weight: 600; color: #f8fafc; margin-bottom: 1rem; }
 </style>
 </head>
@@ -122,8 +138,7 @@ const DATA = {{ data_json }};
   <div class="controls">
     <div><label for="profile-round">Round:</label>
       <select id="profile-round"></select></div>
-    <div><label for="profile-model">Model:</label>
-      <select id="profile-model"></select></div>
+    <div id="model-chips-container"></div>
   </div>
   <div class="chart-wrap" style="max-width:720px;">
     <canvas id="radarChart" height="500"></canvas>
@@ -239,32 +254,70 @@ function renderOverview() {
 // ── Tab 2: Model Profiles (radar) ──────────────────────────────────────────
 
 let radarChart = null;
+let selectedModels = new Set(); // model_ids currently toggled on
 
 function populateProfileSelects() {
   const roundSel = document.getElementById('profile-round');
-  const modelSel = document.getElementById('profile-model');
   roundSel.innerHTML = DATA.rounds.map(r =>
     `<option value="${r.round_id}">${r.label}</option>`
   ).join('');
-  updateProfileModelSelect();
+  updateModelChips();
 }
 
-function updateProfileModelSelect() {
+function updateModelChips() {
   const roundId = document.getElementById('profile-round').value;
   const round   = getRound(roundId);
-  const sel     = document.getElementById('profile-model');
-  const allOpt  = '<option value="__all__">All models</option>';
-  sel.innerHTML = allOpt + (round ? round.models.map(m =>
-    `<option value="${m.model_id}">${m.display_name}</option>`
-  ).join('') : '');
+  const container = document.getElementById('model-chips-container');
+  if (!round) { container.innerHTML = ''; return; }
+
+  // Default: all models selected
+  selectedModels = new Set(round.models.map(m => m.model_id));
+
+  let html = '<div class="model-chips">';
+  html += '<button class="chip-shortcut" onclick="selectAllModels()">All</button>';
+  html += '<button class="chip-shortcut" onclick="selectNoModels()">None</button>';
+  round.models.forEach((model, idx) => {
+    const color = RADAR_COLORS[idx % RADAR_COLORS.length];
+    html += `<button class="chip active" data-model-id="${esc(model.model_id)}"
+      onclick="toggleModel(this, '${esc(model.model_id)}')" style="border-color:${color}">
+      <span class="dot" style="background:${color}"></span>
+      ${esc(model.display_name)}
+    </button>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function toggleModel(btn, modelId) {
+  if (selectedModels.has(modelId)) {
+    selectedModels.delete(modelId);
+    btn.classList.remove('active');
+  } else {
+    selectedModels.add(modelId);
+    btn.classList.add('active');
+  }
+  renderProfiles();
+}
+
+function selectAllModels() {
+  const roundId = document.getElementById('profile-round').value;
+  const round   = getRound(roundId);
+  if (!round) return;
+  selectedModels = new Set(round.models.map(m => m.model_id));
+  document.querySelectorAll('#model-chips-container .chip').forEach(c => c.classList.add('active'));
+  renderProfiles();
+}
+
+function selectNoModels() {
+  selectedModels.clear();
+  document.querySelectorAll('#model-chips-container .chip').forEach(c => c.classList.remove('active'));
+  renderProfiles();
 }
 
 document.getElementById('profile-round').addEventListener('change', () => {
-  updateProfileModelSelect();
+  updateModelChips();
   renderProfiles();
 });
-
-document.getElementById('profile-model').addEventListener('change', renderProfiles);
 
 const RADAR_COLORS = [
   'rgba(56,189,248,0.7)', 'rgba(74,222,128,0.7)', 'rgba(251,191,36,0.7)',
@@ -273,18 +326,16 @@ const RADAR_COLORS = [
 ];
 
 function renderProfiles() {
-  const roundId  = document.getElementById('profile-round').value;
-  const modelSel = document.getElementById('profile-model').value;
-  const round    = getRound(roundId);
+  const roundId = document.getElementById('profile-round').value;
+  const round   = getRound(roundId);
   if (!round) return;
 
   // Criteria: exclude 'Overall average'
   const criteria = round.criteria.filter(c => c !== 'Overall average');
 
   let datasets = [];
-  const models = modelSel === '__all__' ? round.models : round.models.filter(m => m.model_id === modelSel);
-
-  models.forEach((model, idx) => {
+  round.models.forEach((model, idx) => {
+    if (!selectedModels.has(model.model_id)) return;
     const scores = round.ranking[model.model_id] || {};
     datasets.push({
       label: model.display_name,
