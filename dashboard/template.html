@@ -40,7 +40,7 @@
   tr:hover td:first-child { border-left: 3px solid #38bdf8; padding-left: calc(0.75rem - 3px); }
   .score-cell { text-align: right; font-weight: 600; border-radius: 4px; }
   .winner-row td { background: #0f2a1a88; }
-  .winner-row:hover td:first-child { border-left-color: #4ade80; }
+  tr.winner-row:hover td:first-child { border-left: 3px solid #4ade80; padding-left: calc(0.75rem - 3px); }
 
   /* Score colour scale (1–5) */
   .s5 { background: #16a34a33; color: #4ade80; }
@@ -264,6 +264,12 @@ function populateProfileSelects() {
   updateModelChips();
 }
 
+const RADAR_COLORS = [
+  'rgba(56,189,248,0.7)', 'rgba(74,222,128,0.7)', 'rgba(251,191,36,0.7)',
+  'rgba(248,113,113,0.7)', 'rgba(192,132,252,0.7)', 'rgba(251,146,60,0.7)',
+  'rgba(167,243,208,0.7)'
+];
+
 function updateModelChips() {
   const roundId = document.getElementById('profile-round').value;
   const round   = getRound(roundId);
@@ -274,11 +280,11 @@ function updateModelChips() {
   selectedModels = new Set(round.models.map(m => m.model_id));
 
   let html = '<div class="model-chips">';
-  html += '<button class="chip-shortcut" onclick="selectAllModels()">All</button>';
-  html += '<button class="chip-shortcut" onclick="selectNoModels()">None</button>';
+  html += '<button type="button" class="chip-shortcut" onclick="selectAllModels()">All</button>';
+  html += '<button type="button" class="chip-shortcut" onclick="selectNoModels()">None</button>';
   round.models.forEach((model, idx) => {
     const color = RADAR_COLORS[idx % RADAR_COLORS.length];
-    html += `<button class="chip active" data-model-id="${esc(model.model_id)}"
+    html += `<button type="button" class="chip active" data-model-id="${esc(model.model_id)}"
       onclick="toggleModel(this)" style="border-color:${color}">
       <span class="dot" style="background:${color}"></span>
       ${esc(model.display_name)}
@@ -319,12 +325,6 @@ document.getElementById('profile-round').addEventListener('change', () => {
   updateModelChips();
   renderProfiles();
 });
-
-const RADAR_COLORS = [
-  'rgba(56,189,248,0.7)', 'rgba(74,222,128,0.7)', 'rgba(251,191,36,0.7)',
-  'rgba(248,113,113,0.7)', 'rgba(192,132,252,0.7)', 'rgba(251,146,60,0.7)',
-  'rgba(167,243,208,0.7)'
-];
 
 function renderProfiles() {
   const roundId = document.getElementById('profile-round').value;
