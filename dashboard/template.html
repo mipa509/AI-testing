@@ -279,7 +279,7 @@ function updateModelChips() {
   round.models.forEach((model, idx) => {
     const color = RADAR_COLORS[idx % RADAR_COLORS.length];
     html += `<button class="chip active" data-model-id="${esc(model.model_id)}"
-      onclick="toggleModel(this, '${esc(model.model_id)}')" style="border-color:${color}">
+      onclick="toggleModel(this)" style="border-color:${color}">
       <span class="dot" style="background:${color}"></span>
       ${esc(model.display_name)}
     </button>`;
@@ -288,7 +288,8 @@ function updateModelChips() {
   container.innerHTML = html;
 }
 
-function toggleModel(btn, modelId) {
+function toggleModel(btn) {
+  const modelId = btn.dataset.modelId;
   if (selectedModels.has(modelId)) {
     selectedModels.delete(modelId);
     btn.classList.remove('active');
