@@ -97,6 +97,28 @@
     transition: color .15s;
   }
   .chip-shortcut:hover { color: #94a3b8; }
+
+  /* Cost vs performance tab */
+  .chart-title { font-size: 0.95rem; font-weight: 600; color: #f8fafc; }
+  .chart-sub   { font-size: 0.8rem; color: #94a3b8; margin: 0.2rem 0 0.75rem; line-height: 1.5; }
+  .chart-box   { position: relative; height: 440px; }
+  .chart-note  { font-size: 0.75rem; color: #94a3b8; margin-top: 0.6rem; line-height: 1.5; }
+  .chart-empty { font-size: 0.85rem; color: #94a3b8; padding: 2rem 0; text-align: center; }
+  .seg { display: inline-flex; border: 1px solid #334155; border-radius: 6px; overflow: hidden; vertical-align: middle; }
+  .seg-btn {
+    background: transparent; color: #94a3b8; border: none; padding: 0.35rem 0.75rem;
+    font-size: 0.82rem; cursor: pointer; transition: color .15s, background .15s;
+  }
+  .seg-btn + .seg-btn { border-left: 1px solid #334155; }
+  .seg-btn:hover:not(.active) { color: #cbd5e1; background: #1e293b88; }
+  .seg-btn.active { background: #1e3a5f; color: #e2e8f0; }
+  .table-view { margin-top: 0.75rem; }
+  .table-view summary { font-size: 0.78rem; color: #94a3b8; cursor: pointer; user-select: none; }
+  .table-view table { margin-top: 0.5rem; font-size: 0.8rem; }
+  .table-view td, .table-view th { font-variant-numeric: tabular-nums; }
+  .table-view .num { text-align: right; }
+  .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+  .swatch.hollow { background: transparent !important; border: 2px solid currentColor; box-sizing: border-box; }
   .section-title { font-size: 1rem; font-weight: 600; color: #f8fafc; margin-bottom: 1rem; }
 </style>
 </head>
@@ -160,9 +182,28 @@ const DATA = {{ data_json }};
   <div class="controls">
     <div><label for="cost-round">Round:</label>
       <select id="cost-round" onchange="renderCost()"></select></div>
+    <div><label id="usage-measure-label">Usage chart shows:</label>
+      <span class="seg" role="group" aria-labelledby="usage-measure-label">
+        <button type="button" class="seg-btn active" data-measure="tokens" onclick="setUsageMeasure('tokens', this)">Tokens</button>
+        <button type="button" class="seg-btn" data-measure="cost" onclick="setUsageMeasure('cost', this)">Est. cost</button>
+      </span></div>
   </div>
-  <div class="chart-wrap" style="max-width:640px;">
-    <canvas id="scatterChart" height="400"></canvas>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Score vs list price</div>
+    <div class="chart-sub" id="price-chart-sub"></div>
+    <div class="chart-box"><canvas id="priceChart" role="img" aria-label="Scatter chart of overall score against blended list price per million tokens"></canvas></div>
+    <div class="chart-note" id="price-chart-note"></div>
+    <details class="table-view"><summary>Table view</summary><div id="price-table"></div></details>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Measured usage per task</div>
+    <div class="chart-sub" id="usage-chart-sub"></div>
+    <div class="chart-box"><canvas id="usageChart" role="img" aria-label="Grouped bar chart of tokens or estimated cost per task for models with recorded usage"></canvas></div>
+    <div class="chart-empty" id="usage-chart-empty" hidden></div>
+    <div class="chart-note" id="usage-chart-note"></div>
+    <details class="table-view"><summary>Table view</summary><div id="usage-table"></div></details>
   </div>
 </div>
 
@@ -447,7 +488,17 @@ function showTaskDetail(round, task) {
 
 // ── Tab 4: Cost vs Performance ─────────────────────────────────────────────
 
-let scatterChart = null;
+// ── Tab 4: Cost vs performance ─────────────────────────────────────────────
+// Colours: three categorical slots from the dataviz reference palette (dark steps),
+// validated all-pairs against this dashboard's surfaces (#0f172a page, #1e293b card).
+const TIER_COLOR  = { 1: '#199e70', 2: '#3987e5', 3: '#d95926' };   // Free/Cloud, Paid API, Premium
+const SERIES_SLOT = ['#3987e5', '#d95926', '#199e70'];               // fallback order for same-tier series
+const INK = { primary: '#f8fafc', secondary: '#cbd5e1', muted: '#94a3b8', grid: '#334155', surface: '#1e293b' };
+const CHART_FONT = { family: 'system-ui, -apple-system, "Segoe UI", sans-serif', size: 12 };
+
+let priceChart = null;
+let usageChart = null;
+let usageMeasure = 'tokens';
 
 function populateCostSelect() {
   const sel = document.getElementById('cost-round');
@@ -456,89 +507,450 @@ function populateCostSelect() {
   ).join('');
 }
 
+function fmtUsd(v, digits) {
+  if (v === null || v === undefined || isNaN(v)) return '–';
+  if (digits !== undefined) return '$' + v.toFixed(digits);
+  if (v >= 10)  return '$' + v.toFixed(0);
+  if (v >= 1)   return '$' + v.toFixed(2);
+  return '$' + v.toFixed(v >= 0.1 ? 2 : 3);
+}
+
+function logTickLabel(v) {
+  // Label only the 1 / 2 / 5 steps of each decade so the log axis stays legible.
+  if (v <= 0) return '';
+  const mant = v / Math.pow(10, Math.floor(Math.log10(v) + 1e-9));
+  const r = Math.round(mant * 100) / 100;
+  if (r === 1 || r === 2 || r === 5) return fmtUsd(v);
+  return '';
+}
+
+function el(tag, text, cls) {
+  const n = document.createElement(tag);
+  if (text !== undefined && text !== null) n.textContent = text;   // labels are untrusted data
+  if (cls) n.className = cls;
+  return n;
+}
+
+function runFree(model) {
+  return model.cost_tier === 1;   // free Ollama cloud route: the user's run cost was zero
+}
+
+// Text with a thin surface-coloured halo so labels stay legible across gridlines and the frontier.
+function haloText(ctx, text, x, y) {
+  ctx.save();
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = INK.surface;
+  ctx.strokeText(text, x, y);
+  ctx.restore();
+  ctx.fillText(text, x, y);
+}
+
+// Pareto frontier: models that no cheaper (or equal-price) model beats on score.
+function paretoFrontier(points) {
+  const sorted = points.slice().sort((a, b) => a.x - b.x || b.y - a.y);
+  const out = [];
+  let best = -Infinity;
+  for (const p of sorted) {
+    if (p.y > best) { out.push(p); best = p.y; }
+  }
+  return out;
+}
+
+// Direct labels for the scatter, with simple collision avoidance:
+// try right of the point, then left, then nudge upward.
+const pointLabelPlugin = {
+  id: 'pointLabels',
+  afterDatasetsDraw(chart) {
+    if (!chart.$labelDatasets) return;
+    const ctx = chart.ctx;
+    const area = chart.chartArea;
+    ctx.save();
+    ctx.font = `11px ${CHART_FONT.family}`;
+    ctx.fillStyle = INK.secondary;
+    ctx.textBaseline = 'middle';
+    const placed = [];
+    const items = [];
+    chart.$labelDatasets.forEach(di => {
+      const meta = chart.getDatasetMeta(di);
+      if (meta.hidden) return;
+      meta.data.forEach((elm, i) => {
+        const raw = chart.data.datasets[di].data[i];
+        items.push({ x: elm.x, y: elm.y, text: raw.meta.label });
+      });
+    });
+    items.sort((a, b) => a.y - b.y);
+    // markers are obstacles too: a label must not sit on another model's point
+    items.forEach(it => placed.push({ x1: it.x - 10, x2: it.x + 10, y1: it.y - 10, y2: it.y + 10 }));
+    const overlaps = (b) => placed.some(p => !(b.x2 < p.x1 || b.x1 > p.x2 || b.y2 < p.y1 || b.y1 > p.y2));
+    for (const it of items) {
+      const w = ctx.measureText(it.text).width, h = 13;
+      const candidates = [
+        { x: it.x + 12, y: it.y, align: 'left' },
+        { x: it.x - 12, y: it.y, align: 'right' },
+        { x: it.x + 12, y: it.y - 14, align: 'left' },
+        { x: it.x - 12, y: it.y - 14, align: 'right' },
+        { x: it.x + 12, y: it.y + 14, align: 'left' },
+        { x: it.x - 12, y: it.y + 14, align: 'right' },
+      ];
+      let pick = candidates[0];
+      for (const c of candidates) {
+        const x1 = c.align === 'left' ? c.x : c.x - w;
+        const box = { x1, x2: x1 + w, y1: c.y - h / 2, y2: c.y + h / 2 };
+        if (box.x1 < area.left || box.x2 > area.right) continue;
+        if (!overlaps(box)) { pick = c; placed.push(box); break; }
+      }
+      ctx.textAlign = pick.align;
+      haloText(ctx, it.text, pick.x, pick.y);
+    }
+    ctx.restore();
+  }
+};
+
+// Value on the cap of the "Total" bars only (selective direct labels).
+const totalCapLabelPlugin = {
+  id: 'totalCapLabels',
+  afterDatasetsDraw(chart) {
+    const fmt = chart.$capFormat;
+    const totalIndex = chart.$totalIndex;
+    if (!fmt || totalIndex === undefined) return;
+    const ctx = chart.ctx;
+    ctx.save();
+    ctx.font = `11px ${CHART_FONT.family}`;
+    ctx.fillStyle = INK.secondary;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    chart.data.datasets.forEach((ds, di) => {
+      const meta = chart.getDatasetMeta(di);
+      if (meta.hidden) return;
+      const bar = meta.data[totalIndex];
+      const v = ds.data[totalIndex];
+      if (!bar || v === null || v === undefined) return;
+      haloText(ctx, fmt(v), bar.x, bar.y - 4);
+    });
+    ctx.restore();
+  }
+};
+
 function renderCost() {
   const roundId = document.getElementById('cost-round').value;
   const round   = getRound(roundId);
   if (!round) return;
+  renderPriceChart(round);
+  renderUsageChart(round);
+}
 
+// ── Chart 1: score vs list price ───────────────────────────────────────────
+
+function renderPriceChart(round) {
   const points = round.models.map(model => {
     const scores = round.ranking[model.model_id] || {};
     return {
-      x:     model.cost_tier,
-      y:     scores['Overall average'] ?? null,
-      label: model.display_name,
-      tier:  model.cost_label,
+      x: model.blended_price_usd_per_1m,
+      y: scores['Overall average'] ?? null,
+      meta: { label: model.display_name, model },
     };
-  }).filter(p => p.y !== null);
+  }).filter(p => p.x !== null && p.x !== undefined && p.x > 0 && p.y !== null);
 
-  // Group by cost tier for colour
-  const tierColors = { 1: 'rgba(74,222,128,0.8)', 2: 'rgba(251,191,36,0.8)', 3: 'rgba(248,113,113,0.8)' };
+  const unpriced = round.models.filter(m => m.blended_price_usd_per_1m === null || m.blended_price_usd_per_1m === undefined);
+  const asOf = (round.models.find(m => m.pricing && m.pricing.as_of) || {}).pricing?.as_of || 'n/a';
 
-  const dataset = {
-    label: round.label + ' models',
-    data: points.map(p => {
-      // Stable jitter from label hash so points don't jump on redraw
-      let h = 0; for (const c of p.label) h = (h * 31 + c.charCodeAt(0)) & 0xffff;
-      const jitter = ((h % 100) / 100 - 0.5) * 0.15;
-      return { x: p.x + jitter, y: p.y, meta: p };
-    }),
-    backgroundColor: points.map(p => tierColors[p.x] || '#94a3b8'),
-    pointRadius: 10,
-    pointHoverRadius: 13,
-  };
+  const tiers = [
+    { tier: 1, label: 'Free/Cloud' },
+    { tier: 2, label: 'Paid API' },
+    { tier: 3, label: 'Premium' },
+  ];
+  const datasets = tiers.map(t => {
+    const pts = points.filter(p => p.meta.model.cost_tier === t.tier);
+    return {
+      label: t.label,
+      data: pts,
+      showLine: false,
+      pointRadius: 7,
+      pointHoverRadius: 9,
+      pointHitRadius: 14,
+      pointBackgroundColor: pts.map(p => runFree(p.meta.model) ? INK.surface : TIER_COLOR[t.tier]),
+      pointBorderColor: pts.map(p => runFree(p.meta.model) ? TIER_COLOR[t.tier] : INK.surface),
+      pointBorderWidth: pts.map(p => runFree(p.meta.model) ? 2.5 : 2),   // hollow = run at no cost; filled = 2px surface ring
+      backgroundColor: TIER_COLOR[t.tier],
+      borderColor: TIER_COLOR[t.tier],
+      order: 1,
+    };
+  }).filter(ds => ds.data.length);
+  const labelDatasets = datasets.map((_, i) => i);
 
-  if (scatterChart) scatterChart.destroy();
-  scatterChart = new Chart(document.getElementById('scatterChart'), {
+  const xs = points.map(p => p.x);
+  const xMin = Math.pow(10, Math.floor(Math.log10(Math.min(...xs))));
+  const xMax = Math.pow(10, Math.ceil(Math.log10(Math.max(...xs))));
+
+  // Frontier as a staircase boundary: each step holds the best score reachable at that
+  // price until the next frontier model, and the last step runs to the right edge.
+  const frontier = paretoFrontier(points);
+  if (frontier.length >= 1) {
+    const last = frontier[frontier.length - 1];
+    datasets.push({
+      label: 'Best-value frontier',
+      data: [...frontier.map(p => ({ x: p.x, y: p.y, meta: p.meta })), { x: xMax, y: last.y, meta: last.meta }],
+      showLine: true,
+      stepped: 'after',
+      borderColor: 'rgba(203,213,225,0.55)',
+      borderWidth: 2,
+      pointRadius: 0,
+      pointHitRadius: 0,
+      pointHoverRadius: 0,
+      pointStyle: 'line',
+      fill: false,
+      order: 2,
+    });
+  }
+
+  document.getElementById('price-chart-sub').textContent =
+    'Overall average score (all criteria) against blended list price per 1M tokens, 3 parts input to 1 part output, log scale. '
+    + 'Hollow markers: run at no cost via the Ollama cloud route; the price shown is the API list price. '
+    + 'The frontier joins models that no cheaper model beats.';
+  document.getElementById('price-chart-note').textContent =
+    `List prices as of ${asOf}, from the sources recorded in models/fixed_model_slate.json. They are estimates, not billed amounts.`
+    + (unpriced.length ? ` Not plotted (no list price): ${unpriced.map(m => m.display_name).join(', ')}.` : '');
+
+  if (priceChart) priceChart.destroy();
+  priceChart = new Chart(document.getElementById('priceChart'), {
     type: 'scatter',
-    data: { datasets: [dataset] },
+    data: { datasets },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'nearest', intersect: false },
+      layout: { padding: { right: 24, top: 8 } },
       scales: {
         x: {
-          min: 0.5, max: 3.5,
-          ticks: {
-            callback: v => ({ 1: 'Free/Cloud', 2: 'Paid API', 3: 'Premium' }[v] || ''),
-            color: '#94a3b8',
-          },
-          grid: { color: '#1e293b' },
-          title: { display: true, text: 'Cost Tier', color: '#94a3b8' },
+          type: 'logarithmic',
+          min: xMin, max: xMax,
+          ticks: { color: INK.muted, font: CHART_FONT, callback: logTickLabel, maxRotation: 0, autoSkip: false },
+          grid: { color: INK.grid, lineWidth: 1 },
+          border: { color: INK.grid },
+          title: { display: true, text: 'Blended list price, USD per 1M tokens (log scale)', color: INK.muted, font: CHART_FONT },
         },
         y: {
           min: 1, max: 5,
-          ticks: { color: '#94a3b8' },
-          grid: { color: '#1e293b' },
-          title: { display: true, text: 'Overall Average Score', color: '#94a3b8' },
-        }
+          ticks: { color: INK.muted, font: CHART_FONT, stepSize: 0.5 },
+          grid: { color: INK.grid, lineWidth: 1 },
+          border: { color: INK.grid },
+          title: { display: true, text: 'Overall average score (1 to 5)', color: INK.muted, font: CHART_FONT },
+        },
       },
       plugins: {
-        legend: { display: false },
+        legend: {
+          display: true,
+          position: 'top',
+          align: 'end',
+          labels: { color: INK.secondary, usePointStyle: true, pointStyle: 'circle', boxWidth: 8, font: CHART_FONT },
+        },
         tooltip: {
+          displayColors: false,
+          backgroundColor: '#0f172a',
+          titleColor: INK.primary,
+          bodyColor: INK.secondary,
+          borderColor: INK.grid,
+          borderWidth: 1,
+          filter: item => item.dataset.label !== 'Best-value frontier',
           callbacks: {
+            title: items => items.length ? items[0].raw.meta.label : '',
             label: ctx => {
-              const p = ctx.raw.meta;
-              return `${p.label} (${p.tier}): ${p.y.toFixed(2)}`;
-            }
-          }
-        }
-      }
+              const m = ctx.raw.meta.model;
+              const pr = m.pricing || {};
+              const lines = [
+                `Score ${ctx.raw.y.toFixed(2)}`,
+                `Blended ${fmtUsd(ctx.raw.x)} per 1M  (in ${fmtUsd(pr.input_usd_per_1m)}, out ${fmtUsd(pr.output_usd_per_1m)})`,
+                `Tier: ${m.cost_label}`,
+              ];
+              if (runFree(m)) lines.push('Run at no cost via Ollama cloud');
+              return lines;
+            },
+          },
+        },
+      },
     },
-    plugins: [{
-      // Draw model labels next to each point
-      afterDraw(chart) {
-        const ctx = chart.ctx;
-        ctx.save();
-        ctx.font = '11px sans-serif';
-        ctx.fillStyle = '#e2e8f0';
-        ctx.textAlign = 'left';
-        chart.data.datasets[0].data.forEach((pt, i) => {
-          const meta = chart.getDatasetMeta(0).data[i];
-          if (!meta) return;
-          ctx.fillText(pt.meta.label, meta.x + 14, meta.y + 4);
-        });
-        ctx.restore();
-      }
-    }]
+    plugins: [pointLabelPlugin],
   });
+  priceChart.$labelDatasets = labelDatasets;
+
+  // Table view twin
+  const wrap = document.getElementById('price-table');
+  wrap.innerHTML = '';
+  const table = el('table');
+  const thead = el('thead'), trh = el('tr');
+  ['Model', 'Tier', 'Input $/1M', 'Output $/1M', 'Blended $/1M', 'Overall score', 'Run route'].forEach((h, i) => trh.appendChild(el('th', h, i >= 2 && i <= 5 ? 'num' : '')));
+  thead.appendChild(trh); table.appendChild(thead);
+  const tbody = el('tbody');
+  points.slice().sort((a, b) => b.y - a.y).forEach(p => {
+    const m = p.meta.model, pr = m.pricing || {};
+    const tr = el('tr');
+    const nameTd = el('td');
+    const sw = el('span', '', 'swatch' + (runFree(m) ? ' hollow' : ''));
+    sw.style.background = TIER_COLOR[m.cost_tier]; sw.style.color = TIER_COLOR[m.cost_tier];
+    nameTd.appendChild(sw); nameTd.appendChild(document.createTextNode(m.display_name));
+    tr.appendChild(nameTd);
+    tr.appendChild(el('td', m.cost_label));
+    tr.appendChild(el('td', fmtUsd(pr.input_usd_per_1m, 2), 'num'));
+    tr.appendChild(el('td', fmtUsd(pr.output_usd_per_1m, 2), 'num'));
+    tr.appendChild(el('td', fmtUsd(p.x, 2), 'num'));
+    tr.appendChild(el('td', p.y.toFixed(2), 'num'));
+    tr.appendChild(el('td', runFree(m) ? 'Free (Ollama cloud)' : (m.cost_tier === 3 ? 'Premium (subscription/API)' : 'Paid API')));
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  wrap.appendChild(table);
+}
+
+// ── Chart 2: measured usage per task ───────────────────────────────────────
+
+function setUsageMeasure(measure, btn) {
+  usageMeasure = measure;
+  document.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b === btn));
+  const round = getRound(document.getElementById('cost-round').value);
+  if (round) renderUsageChart(round);
+}
+
+function renderUsageChart(round) {
+  const usage = round.usage || {};
+  const canvas = document.getElementById('usageChart');
+  const empty  = document.getElementById('usage-chart-empty');
+  const modelIds = round.models.map(m => m.model_id).filter(id => Object.values(usage).some(t => t[id]));
+  const byId = Object.fromEntries(round.models.map(m => [m.model_id, m]));
+
+  // Task order: manifest order if present, otherwise scorecard order; then a Total group.
+  const manifestIds = (round.task_manifest || []).map(t => t.task_id);
+  const taskIds = (manifestIds.length ? manifestIds : round.tasks.map(t => t.task_id)).filter(id => usage[id]);
+  const titles = Object.fromEntries([
+    ...(round.task_manifest || []).map(t => [t.task_id, t.title]),
+    ...round.tasks.map(t => [t.task_id, t.task_title]),
+  ]);
+
+  const recorded = modelIds.length;
+  document.getElementById('usage-chart-sub').textContent =
+    'Grouped bars per task for the models with recorded usage. Toggle between Codex-reported tokens and the estimated cost at list price.';
+  document.getElementById('usage-chart-note').textContent =
+    `Usage recorded for ${recorded} of ${round.models.length} models; the April 2026 run records carry no token counts. `
+    + 'Codex reports one total token figure per run (input, output and reasoning together), so the estimated cost prices every token at the model\'s output list rate and is an upper bound.';
+
+  if (usageChart) { usageChart.destroy(); usageChart = null; }
+  document.getElementById('usage-table').innerHTML = '';
+  if (!recorded) {
+    canvas.parentElement.hidden = true;
+    empty.hidden = false;
+    empty.textContent = 'No run record in this round carries a token count.';
+    return;
+  }
+  canvas.parentElement.hidden = false;
+  empty.hidden = true;
+
+  const isCost = usageMeasure === 'cost';
+  const labels = [...taskIds, 'Total'];
+  const usedColors = new Set();
+  const datasets = modelIds.map((id, i) => {
+    const m = byId[id];
+    let color = TIER_COLOR[m.cost_tier];
+    if (usedColors.has(color)) color = SERIES_SLOT.find(c => !usedColors.has(c)) || color;   // same-tier fallback
+    usedColors.add(color);
+    const vals = taskIds.map(t => {
+      const u = usage[t][id];
+      if (!u) return null;
+      return isCost ? u.est_cost_usd : u.tokens_k;
+    });
+    const total = vals.reduce((s, v) => s + (v || 0), 0);
+    return {
+      label: m.display_name,
+      data: [...vals, total],
+      backgroundColor: color,
+      borderColor: color,
+      borderWidth: 0,
+      borderRadius: 4,
+      borderSkipped: 'bottom',
+      maxBarThickness: 24,
+      meta: { id },
+    };
+  });
+
+  usageChart = new Chart(canvas, {
+    type: 'bar',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      datasets: { bar: { categoryPercentage: 0.7, barPercentage: 0.85 } },
+      layout: { padding: { top: 16 } },
+      scales: {
+        x: {
+          ticks: { color: INK.muted, font: CHART_FONT, maxRotation: 0, autoSkip: false },
+          grid: { display: false },
+          border: { color: INK.grid },
+        },
+        y: {
+          beginAtZero: true,
+          ticks: { color: INK.muted, font: CHART_FONT, callback: v => isCost ? fmtUsd(v, 2) : v.toLocaleString() + 'k' },
+          grid: { color: INK.grid, lineWidth: 1 },
+          border: { color: INK.grid },
+          title: { display: true, color: INK.muted, font: CHART_FONT,
+                   text: isCost ? 'Estimated cost, USD (tokens x output list price, upper bound)' : 'Codex-reported tokens (thousands)' },
+        },
+      },
+      plugins: {
+        legend: { display: true, position: 'top', align: 'end', labels: { color: INK.secondary, boxWidth: 12, boxHeight: 12, font: CHART_FONT } },
+        tooltip: {
+          backgroundColor: '#0f172a', titleColor: INK.primary, bodyColor: INK.secondary, borderColor: INK.grid, borderWidth: 1,
+          callbacks: {
+            title: items => items.length ? (titles[items[0].label] || items[0].label) : '',
+            label: ctx => {
+              const id = ctx.dataset.meta.id;
+              const name = ctx.dataset.label;
+              if (ctx.label === 'Total') {
+                const t = taskIds.reduce((s, tk) => s + ((usage[tk][id] || {}).tokens_k || 0), 0);
+                const c = taskIds.reduce((s, tk) => s + ((usage[tk][id] || {}).est_cost_usd || 0), 0);
+                return `${name}: ${t}k tokens · ${fmtUsd(c, 2)} est.`;
+              }
+              const u = usage[ctx.label] && usage[ctx.label][id];
+              if (!u) return `${name}: no usage recorded`;
+              const parts = [`${u.tokens_k}k tokens`, `${fmtUsd(u.est_cost_usd, 2)} est.`];
+              if (u.latency) parts.push(u.latency);
+              return `${name}: ${parts.join(' · ')}`;
+            },
+          },
+        },
+      },
+    },
+    plugins: [totalCapLabelPlugin],
+  });
+  usageChart.$totalIndex = labels.length - 1;
+  usageChart.$capFormat = v => isCost ? fmtUsd(v, 2) : `${Math.round(v)}k`;
+
+  // Table view twin
+  const wrap = document.getElementById('usage-table');
+  const table = el('table');
+  const thead = el('thead'), trh = el('tr');
+  trh.appendChild(el('th', 'Task'));
+  modelIds.forEach(id => { trh.appendChild(el('th', byId[id].display_name + ' tokens', 'num')); trh.appendChild(el('th', byId[id].display_name + ' est. cost', 'num')); trh.appendChild(el('th', byId[id].display_name + ' latency')); });
+  thead.appendChild(trh); table.appendChild(thead);
+  const tbody = el('tbody');
+  labels.forEach(t => {
+    const tr = el('tr');
+    tr.appendChild(el('td', t === 'Total' ? 'Total' : (titles[t] || t)));
+    modelIds.forEach(id => {
+      if (t === 'Total') {
+        const tk = taskIds.reduce((s, x) => s + ((usage[x][id] || {}).tokens_k || 0), 0);
+        const c  = taskIds.reduce((s, x) => s + ((usage[x][id] || {}).est_cost_usd || 0), 0);
+        tr.appendChild(el('td', `${tk}k`, 'num')); tr.appendChild(el('td', fmtUsd(c, 2), 'num')); tr.appendChild(el('td', ''));
+      } else {
+        const u = usage[t][id];
+        tr.appendChild(el('td', u ? `${u.tokens_k}k` : '–', 'num'));
+        tr.appendChild(el('td', u ? fmtUsd(u.est_cost_usd, 2) : '–', 'num'));
+        tr.appendChild(el('td', u && u.latency ? u.latency : '–'));
+      }
+    });
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  wrap.appendChild(table);
 }
 
 // ── Boot ───────────────────────────────────────────────────────────────────
