@@ -17,12 +17,20 @@
 | `minimax-m2.7-cloud` | 4 | 4 | 3 | 4 | 4 | 4 | 3 | Technically sound on vectorisation and validation, but it grows into a broad redesign with custom exceptions, warnings, optional percentiles, and unsupported performance claims. |
 | `kimi-k2-thinking` | 4 | 4 | 3 | 4 | 4 | 4 | 5 | Technically strong on vectorisation and validation, but it turns the review into a broader redesign with new parameters and data-handling policy. |
 | `deepseek-v3.2` | 4 | 4 | 3 | 4 | 4 | 4 | 3 | Strong on vectorisation and validation, but it expands the scope into a much larger redesign with extra stats, helper functions, and reporting features. |
+| `gpt5.6-sol-xhigh` | 5 | 5 | 4 | 5 | 5 | 5 | 3 | Blind winner in both judging rounds: the most rigorous vectorised rewrite (dtype-aware key normalisation, finiteness checks, reason-coded diagnostics, raise/drop policy), at the cost of extra length and a documented member-envelope grain change. |
+| `gpt5.6-luna-max` | 5 | 5 | 4 | 5 | 4 | 5 | 3 | Proportionate, semantics-preserving vectorised rewrite with fail-fast validation including infinity and non-positive length, but it stringifies the key columns unconditionally and does not flag the changed group ordering. |
 
 ## Judge Output Summary
 
 Manual comparative pass completed for all seven models.
 
 Task summary: Review a member-summary pipeline for large-data performance, cleaning, correctness, and maintainability under several-hundred-thousand-row workloads.
+
+### September 2026 refresh
+
+- Blind pack judged twice: `gpt5.6-sol-xhigh` 4.83 and 4.67, `gpt5.6-luna-max` 4.67 and 4.33, `gpt5.4-xhigh` 4.33 in both rounds, `gemma4:31b-cloud` 2.67 in both rounds.
+- Sol, Luna and the April `gpt5.4-xhigh` response were all judged safe-to-apply vectorised rewrites that fix the row loop, the unsafe float casts and zero/missing lengths; Sol was the most rigorous on dtypes, finiteness and diagnostics at the cost of length and a documented grain change.
+- Luna was judged the most proportionate rewrite that preserves the original aggregation semantics, with unflagged key stringification and group-order changes as its main deductions.
 
 ## Manual Override Notes
 
@@ -61,8 +69,17 @@ Provisional `gemma4:31b-cloud` review:
 - It keeps the existing status vocabulary intact, which helps change safety.
 - Main deductions are for mutating the input `df` in place and still pushing toward a larger revised implementation rather than the smallest patch plan.
 
+### September 2026 refresh
+
+- Scoring: technical criteria for `gpt5.6-sol-xhigh` and `gpt5.6-luna-max` were scored blind by a new judge alongside two April anchor responses, then shifted onto the April scale with a per-task offset of +0.42 derived from those anchors (see `benchmarks/refresh_2026-09_calibration.md`). The April rows above are unchanged.
+- Manual overrides: none. The de-anonymised judgements were checked against the evaluator notes and no score was changed.
+- Practicality `gpt5.6-sol-xhigh` = 3: same premium Codex route as `gpt5.4-xhigh`, faster on every task with a recorded time, no refusal or truncation, waited for context; scored as the April premium reference.
+- Practicality `gpt5.6-luna-max` = 3: same Codex route on the budget API tier ($0.20 / $1.20 per 1M tokens list price), about 3 to 4 minutes per v2 task, no refusal or truncation, waited for context; low price offset by the slowest latency in the set.
+
 ## Winner
 
-- Winner: `kimi-k2-thinking`
+- Winner: `gpt5.6-sol-xhigh`
 - Difference size: `Small`
-- Why it matters in practice: `All six recognised the vectorisation need, but kimi still best balanced performance improvement with a stable output contract.`
+- Why it matters in practice: `GPT-5.6 Sol delivered the most rigorous safe vectorised rewrite; Luna (4.43) and the April GPT-5.4 (4.00) are both safe-to-apply alternatives, and kimi-k2-thinking keeps the best free/cloud value.`
+
+September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.57) beats the April result, so the winner line above was updated. April 2026 result for the seven original models: winner `kimi-k2-thinking` (overall mean 4.00); Difference size: `Small`; Why it matters in practice: `All six recognised the vectorisation need, but kimi still best balanced performance improvement with a stable output contract.`

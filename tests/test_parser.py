@@ -81,11 +81,17 @@ def test_parse_scorecard_v2_deep01():
 
     assert task["task_id"] == "v2-deep-01"
     assert task["task_title"] == "Multi-file bug hunt in a member check pipeline"
-    assert task["winner"] == "gemma4:31b-cloud"
-    assert task["difference_size"].lower() == "small"
+    # September 2026 refresh: gpt5.6-sol-xhigh overtook the April winner gemma4:31b-cloud
+    assert task["winner"] == "gpt5.6-sol-xhigh"
+    assert task["difference_size"].lower() == "very small"
+    # April rows are frozen
     assert task["scores"]["gpt5.4-xhigh"]["Correctness"] == 4.0
     assert task["scores"]["kimi-k2-thinking"]["Correctness"] == 1.0
     assert "gemma4:31b-cloud" in task["notes"]
+    # refresh rows are appended, not substituted
+    assert task["scores"]["gpt5.6-sol-xhigh"]["Correctness"] == 5.0
+    assert task["scores"]["gpt5.6-luna-max"]["Economics/practicality"] == 3.0
+    assert len(task["scores"]) == 9
     assert len(task["commentary"]) > 50
 
 

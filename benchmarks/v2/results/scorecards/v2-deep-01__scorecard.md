@@ -17,12 +17,20 @@
 | `minimax-m2.7-cloud` | 4 | 4 | 3 | 3 | 4 | 4 | 3 | Grounded and correct on the root unit bug, but it missed the stronger signed-moment envelope risk and expanded the patch with weaker secondary issues. |
 | `kimi-k2-thinking` | 1 | 1 | 1 | 1 | 1 | 2 | 1 | Final answer is clearly written, but it evaluates an invented codebase with nonexistent APIs, types, and tests rather than the supplied files. |
 | `deepseek-v3.2` | 4 | 4 | 3 | 3 | 4 | 4 | 3 | Correctly found the unit-conversion defect, but the proposed fix widens behaviour by swallowing errors and introducing `ERROR` status handling. |
+| `gpt5.6-sol-xhigh` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Blind-judged top pair with Luna: found the cm3 to mm3 root cause, the signed-moment envelope risk and the rounding-before-status bug in the right severity order with stated assumptions, though the pipeline validations are described in prose rather than code. |
+| `gpt5.6-luna-max` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Blind-judged top pair with Sol: found the root cause, the envelope, the first/max section mismatch and the rounding-before-status bug and shipped complete runnable code, but ranked a speculative axis-naming question above the envelope defect and patched more broadly than the minimum. |
 
 ## Judge Output Summary
 
 Manual comparative pass completed for all seven models.
 
 Task summary: Diagnose why major-axis beam utilisation ratios became too high after a refactor and define the smallest safe multi-file fix.
+
+### September 2026 refresh
+
+- Blind pack (one judging round): `gpt5.6-sol-xhigh` and `gpt5.6-luna-max` tied at 4.50 on the six technical criteria, ahead of the April anchors `gpt5.4-xhigh` (3.33) and `qwen-3.6plus` (3.17) as re-scored by the same judge.
+- Both new models found the `1e2` versus `1e3` conversion root cause and, unlike the two anchors, also caught the signed-maximum envelope risk, the section/moment first-max mismatch and the rounding-before-status bug.
+- The judge placed Sol first on the tie for severity ordering and patch scope; Luna shipped complete runnable code but ranked a speculative axis-naming question above the envelope defect and patched more broadly than the minimum.
 
 ## Manual Override Notes
 
@@ -61,8 +69,17 @@ Provisional `gemma4:31b-cloud` review:
 - Its secondary risk on `.max()` missing a governing negative moment is grounded in the supplied code and stronger than the more speculative side-notes in some other answers.
 - The proposed sign-handling change is still a behaviour change, so this is strong rather than perfect, but it remains well within the task brief.
 
+### September 2026 refresh
+
+- Scoring: technical criteria for `gpt5.6-sol-xhigh` and `gpt5.6-luna-max` were scored blind by a new judge alongside two April anchor responses, then shifted onto the April scale with a per-task offset of +0.67 derived from those anchors (see `benchmarks/refresh_2026-09_calibration.md`). The April rows above are unchanged.
+- Manual overrides: none. Sol's absolute file-path links are a capture artefact (context delivered as attached files) and were not penalised.
+- Practicality `gpt5.6-sol-xhigh` = 3: same premium Codex route as `gpt5.4-xhigh`, faster on every task with a recorded time, no refusal or truncation, waited for context; scored as the April premium reference.
+- Practicality `gpt5.6-luna-max` = 3: same Codex route on the budget API tier ($0.20 / $1.20 per 1M tokens list price), about 3 to 4 minutes per v2 task, no refusal or truncation, waited for context; low price offset by the slowest latency in the set.
+
 ## Winner
 
-- Winner: `gemma4:31b-cloud`
-- Difference size: `Small`
-- Why it matters in practice: `Gemma found the core unit bug and paired it with the most repo-grounded secondary risk, giving the strongest overall review without hallucinating a different codebase.`
+- Winner: `gpt5.6-sol-xhigh`
+- Difference size: `Very small`
+- Why it matters in practice: `GPT-5.6 Sol and GPT-5.6 Luna tie at 4.71 overall; both caught the signed-moment envelope risk that the April leaders missed, and Sol is placed first on the blind judge's tie-break for severity ordering and patch scope.`
+
+September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.71) beats the April result, so the winner line above was updated. April 2026 result for the seven original models: winner `gemma4:31b-cloud` (overall mean 4.29); Difference size: `Small`; Why it matters in practice: `Gemma found the core unit bug and paired it with the most repo-grounded secondary risk, giving the strongest overall review without hallucinating a different codebase.`

@@ -17,12 +17,20 @@
 | `minimax-m2.7-cloud` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Very strong and fully grounded: it recognised that the current split is already the safe shape and correctly rejected any shared utilisation helper. |
 | `kimi-k2-thinking` | 5 | 5 | 5 | 5 | 5 | 5 | 5 | Excellent answer: it isolated the safe shared logic, preserved the zero-denominator split, and kept downstream status text intact. |
 | `deepseek-v3.2` | 1 | 1 | 1 | 1 | 1 | 2 | 1 | Severe context failure: it answered against a fabricated helper structure and zero-denominator behaviour that do not exist in the supplied files. |
+| `gpt5.6-sol-xhigh` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Blind winner in both judging rounds: recommends leave-as-is as the lowest-risk option, gives an explicit-policy helper that preserves the zero-denominator split, notes format_status(None) would raise, and supplies runnable parametrised tests covering the boundary and both denominators. |
+| `gpt5.6-luna-max` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Correct parametrised helper with full code that flags the fallback-argument misuse risk and asks for spreadsheet output comparison, but its regression set misses the inclusive 1.0 boundary and utilisation-level asserts and it lists the <= 0 guard under both shared and distinct. |
 
 ## Judge Output Summary
 
 Manual comparative pass completed for all seven models.
 
 Task summary: Assess whether a shared utilisation helper can be extracted without changing material-specific zero-capacity behaviour or downstream status text.
+
+### September 2026 refresh
+
+- Blind pack judged twice: `gpt5.6-sol-xhigh` 4.83 in both rounds, `gpt5.6-luna-max` 4.33 and 4.50, `gpt5.4-xhigh` 3.83 and 4.17, `gemma4:31b-cloud` 3.83 and 3.67.
+- All four responses caught the concrete `None`/`CHECK INPUT` versus steel `0.0`/`PASS` trap and preserved the status text; the spread reflects depth of safeguards, not correctness.
+- Sol led for recommending leave-as-is as the lowest-risk option, an explicit-policy helper, the `format_status(None)` observation and runnable parametrised tests; Luna's regression set omitted the inclusive 1.0 boundary and utilisation-level asserts.
 
 ## Manual Override Notes
 
@@ -61,8 +69,17 @@ Provisional `gemma4:31b-cloud` review:
 - The proposed shared helper is genuinely minimal and preserves both downstream status text and public behaviour.
 - This is essentially tied with the best task-4 responses; the only minor deduction is that it is slightly less explicit than the strongest write-ups.
 
+### September 2026 refresh
+
+- Scoring: technical criteria for `gpt5.6-sol-xhigh` and `gpt5.6-luna-max` were scored blind by a new judge alongside two April anchor responses, then shifted onto the April scale with a per-task offset of +0.96 derived from those anchors (see `benchmarks/refresh_2026-09_calibration.md`). The April rows above are unchanged.
+- Manual overrides: none. The de-anonymised judgements were checked against the evaluator notes and no score was changed.
+- Practicality `gpt5.6-sol-xhigh` = 3: same premium Codex route as `gpt5.4-xhigh`, faster on every task with a recorded time, no refusal or truncation, waited for context; scored as the April premium reference.
+- Practicality `gpt5.6-luna-max` = 3: same Codex route on the budget API tier ($0.20 / $1.20 per 1M tokens list price), about 3 to 4 minutes per v2 task, no refusal or truncation, waited for context; low price offset by the slowest latency in the set.
+
 ## Winner
 
 - Winner: `kimi-k2-thinking`
 - Difference size: `Very small`
 - Why it matters in practice: `Kimi, glm, gemma, and qwen were all strong here. The ranking edge is mostly about presentation and practicality, not a major technical gap.`
+
+September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.71) and `gpt5.6-luna-max` (4.71) do not beat the April result of `kimi-k2-thinking` (5.00), so the winner line is unchanged.

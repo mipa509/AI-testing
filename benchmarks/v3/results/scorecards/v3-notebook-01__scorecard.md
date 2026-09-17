@@ -17,6 +17,8 @@
 | `minimax-m2.7-cloud` | 5 | 5 | 4 | 4 | 4 | 5 | 4 | Clear, correct, and well presented; minor penalty because the `abs(Mx) + abs(My)` framing is less rigorous than the stated sign-convention model. |
 | `kimi-k2-thinking` | 5 | 5 | 4 | 4 | 4 | 5 | 3 | Correct result and usable notebook, but the pressure model is presented mostly as a section-modulus shortcut and the governing-case logic is more heuristic than explicit. |
 | `deepseek-v3.2` | 5 | 5 | 4 | 3 | 4 | 5 | 3 | Correct size and solid executable code, but the written eccentricity definitions are swapped and the narrative is less precise than the stronger entries. |
+| `gpt5.6-sol-xhigh` | 5 | 5 | 4 | 4 | 4 | 4 | 4 | Correct, executable and self-verified notebook (3.0 m, LC2 governing, 2.9 m rejected at qmin = -0.41 kPa) with all six sections, but it quotes the compact 6|M|/B^3 formula without derivation, gives no justification for the rigid linear model and never defines eccentricities; the copy-time loss of formatting was not penalised. |
+| `gpt5.6-luna-max` | 3 | 3 | 4 | 4 | 4 | 4 | 3 | Narrative, closed-form equations and final answers are right and derived from N/A +/- M*y/I, but the coded point-pressure function uses 6*M*x/B^3 instead of 12*M*x/B^4, so its own consistency assert fails at the first candidate and the notebook does not run past code cell 3 (verified by execution). |
 
 ## Judge Output Summary
 
@@ -26,14 +28,29 @@
 - `glm-5.1:cloud` and `minimax-m2.7-cloud` were strong runner-ups.
 - Main weaknesses observed across the field were wrong governing-case framing, unresolved placeholders in the final prose, weaker derivation, and slower-than-ideal response times.
 
+### September 2026 refresh
+
+- Blind pack judged twice: `gpt5.4-xhigh` 4.83 in both rounds, `gpt5.6-sol-xhigh` 3.67 in both rounds, `gpt5.6-luna-max` 3.17 and 2.83, `gemma4:31b-cloud` 2.50 and 2.33.
+- Sol selected `3.0 m` with `LC2` governing and its code runs end to end (verified by execution), but it quotes the compact pressure formula without the requested derivation, gives no justification for the rigid linear model and never defines eccentricities.
+- Luna's Markdown derivation and conclusions are correct, but its `pressure_at_point()` uses `6*M*x/B^3` instead of `12*M*x/B^4`, so its own consistency assert fails at the first candidate and the notebook does not run past code cell 3 (verified by execution). Neither new model chose `2.9 m`.
+
 ## Manual Override Notes
 
 - Scores were locked by manual engineering review plus direct execution of the calculation cells.
 - Per user instruction, `qwen-3.6plus` was scored mainly on the underlying notebook content rather than being heavily penalized for the VS Code cell-wrapper export format.
 - Latency was treated as a light secondary factor only. It influenced practical-usability scoring but did not override technical correctness.
 
+### September 2026 refresh
+
+- Scoring: technical criteria for `gpt5.6-sol-xhigh` and `gpt5.6-luna-max` were scored blind by a new judge alongside two April anchor responses, then shifted onto the April scale with a per-task offset of +0.71 derived from those anchors (see `benchmarks/refresh_2026-09_calibration.md`). The April rows above are unchanged.
+- Manual overrides: none. The judges' executability findings were verified by running each new model's code cells in order with standard-library Python: Sol runs end to end and selects `3.0 m` with `LC2` governing; Luna stops with `AssertionError` at code cell 4 because its point-pressure formula disagrees with its own closed form.
+- Practicality `gpt5.6-sol-xhigh` = 4: latency not captured, about 23k tokens, notebook runs end to end; scored as the April `gpt5.4-xhigh` reference.
+- Practicality `gpt5.6-luna-max` = 3: about 4 minutes, and the notebook needs a one-line formula fix before it runs; matches the April scores given for long think time alone.
+
 ## Winner
 
 - Winner: `gpt5.4-xhigh`
 - Difference size: `moderate`
 - Why it matters in practice: Several models reached the correct `3.0 m` size, but the winner combined the best audit trail, the clearest explanation of the `2.9 m` no-uplift failure, correct governing-case framing, and clean executable notebook structure with the least manual rework.
+
+September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.29) and `gpt5.6-luna-max` (3.57) do not beat the April result of `gpt5.4-xhigh` (4.86), so the winner line is unchanged.
