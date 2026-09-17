@@ -16,7 +16,7 @@
 
 ## First-Pass Output Summary
 
-Produced a six-section notebook draft in the required order, with alternating Markdown and standard-library Python cells. It uses the rigid-footing corner-pressure formulas `N/B^2 ± 6|Mx|/B^3 ± 6|My|/B^3`, searches 2.4 m to 3.2 m, and selects `3.0 m x 3.0 m`. It names `LC2` as the governing case through no-uplift (the 2.9 m candidate gives `qmin ≈ -0.41 kPa`) and `LC3` as the maximum-bearing case at the selected size. The final code cell asserts the selection and the 2.9 m LC2 uplift failure. Hand check: the reported pressures at 3.0 m and the 2.9 m LC2 `qmin` match the brief. The code was not executed at capture time.
+Produced a six-section notebook draft in the required order, with alternating Markdown and standard-library Python cells. It uses the rigid-footing corner-pressure formulas `N/B^2 ± 6|Mx|/B^3 ± 6|My|/B^3`, searches 2.4 m to 3.2 m, and selects `3.0 m x 3.0 m`. It names `LC2` as the governing case through no-uplift (the 2.9 m candidate gives `qmin ≈ -0.41 kPa`) and `LC3` as the maximum-bearing case at the selected size. The final code cell asserts the selection and the 2.9 m LC2 uplift failure. Execution check (2026-09-17, Python 3.13.2 standard library; the six code cells were concatenated in order because the copy lost the code fences): runs end to end, every `assert` passes, it selects `3.0 m`, and it prints the same load-case table as the Markdown (LC2 `qmin = 2.22 kPa`, LC3 `qmax = 178.89 kPa`). The 2.9 m LC2 `qmin` evaluates to `-0.410 kPa`.
 
 ## Operational Notes
 
