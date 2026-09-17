@@ -10,6 +10,10 @@ Current scored model slate:
 - `minimax-m2.7-cloud`
 - `kimi-k2-thinking`
 - `deepseek-v3.2`
+- `gpt5.6-sol-xhigh` (September 2026 refresh; successor to `gpt5.4-xhigh`)
+- `gpt5.6-luna-max` (September 2026 refresh; budget API tier)
+
+The September 2026 rows were scored blind with calibration against the April results; see `benchmarks/refresh_2026-09_summary.md` and `benchmarks/refresh_2026-09_calibration.md`.
 
 Benchmark shape:
 - `1` deterministic notebook-style task

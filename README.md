@@ -12,8 +12,10 @@ Artifacts include benchmark packs, written reports, per-task result summaries, p
 | Round | Focus | Scope | Current leader | Main files |
 |---|---|---|---|---|
 | `v1` | Short coding and review prompts | `6` tasks, `3` models | `gemma4:31b-cloud` (`3.93`) | `benchmarks/v1/`, `structural_engineering_benchmark_report.md` |
-| `v2` | Larger-context repo reading and change design | `6` primary tasks + `1` historical anchor, `7` models | `gpt5.4-xhigh` (`4.14`) | `benchmarks/v2/`, `structural_engineering_benchmark_report_v2.md` |
-| `v3` | Deterministic notebook-style code generation | `1` notebook task, `7` models | `gpt5.4-xhigh` (`4.86`) | `benchmarks/v3/`, `benchmarks/v3/results/` |
+| `v2` | Larger-context repo reading and change design | `6` primary tasks + `1` historical anchor, `7` models (April 2026) + `2` (September 2026 refresh) | `gpt5.6-luna-max` (`4.48`), `gpt5.6-sol-xhigh` (`4.45`); April leader `gpt5.4-xhigh` (`4.14`) | `benchmarks/v2/`, `structural_engineering_benchmark_report_v2.md`, `benchmarks/refresh_2026-09_summary.md` |
+| `v3` | Deterministic notebook-style code generation | `1` notebook task, `7` models (April 2026) + `2` (September 2026 refresh) | `gpt5.4-xhigh` (`4.86`) | `benchmarks/v3/`, `benchmarks/v3/results/`, `benchmarks/refresh_2026-09_summary.md` |
+
+September 2026 refresh: `gpt5.6-sol-xhigh` (successor to `gpt5.4-xhigh`) and `gpt5.6-luna-max` (budget API tier) were run on the unchanged v2 and v3 tasks and scored blind with calibration against the April results. The then-vs-now comparison is in `benchmarks/refresh_2026-09_summary.md`; the calibration procedure and judge replies are in `benchmarks/refresh_2026-09_calibration.md`. The April full reports are unchanged.
 
 ## Start Here
 
@@ -76,6 +78,8 @@ Current scored model set:
 - `minimax-m2.7-cloud`
 - `kimi-k2-thinking`
 - `deepseek-v3.2`
+- `gpt5.6-sol-xhigh` (September 2026 refresh)
+- `gpt5.6-luna-max` (September 2026 refresh)
 
 Scope:
 - `6` new v2 tasks
@@ -86,35 +90,38 @@ Scope:
 
 The unchanged EC3 trap task is reported separately as an anchor comparison and is not part of the default v2 composite score.
 
-Headline v2 ranking:
-1. `gpt5.4-xhigh` - `4.14`
-2. `gemma4:31b-cloud` - `4.10`
-3. `glm-5.1:cloud` - `3.88`
-4. `qwen-3.6plus` - `3.74`
-5. `minimax-m2.7-cloud` - `3.72`
-6. `kimi-k2-thinking` - `3.67`
-7. `deepseek-v3.2` - `2.65`
+Headline v2 ranking (September 2026 refresh rows scored blind with calibration against April anchors; April rows unchanged):
+1. `gpt5.6-luna-max` - `4.48`
+2. `gpt5.6-sol-xhigh` - `4.45`
+3. `gpt5.4-xhigh` - `4.14`
+4. `gemma4:31b-cloud` - `4.10`
+5. `glm-5.1:cloud` - `3.88`
+6. `qwen-3.6plus` - `3.74`
+7. `minimax-m2.7-cloud` - `3.72`
+8. `kimi-k2-thinking` - `3.67`
+9. `deepseek-v3.2` - `2.65`
 
 Current v2 primary task winners:
 
-| Task | Winner | Difference size |
-|---|---|---|
-| Task 1 - Multi-file bug hunt | `gemma4:31b-cloud` | Small |
-| Task 2 - Repo review traps | `gemma4:31b-cloud` | Small |
-| Task 3 - Scoped feature design | `gpt5.4-xhigh` | Small |
-| Task 4 - Safe refactor | `kimi-k2-thinking` | Very small |
-| Task 5 - Large dataset pipeline | `kimi-k2-thinking` | Small |
-| Task 6 - Review plus tests | `glm-5.1:cloud` | Small |
+| Task | Winner | Difference size | April 2026 winner |
+|---|---|---|---|
+| Task 1 - Multi-file bug hunt | `gpt5.6-sol-xhigh` | Very small (tie with `gpt5.6-luna-max`) | `gemma4:31b-cloud` |
+| Task 2 - Repo review traps | `gemma4:31b-cloud` | Small | unchanged |
+| Task 3 - Scoped feature design | `gpt5.6-sol-xhigh` | Small | `gpt5.4-xhigh` |
+| Task 4 - Safe refactor | `kimi-k2-thinking` | Very small | unchanged |
+| Task 5 - Large dataset pipeline | `gpt5.6-sol-xhigh` | Small | `kimi-k2-thinking` |
+| Task 6 - Review plus tests | `gpt5.6-luna-max` | Small | `glm-5.1:cloud` |
 
 Latest report-aligned takeaways:
-- Best premium reference model: `gpt5.4-xhigh`
-- Best primary coder: `gpt5.4-xhigh`
-- Best reviewer: `gpt5.4-xhigh`
+- Best premium reference model: `gpt5.6-sol-xhigh` (like-for-like successor to `gpt5.4-xhigh`; 4.45 against 4.14)
+- Best primary coder: `gpt5.6-sol-xhigh`
+- Best reviewer: `gpt5.6-luna-max`
 - Best value under free-use constraints: `gemma4:31b-cloud`
-- Biggest operational weakness observed: severe context-fidelity failures before or without the supplied files on weaker models
+- Best value paid API: `gpt5.6-luna-max`
+- Biggest operational weakness observed: severe context-fidelity failures before or without the supplied files on weaker models; slower responses (about 3 to 4 minutes per task) from `gpt5.6-luna-max`
 
 Historical anchor:
-- winner on corrected engineering standard: `gpt5.4-xhigh`
+- winner on corrected engineering standard: `gpt5.4-xhigh` (September 2026: `gpt5.6-sol-xhigh` ties it at 4.43 overall with the same corrected answer; `gpt5.6-luna-max` 4.29)
 - strongest free/cloud value result on the primary six-task set: `gemma4:31b-cloud`
 
 ### V3 - Notebook-style code-generation benchmark
@@ -127,6 +134,8 @@ Current scored model set:
 - `minimax-m2.7-cloud`
 - `kimi-k2-thinking`
 - `deepseek-v3.2`
+- `gpt5.6-sol-xhigh` (September 2026 refresh)
+- `gpt5.6-luna-max` (September 2026 refresh)
 
 Benchmark shape:
 - `1` deterministic notebook-style task
@@ -134,14 +143,16 @@ Benchmark shape:
 - no repository context files are shared for the task
 - scoring combines structured judge prompts with final manual engineering review
 
-Headline v3 ranking:
+Headline v3 ranking (September 2026 refresh rows scored blind with calibration against April anchors; April rows unchanged):
 1. `gpt5.4-xhigh` - `4.86`
 2. `glm-5.1:cloud` - `4.71`
 3. `minimax-m2.7-cloud` - `4.43`
 4. `kimi-k2-thinking` - `4.29`
-5. `deepseek-v3.2` - `4.14`
-6. `qwen-3.6plus` - `4.00`
-7. `gemma4:31b-cloud` - `3.71`
+5. `gpt5.6-sol-xhigh` - `4.29`
+6. `deepseek-v3.2` - `4.14`
+7. `qwen-3.6plus` - `4.00`
+8. `gemma4:31b-cloud` - `3.71`
+9. `gpt5.6-luna-max` - `3.57`
 
 Current v3 task result:
 
@@ -154,6 +165,7 @@ Current v3 takeaways:
 - Best technically reliable result: `gpt5.4-xhigh`
 - Best value under free-use constraints: `gemma4:31b-cloud` if local or no-cost access is available
 - Biggest operational weakness observed: long think time on several otherwise strong models, plus conclusion-level governing-case mistakes that still need human review
+- September 2026 note: `gpt5.6-sol-xhigh` did not match its predecessor here (correct and executable, but no derivation or eccentricity definitions); `gpt5.6-luna-max` states the right answer but its notebook fails its own consistency assert until a one-line formula fix is applied
 
 ## Repository Structure
 

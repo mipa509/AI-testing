@@ -28,6 +28,8 @@ Use these exact model IDs for the current scored slate:
 - `minimax-m2.7-cloud`
 - `kimi-k2-thinking`
 - `deepseek-v3.2`
+- `gpt5.6-sol-xhigh` (September 2026 refresh)
+- `gpt5.6-luna-max` (September 2026 refresh)
 
 ## 3. Folder Convention While Running
 
