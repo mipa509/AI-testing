@@ -60,6 +60,8 @@
     "display_name": "GPT-5.6 Luna Max",
     "role": "low-cost candidate",
     "provider": "OpenAI API",
+    "cost_tier": 2,
+    "cost_label": "Paid API",
     "notes": "September 2026 refresh. API model gpt-5.6-luna at reasoning effort max; budget tier listed at $0.20 / $1.20 per 1M input / output tokens. Knowledge cutoff 2026-02-16."
   }
 ]
