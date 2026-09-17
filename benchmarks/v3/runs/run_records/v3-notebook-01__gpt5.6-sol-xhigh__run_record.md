@@ -11,7 +11,7 @@
 - `run_route`: `Codex VS Code extension, fresh session, empty sandbox workspace on a separate drive` (same route as the April `gpt5.4-xhigh` runs)
 - `rate_limit_or_refusal_notes`: no refusal or truncation in the output; rate limits not reported
 - `latency_notes`: not captured
-- `token_usage_or_cost`: not available in the Codex VS Code extension
+- `token_usage_or_cost`: about `23k` tokens as reported by Codex
 - `manual_observations`: Run in an empty sandbox workspace on a separate drive, with the prompt pasted as text. Output was copied as displayed from the Codex VS Code extension response, so code fences, table pipes, and heading markers were lost in the copy. Score the notebook content, not the copy formatting (same approach as the April `qwen-3.6plus` export issue).
 
 ## First-Pass Output Summary

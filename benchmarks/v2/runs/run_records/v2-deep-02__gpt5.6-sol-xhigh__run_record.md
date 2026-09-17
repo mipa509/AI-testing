@@ -11,7 +11,7 @@
 - `run_route`: `Codex VS Code extension, fresh session, empty sandbox workspace on a separate drive`
 - `rate_limit_or_refusal_notes`: none reported; no refusal or truncation in the output
 - `latency_notes`: under 1 min after the context message (answered within the same clock minute; exact time not shown)
-- `token_usage_or_cost`: not available in the Codex VS Code extension
+- `token_usage_or_cost`: about `21k` tokens as reported by Codex
 - `manual_observations`: Inputs taken from the neutral copy `D:\bench-inputs\task3` (no benchmark names or answer-key files in that folder). Context delivered by pasting the text of `context_combined.md` as message 2. The model waited for the code before answering. The output cites only bare file names with line numbers, not absolute paths.
 
 ## First-Pass Output Summary

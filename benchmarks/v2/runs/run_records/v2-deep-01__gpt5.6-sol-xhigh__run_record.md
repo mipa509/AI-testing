@@ -11,7 +11,7 @@
 - `run_route`: `Codex VS Code extension, fresh session, empty sandbox workspace on a separate drive`
 - `rate_limit_or_refusal_notes`: none reported; no refusal or truncation in the output
 - `latency_notes`: `56 s` after the context message
-- `token_usage_or_cost`: not available in the Codex VS Code extension
+- `token_usage_or_cost`: about `24k` tokens as reported by Codex
 - `manual_observations`: The model waited for the context files as instructed. Message 2 attached the three `context/*.py` files through the Codex "add files" option rather than pasting `context_combined.md`; the code content is identical. Attachments carry their absolute file paths, which is why the output links point into this repo with exact line numbers. The workspace itself was an empty sandbox, so the model had no workspace access to evaluator or reference files. The April `gpt5.4-xhigh` run used pasted text instead.
 
 ## First-Pass Output Summary

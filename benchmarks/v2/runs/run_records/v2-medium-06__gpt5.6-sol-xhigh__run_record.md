@@ -11,7 +11,7 @@
 - `run_route`: `Codex VS Code extension, fresh session, empty sandbox workspace on a separate drive`
 - `rate_limit_or_refusal_notes`: none reported; no refusal or truncation in the output
 - `latency_notes`: under 1 min after the context message (exact time not shown)
-- `token_usage_or_cost`: not available in the Codex VS Code extension
+- `token_usage_or_cost`: about `21k` tokens as reported by Codex
 - `manual_observations`: Inputs taken from the neutral copy `D:\bench-inputs\task7`. Context delivered by pasting the text of `context_combined.md` as message 2. The model waited for the code before answering.
 
 ## First-Pass Output Summary
