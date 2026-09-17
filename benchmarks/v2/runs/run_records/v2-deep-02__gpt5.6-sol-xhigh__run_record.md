@@ -10,9 +10,9 @@
 - `raw_output_path`: `runs/raw_outputs/v2-deep-02__gpt5.6-sol-xhigh__raw.md`
 - `run_route`: `Codex VS Code extension, fresh session, empty sandbox workspace on a separate drive`
 - `rate_limit_or_refusal_notes`: none reported; no refusal or truncation in the output
-- `latency_notes`: PENDING
+- `latency_notes`: under 1 min after the context message (answered within the same clock minute; exact time not shown)
 - `token_usage_or_cost`: not available in the Codex VS Code extension
-- `manual_observations`: Inputs taken from the neutral copy `D:\bench-inputs\task3` (no benchmark names or answer-key files in that folder). Context delivery method (pasted `context_combined.md` or attached files) and whether the model waited for the code: PENDING. The output cites only bare file names with line numbers, not absolute paths.
+- `manual_observations`: Inputs taken from the neutral copy `D:\bench-inputs\task3` (no benchmark names or answer-key files in that folder). Context delivered by pasting the text of `context_combined.md` as message 2. The model waited for the code before answering. The output cites only bare file names with line numbers, not absolute paths.
 
 ## First-Pass Output Summary
 
