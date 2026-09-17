@@ -113,8 +113,10 @@ def test_discover_rounds():
     assert "v1" not in round_ids
 
     v2 = next(r for r in rounds if r["round_id"] == "v2")
-    assert len(v2["models"]) == 7
+    assert len(v2["models"]) == 9
     assert v2["models"][0]["model_id"] == "gemma4:31b-cloud"
+    v2_model_ids = {m["model_id"] for m in v2["models"]}
+    assert {"gpt5.6-sol-xhigh", "gpt5.6-luna-max"} <= v2_model_ids
     assert len(v2["tasks"]) >= 6
     assert len(v2["criteria"]) >= 7
     assert v2["ranking"]["gpt5.4-xhigh"]["Overall average"] == 4.14
