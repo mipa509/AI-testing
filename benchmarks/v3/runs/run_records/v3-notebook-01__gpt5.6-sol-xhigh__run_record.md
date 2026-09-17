@@ -12,7 +12,7 @@
 - `rate_limit_or_refusal_notes`: no refusal or truncation in the output; rate limits not reported
 - `latency_notes`: not captured
 - `token_usage_or_cost`: not available in the Codex VS Code extension
-- `manual_observations`: Output was copied as displayed from the Codex VS Code extension response, so code fences, table pipes, and heading markers were lost in the copy. Score the notebook content, not the copy formatting (same approach as the April `qwen-3.6plus` export issue).
+- `manual_observations`: PROVISIONAL - validity under review. The `v2-deep-01` Sol run on the same day showed the Codex workspace had access to the benchmark repo, and this task folder holds `reference_solution_review.md` and `_evaluator_notes.md`. This output has no file links, but keep it only if the Codex activity log shows none of those files were read; otherwise replace it with a rerun from an empty workspace. Output was copied as displayed from the Codex VS Code extension response, so code fences, table pipes, and heading markers were lost in the copy. Score the notebook content, not the copy formatting (same approach as the April `qwen-3.6plus` export issue).
 
 ## First-Pass Output Summary
 
