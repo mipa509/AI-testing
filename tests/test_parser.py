@@ -5,7 +5,10 @@ from pathlib import Path
 # Add repo root to path so `dashboard` is importable
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from dashboard.parser import parse_md_table, parse_ranking_table, parse_scorecard, discover_rounds
+from dashboard.parser import (
+    parse_md_table, parse_ranking_table, parse_scorecard, discover_rounds,
+    blended_price_usd_per_1m, parse_run_record_usage,
+)
 
 REPO_ROOT = Path(__file__).parent.parent
 
@@ -143,6 +146,16 @@ def test_discover_rounds():
     assert luna_model["cost_tier"] == 2
     assert luna_model["cost_label"] == "Paid API"
 
+    # every model in both slates carries sourced list pricing for the cost chart
+    for r in rounds:
+        for model in r["models"]:
+            assert model["blended_price_usd_per_1m"] is not None, model["model_id"]
+            assert model["pricing"]["as_of"] == "2026-09-17"
+            assert model["pricing"]["source"].startswith("https://")
+    assert luna_model["blended_price_usd_per_1m"] == 0.45          # 0.75*0.20 + 0.25*1.20
+    sol_model = next(m for m in v2["models"] if m["model_id"] == "gpt5.6-sol-xhigh")
+    assert sol_model["blended_price_usd_per_1m"] == 11.25          # 0.75*5.00 + 0.25*30.00
+
 
 def test_discover_rounds_explicit_cost_tier_overrides_provider_keyword(tmp_path):
     """A slate entry may carry cost_tier / cost_label; they take precedence over the provider keyword mapping."""
@@ -171,3 +184,73 @@ def test_discover_rounds_explicit_cost_tier_overrides_provider_keyword(tmp_path)
     # a partial override keeps the keyword-derived value for the missing field
     assert by_id["free-explicit-label-only"]["cost_tier"] == 1
     assert by_id["free-explicit-label-only"]["cost_label"] == "Free/Local"
+
+
+# ---------------------------------------------------------------------------
+# list pricing (cost vs performance chart)
+# ---------------------------------------------------------------------------
+
+def test_blended_price_is_three_to_one_input_to_output():
+    # 3 parts input : 1 part output per 1M tokens
+    assert blended_price_usd_per_1m({"input_usd_per_1m": 0.20, "output_usd_per_1m": 1.20}) == 0.45
+    assert blended_price_usd_per_1m({"input_usd_per_1m": 4.0, "output_usd_per_1m": 4.0}) == 4.0
+
+
+def test_blended_price_missing_or_partial_pricing_is_none():
+    assert blended_price_usd_per_1m(None) is None
+    assert blended_price_usd_per_1m({}) is None
+    assert blended_price_usd_per_1m({"input_usd_per_1m": 1.0}) is None
+    assert blended_price_usd_per_1m({"input_usd_per_1m": None, "output_usd_per_1m": 2.0}) is None
+
+
+def test_discover_rounds_adds_blended_price_from_slate_pricing(tmp_path):
+    import json
+    models_dir = tmp_path / "benchmarks" / "vx" / "models"
+    models_dir.mkdir(parents=True)
+    slate = [
+        {"model_id": "priced", "display_name": "P", "role": "r", "provider": "OpenAI API", "notes": "",
+         "pricing": {"input_usd_per_1m": 0.20, "output_usd_per_1m": 1.20,
+                     "as_of": "2026-09-17", "source": "https://example.com"}},
+        {"model_id": "unpriced", "display_name": "U", "role": "r", "provider": "Ollama cloud", "notes": ""},
+    ]
+    (models_dir / "fixed_model_slate.json").write_text(json.dumps(slate), encoding="utf-8")
+
+    rounds = discover_rounds(tmp_path)
+    by_id = {m["model_id"]: m for m in rounds[0]["models"]}
+    assert by_id["priced"]["blended_price_usd_per_1m"] == 0.45
+    assert by_id["priced"]["pricing"]["as_of"] == "2026-09-17"   # pricing block passes through untouched
+    assert by_id["unpriced"]["blended_price_usd_per_1m"] is None
+    assert "pricing" not in by_id["unpriced"]
+
+
+# ---------------------------------------------------------------------------
+# run-record usage (measured tokens / latency for the usage chart)
+# ---------------------------------------------------------------------------
+
+def test_parse_run_record_usage_real_september_record():
+    rec = REPO_ROOT / "benchmarks/v2/runs/run_records/v2-deep-01__gpt5.6-sol-xhigh__run_record.md"
+    usage = parse_run_record_usage(rec)
+    assert usage["task_id"] == "v2-deep-01"
+    assert usage["model_id"] == "gpt5.6-sol-xhigh"
+    assert usage["tokens_k"] == 24
+    assert "56 s" in usage["latency"]
+
+
+def test_parse_run_record_usage_april_record_has_no_tokens():
+    rec = REPO_ROOT / "benchmarks/v2/runs/run_records/v2-deep-01__gpt5.4-xhigh__run_record.md"
+    usage = parse_run_record_usage(rec)
+    assert usage["model_id"] == "gpt5.4-xhigh"
+    assert usage["tokens_k"] is None
+    assert usage["latency"] is None
+
+
+def test_discover_rounds_collects_usage_only_where_tokens_were_recorded():
+    rounds = discover_rounds(REPO_ROOT)
+    v2 = next(r for r in rounds if r["round_id"] == "v2")
+    usage = v2["usage"]
+    assert usage["v2-anchor-07"]["gpt5.6-luna-max"]["tokens_k"] == 131
+    assert usage["v2-anchor-07"]["gpt5.6-sol-xhigh"]["tokens_k"] == 85
+    assert "gpt5.4-xhigh" not in usage["v2-anchor-07"]          # April records carry no token figure
+    assert set(usage["v2-deep-01"]) == {"gpt5.6-sol-xhigh", "gpt5.6-luna-max"}
+    v3 = next(r for r in rounds if r["round_id"] == "v3")
+    assert v3["usage"]["v3-notebook-01"]["gpt5.6-sol-xhigh"]["tokens_k"] == 23

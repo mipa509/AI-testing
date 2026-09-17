@@ -4,56 +4,128 @@
     "display_name": "Gemma 4 31B Cloud",
     "role": "continuity baseline",
     "provider": "Ollama cloud",
-    "notes": "Carry-forward baseline from v1."
+    "notes": "Carry-forward baseline from v1.",
+    "pricing": {
+      "input_usd_per_1m": 0.09,
+      "output_usd_per_1m": 0.34,
+      "unit": "USD per 1M tokens, list price",
+      "as_of": "2026-09-17",
+      "source": "https://openrouter.ai/api/v1/models",
+      "source_model_id": "google/gemma-4-31b-it",
+      "note": "OpenRouter paid listing; a rate-limited free variant is also listed. Benchmark runs used the free Ollama cloud route, so the user's run cost was zero."
+    }
   },
   {
     "model_id": "glm-5.1:cloud",
     "display_name": "GLM 5.1 Cloud",
     "role": "new candidate",
     "provider": "Ollama cloud",
-    "notes": "Larger-context cloud candidate for independent primary-model work."
+    "notes": "Larger-context cloud candidate for independent primary-model work.",
+    "pricing": {
+      "input_usd_per_1m": 0.966,
+      "output_usd_per_1m": 3.036,
+      "unit": "USD per 1M tokens, list price",
+      "as_of": "2026-09-17",
+      "source": "https://openrouter.ai/api/v1/models",
+      "source_model_id": "z-ai/glm-5.1",
+      "note": "OpenRouter listing. Benchmark runs used the free Ollama cloud route."
+    }
   },
   {
     "model_id": "gpt5.4-xhigh",
     "display_name": "GPT-5.4 XHigh",
     "role": "premium reference",
     "provider": "OpenAI / subscription or API",
-    "notes": "Premium reference model added after the initial free/cloud slate."
+    "notes": "Premium reference model added after the initial free/cloud slate.",
+    "pricing": {
+      "input_usd_per_1m": 2.5,
+      "output_usd_per_1m": 15.0,
+      "unit": "USD per 1M tokens, list price",
+      "as_of": "2026-09-17",
+      "source": "https://openrouter.ai/api/v1/models",
+      "source_model_id": "openai/gpt-5.4",
+      "note": "Matches OpenAI's published GPT-5.4 rate. Benchmark runs used the Codex VS Code extension on a subscription plan."
+    }
   },
   {
     "model_id": "qwen-3.6plus",
     "display_name": "Qwen 3.6 Plus",
     "role": "new candidate",
     "provider": "OpenRouter API",
-    "notes": "Paid API middle-tier comparator added after the initial free/cloud slate."
+    "notes": "Paid API middle-tier comparator added after the initial free/cloud slate.",
+    "pricing": {
+      "input_usd_per_1m": 0.325,
+      "output_usd_per_1m": 1.95,
+      "unit": "USD per 1M tokens, list price",
+      "as_of": "2026-09-17",
+      "source": "https://openrouter.ai/api/v1/models",
+      "source_model_id": "qwen/qwen3.6-plus",
+      "note": "OpenRouter listing; benchmark runs used the OpenRouter API."
+    }
   },
   {
     "model_id": "kimi-k2-thinking",
     "display_name": "Kimi K2 Thinking",
     "role": "new candidate",
     "provider": "Ollama cloud",
-    "notes": "Reasoning-oriented cloud candidate."
+    "notes": "Reasoning-oriented cloud candidate.",
+    "pricing": {
+      "input_usd_per_1m": 0.6,
+      "output_usd_per_1m": 2.5,
+      "unit": "USD per 1M tokens, list price",
+      "as_of": "2026-09-17",
+      "source": "https://openrouter.ai/api/v1/models",
+      "source_model_id": "moonshotai/kimi-k2-thinking",
+      "note": "OpenRouter listing. Benchmark runs used the free Ollama cloud route."
+    }
   },
   {
     "model_id": "deepseek-v3.2",
     "display_name": "DeepSeek V3.2",
     "role": "new candidate",
     "provider": "Ollama cloud",
-    "notes": "Larger-context cloud candidate with strong coding expectations."
+    "notes": "Larger-context cloud candidate with strong coding expectations.",
+    "pricing": {
+      "input_usd_per_1m": 0.269,
+      "output_usd_per_1m": 0.4,
+      "unit": "USD per 1M tokens, list price",
+      "as_of": "2026-09-17",
+      "source": "https://openrouter.ai/api/v1/models",
+      "source_model_id": "deepseek/deepseek-v3.2",
+      "note": "OpenRouter listing. Benchmark runs used the free Ollama cloud route."
+    }
   },
   {
     "model_id": "minimax-m2.7-cloud",
     "display_name": "MiniMax M2.7 Cloud",
     "role": "new candidate",
     "provider": "Ollama cloud",
-    "notes": "Cloud candidate for the current benchmark pass."
+    "notes": "Cloud candidate for the current benchmark pass.",
+    "pricing": {
+      "input_usd_per_1m": 0.3,
+      "output_usd_per_1m": 1.2,
+      "unit": "USD per 1M tokens, list price",
+      "as_of": "2026-09-17",
+      "source": "https://openrouter.ai/api/v1/models",
+      "source_model_id": "minimax/minimax-m2.7",
+      "note": "OpenRouter listing. Benchmark runs used the free Ollama cloud route."
+    }
   },
   {
     "model_id": "gpt5.6-sol-xhigh",
     "display_name": "GPT-5.6 Sol XHigh",
     "role": "premium reference",
     "provider": "OpenAI / subscription or API",
-    "notes": "September 2026 refresh. API model gpt-5.6-sol at reasoning effort xhigh; like-for-like successor to gpt5.4-xhigh. Knowledge cutoff 2026-02-16."
+    "notes": "September 2026 refresh. API model gpt-5.6-sol at reasoning effort xhigh; like-for-like successor to gpt5.4-xhigh. Knowledge cutoff 2026-02-16.",
+    "pricing": {
+      "input_usd_per_1m": 5.0,
+      "output_usd_per_1m": 30.0,
+      "unit": "USD per 1M tokens, list price",
+      "as_of": "2026-09-17",
+      "source": "https://www.eesel.ai/blog/gpt-5-6-pricing",
+      "source_model_id": "gpt-5.6-sol",
+      "note": "OpenAI standard short-context rate as reported on 2026-08-04 (openai.com/api/pricing blocked automated fetch). On the same date OpenRouter listed $2.00 / $10.00 and one aggregator reported a promotional $4.00 / $20.00; the standard rate is used here. The per-run estimates in benchmarks/refresh_2026-09_summary.md used the $20 output figure recorded at capture time. Benchmark runs used the Codex VS Code extension on a subscription plan."
+    }
   },
   {
     "model_id": "gpt5.6-luna-max",
@@ -62,6 +134,15 @@
     "provider": "OpenAI API",
     "cost_tier": 2,
     "cost_label": "Paid API",
-    "notes": "September 2026 refresh. API model gpt-5.6-luna at reasoning effort max; budget tier listed at $0.20 / $1.20 per 1M input / output tokens. Knowledge cutoff 2026-02-16."
+    "notes": "September 2026 refresh. API model gpt-5.6-luna at reasoning effort max; budget tier listed at $0.20 / $1.20 per 1M input / output tokens. Knowledge cutoff 2026-02-16.",
+    "pricing": {
+      "input_usd_per_1m": 0.2,
+      "output_usd_per_1m": 1.2,
+      "unit": "USD per 1M tokens, list price",
+      "as_of": "2026-09-17",
+      "source": "https://openrouter.ai/api/v1/models",
+      "source_model_id": "openai/gpt-5.6-luna",
+      "note": "Matches OpenAI's published rate after the 2026-07-30 price cut. Benchmark runs used the Codex VS Code extension on a subscription plan."
+    }
   }
 ]
