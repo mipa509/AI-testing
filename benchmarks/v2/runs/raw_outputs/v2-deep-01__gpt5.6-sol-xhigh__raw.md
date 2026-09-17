@@ -4,7 +4,7 @@
 - model_id_used: `gpt5.6-sol-xhigh`
 - api_model: `gpt-5.6-sol`
 - reasoning_effort: `xhigh`
-- run_route: `Codex VS Code extension, fresh session (workspace had repo access, see run record)`
+- run_route: `Codex VS Code extension, fresh session, empty sandbox workspace; context attached as files (see run record)`
 - run_date: `2026-09-17`
 - thinking_mode_used: `yes (reasoning effort xhigh)`
 

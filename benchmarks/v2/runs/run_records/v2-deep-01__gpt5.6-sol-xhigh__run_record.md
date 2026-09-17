@@ -8,11 +8,11 @@
 - `prompt_version`: `tasks/deep_01_multifile_bug_hunt/prompt.md`
 - `context_files_shared`: `context/analysis_pipeline.py`, `context/section_library.py`, `context/reporting.py`
 - `raw_output_path`: `runs/raw_outputs/v2-deep-01__gpt5.6-sol-xhigh__raw.md`
-- `run_route`: `Codex VS Code extension, fresh session`
+- `run_route`: `Codex VS Code extension, fresh session, empty sandbox workspace on a separate drive`
 - `rate_limit_or_refusal_notes`: none reported; no refusal or truncation in the output
 - `latency_notes`: `56 s` after the context message
 - `token_usage_or_cost`: not available in the Codex VS Code extension
-- `manual_observations`: PROVISIONAL - validity under review. The model waited for the context files as instructed. However, its file links resolve to absolute paths inside this repository (`.../AI-testing/benchmarks/v2/tasks/deep_01_multifile_bug_hunt/context/*.py`) with line numbers that exactly match the on-disk files. That means the Codex workspace had access to the benchmark repo, where the task folder also holds `_evaluator_notes.md`. The April `gpt5.4-xhigh` run cited only relative paths with off-by-one line numbers, which suggests it had no repo access. Keep this run only if the Codex activity log shows no evaluator, reference, run, or results files were read; otherwise replace it with a rerun from an empty workspace.
+- `manual_observations`: The model waited for the context files as instructed. Message 2 attached the three `context/*.py` files through the Codex "add files" option rather than pasting `context_combined.md`; the code content is identical. Attachments carry their absolute file paths, which is why the output links point into this repo with exact line numbers. The workspace itself was an empty sandbox, so the model had no workspace access to evaluator or reference files. The April `gpt5.4-xhigh` run used pasted text instead.
 
 ## First-Pass Output Summary
 
