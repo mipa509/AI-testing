@@ -12,7 +12,7 @@
 - `rate_limit_or_refusal_notes`: none reported; no refusal or truncation in the output
 - `latency_notes`: about `3 min` after the context message (`gpt5.6-sol-xhigh`: `56 s` on the same task)
 - `token_usage_or_cost`: about `28k` tokens as reported by Codex (`gpt5.6-sol-xhigh`: about `24k` on the same task)
-- `manual_observations`: The model waited for the context files. Per the run plan, the three `.py` files were attached from `D:\bench-inputs\task2\context\` through the Codex "add files" option, matching how Sol received them on this task (delivery method to be confirmed by the operator). The output cites bare file names only, with no absolute paths.
+- `manual_observations`: The model waited for the context files. Inputs taken from the neutral copy `D:\bench-inputs\task2`. Context delivered by pasting the text of `context_combined.md` as message 2 (the operator confirmed pasting the combined context for every Luna run). The code content is identical, but delivery differs from `gpt5.6-sol-xhigh` on this task, which received attached files. The output cites bare file names only, with no absolute paths.
 
 ## First-Pass Output Summary
 
