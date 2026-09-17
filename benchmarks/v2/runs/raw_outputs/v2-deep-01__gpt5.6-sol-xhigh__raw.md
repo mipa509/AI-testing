@@ -10,7 +10,7 @@
 
 ## Prompt Used
 
-Same as in the prompt file (`tasks/deep_01_multifile_bug_hunt/prompt.md`), sent as message 1. `tasks/deep_01_multifile_bug_hunt/context_combined.md` sent as message 2.
+Same as in the prompt file (`tasks/deep_01_multifile_bug_hunt/prompt.md`), sent as message 1. The three `context/*.py` files were attached through the Codex "add files" option as message 2 (same code content as `context_combined.md`).
 
 ## Context Files Shared
 

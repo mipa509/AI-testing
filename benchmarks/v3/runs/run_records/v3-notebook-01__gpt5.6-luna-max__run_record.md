@@ -11,7 +11,7 @@
 - `run_route`: `Codex VS Code extension, fresh session, empty sandbox workspace on a separate drive`
 - `rate_limit_or_refusal_notes`: none reported; no refusal or truncation in the output
 - `latency_notes`: about 4 min in total: about 3 min before output started, then about 1 min to print it
-- `token_usage_or_cost`: PENDING
+- `token_usage_or_cost`: about `31k` tokens as reported by Codex (`gpt5.6-sol-xhigh`: about `23k` on the same task)
 - `manual_observations`: Prompt pasted from the neutral copy `D:\bench-inputs\task1\prompt.md` as a single message. This copy kept its Markdown code fences, unlike the Sol v3 copy. Capture-time arithmetic check (not executed in Python): `pressure_at_point()` implements `6*M*x/B^3`, which at `x = B/2` gives `3M/B^2` rather than the closed-form `6M/B^3`. For `B = 2.4 m`, LC1, the code's corner pressure is `269.10 kPa` against the closed form's `256.08 kPa`. The `abs_tol=1e-12` assert in `evaluate_case()` would therefore raise `AssertionError` on the first evaluation, so Code Cell 4 would stop and Cells 5-6 would not run. The Markdown line `q(x,y) = N/B^2 + 6*My*x/B^3 + 6*Mx*y/B^3` has the same error, although the following derivation lines correctly use `12*My*x/B^4`. Confirm by execution during scoring.
 
 ## First-Pass Output Summary
