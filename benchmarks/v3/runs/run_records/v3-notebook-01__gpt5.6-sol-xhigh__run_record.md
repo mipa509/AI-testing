@@ -8,11 +8,11 @@
 - `prompt_version`: `v1`
 - `context_files_shared`: `none`
 - `raw_output_path`: `benchmarks/v3/runs/raw_outputs/v3-notebook-01__gpt5.6-sol-xhigh__raw.md`
-- `run_route`: PENDING
+- `run_route`: `Codex VS Code extension, fresh session` (same route as the April `gpt5.4-xhigh` runs)
 - `rate_limit_or_refusal_notes`: no refusal or truncation in the output; rate limits not reported
-- `latency_notes`: PENDING
-- `token_usage_or_cost`: PENDING
-- `manual_observations`: Output was copied from the rendered chat view, so code fences, table pipes, and heading markers were lost in the copy. Score the notebook content, not the copy formatting (same approach as the April `qwen-3.6plus` export issue).
+- `latency_notes`: not captured
+- `token_usage_or_cost`: not available in the Codex VS Code extension
+- `manual_observations`: Output was copied as displayed from the Codex VS Code extension response, so code fences, table pipes, and heading markers were lost in the copy. Score the notebook content, not the copy formatting (same approach as the April `qwen-3.6plus` export issue).
 
 ## First-Pass Output Summary
 

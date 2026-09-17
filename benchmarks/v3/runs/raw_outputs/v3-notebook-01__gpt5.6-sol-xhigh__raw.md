@@ -4,7 +4,7 @@
 - model_id_used: `gpt5.6-sol-xhigh`
 - api_model: `gpt-5.6-sol`
 - reasoning_effort: `xhigh`
-- run_route: `PENDING`
+- run_route: `Codex VS Code extension, fresh session`
 - run_date: `2026-09-17`
 - thinking_mode_used: `yes (reasoning effort xhigh)`
 
@@ -14,7 +14,7 @@ Same as in the prompt file (`tasks/notebook_01_pad_footing_sizing/prompt.md`), s
 
 ## Raw Model Output
 
-Copy note: this output was copied from the rendered chat view, so the Markdown code fences, table pipes, and heading markers were lost in the copy. The text below is otherwise verbatim and is wrapped in a `text` block to stop it re-rendering.
+Copy note: this output was copied as displayed from the Codex VS Code extension response, so the Markdown code fences, table pipes, and heading markers were lost in the copy. The text below is otherwise verbatim and is wrapped in a `text` block to stop it re-rendering.
 
 ````text
 Markdown Cell 1 — 1. Assumptions, exclusions, and sign conventions
