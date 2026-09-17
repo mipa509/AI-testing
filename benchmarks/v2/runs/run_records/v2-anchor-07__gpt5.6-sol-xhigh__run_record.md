@@ -11,7 +11,7 @@
 - `run_route`: `Codex VS Code extension, fresh session, empty sandbox workspace on a separate drive`
 - `rate_limit_or_refusal_notes`: none reported; no refusal or truncation in the output
 - `latency_notes`: `3 min 30 s` (single-message task)
-- `token_usage_or_cost`: not available in the Codex VS Code extension
+- `token_usage_or_cost`: about `85k` tokens as reported by Codex (`gpt5.6-luna-max`: about `131k` on the same task)
 - `manual_observations`: Prompt pasted from the neutral copy `D:\bench-inputs\task8\prompt.txt` (text-block content only) as a single message. The output cites specific SCI P363 PDF pages by URL, so the Codex route evidently used web lookup. The April `gpt5.4-xhigh` anchor output also cited the SCI P363 URL, so the two runs are like-for-like on tool access.
 
 ## First-Pass Output Summary
