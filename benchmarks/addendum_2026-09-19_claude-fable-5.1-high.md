@@ -240,3 +240,237 @@ C and B are both usable as-is by a checking engineer; the gap between them is de
 - C's expected-output blocks were spot-checked (LC1/LC3 at 2.4 m, LC2 kern ratio 0.1619, B_min uplift 2.914 m, bisection bearing widths) and match the reference model; no fabricated numbers found.
 - D's Markdown table values (122.22/20.00/13.33 etc.) match the reference at 3.0 m.
 - B and C use `list[...]`/`tuple[...]` style or `itertools`/`dataclasses`; all are standard library, C requires Python 3.9+ for built-in generic hints.
+
+## 6. Second judge from a different model family (2026-09-19)
+
+Because the first judge, the orchestrator and the model under test are all Claude models, the user ran the same three packs (unchanged, same A to D labels) through a judge from a different model family, one fresh chat per pack: pack only, no web, no code execution, no vendor guessing, six integer scores in the pack's column order. The judge's identity and settings are recorded below when supplied by the user. The replies were de-anonymised with the recorded mapping. **No score in this record or in the repository was changed on the strength of this comparison**; it is recorded as evidence about the first judge.
+
+| Task | Response | April | Judge 1 (Claude) | Judge 2 (other family) | J2 - J1 |
+|---|---|---:|---:|---:|---:|
+| `v2-deep-02` | `claude-fable-5.1-high` | - | 4.67 | 3.17 [4, 4, 3, 2, 3, 3] | -1.50 |
+| `v2-deep-02` | `gpt5.6-sol-xhigh` | - | 4.50 | 4.67 [5, 5, 5, 4, 5, 4] | +0.17 |
+| `v2-deep-02` | `gpt5.4-xhigh` | 4.83 | 4.33 | 5.00 [5, 5, 5, 5, 5, 5] | +0.67 |
+| `v2-deep-02` | `minimax-m2.7-cloud` | 3.00 | 2.33 | 1.50 [1, 2, 1, 1, 2, 2] | -0.83 |
+| `v2-anchor-07` | `claude-fable-5.1-high` | - | 4.33 | 3.83 [4, 4, 4, 3, 4, 4] | -0.50 |
+| `v2-anchor-07` | `gpt5.6-sol-xhigh` | - | 4.83 | 4.83 [5, 5, 5, 4, 5, 5] | +0.00 |
+| `v2-anchor-07` | `gpt5.4-xhigh` | 4.83 | 4.67 | 4.67 [5, 5, 4, 4, 5, 5] | +0.00 |
+| `v2-anchor-07` | `minimax-m2.7-cloud` | 2.50 | 1.83 | 1.83 [2, 2, 1, 1, 2, 3] | +0.00 |
+| `v3-notebook-01` | `claude-fable-5.1-high` | - | 5.00 | 4.17 [5, 4, 3, 4, 4, 5] | -0.83 |
+| `v3-notebook-01` | `gpt5.6-sol-xhigh` | - | 3.50 | 4.17 [5, 5, 4, 3, 4, 4] | +0.67 |
+| `v3-notebook-01` | `gpt5.4-xhigh` | 5.00 | 4.67 | 5.00 [5, 5, 5, 5, 5, 5] | +0.33 |
+| `v3-notebook-01` | `gemma4:31b-cloud` | 3.67 | 2.50 | 3.50 [4, 4, 3, 4, 3, 3] | +1.00 |
+
+Judge 2 against the frozen April anchors: MAD 0.500, signed -0.389, worst row 1.50 (`minimax-m2.7-cloud` on the repo review, read 1.5 points below April). The gate fails on the worst row only; the high anchor is reproduced to within 0.17 on every task.
+
+Judge 2 minus judge 1, mean of the six-criterion means: +0.22 over the nine rows that are not the model under test (level or more lenient), -0.94 over the three Fable rows (lower on every task: -1.50 on the repo review, -0.50 on the anchor, -0.83 on the notebook). Rankings: judge 2 keeps the anchor order on every task and agrees with judge 1 on the EC3 anchor (Fable third of the three correct answers), but moves Fable from first to third on the repo review (behind `gpt5.4-xhigh` and `gpt5.6-sol-xhigh`) and from first to second on the notebook (behind `gpt5.4-xhigh`).
+
+Read of the disagreement, from the two judges' stated reasons:
+
+- On the repo review, judge 2 scored the terse `gpt5.4-xhigh` review a straight 5.00 while noting it has no worked numbers, and marked the Fable review down to 2 on engineering judgement for categorical wording ("for every row", "accidentally safe state"), for treating the combination label as evidence of intended dispatch, for calling the rounding effect unpredictable when the only effect under the code's strict less-than test is a conservative false failure, and for findings 6 and 7 and the release gate turning unestablished requirements into required changes. The rounding point is correct and judge 1 missed it; the others are the proportionality and inference points judge 1 also made, weighed much more heavily. Judge 2 confirmed the worked table.
+- On the anchor, judge 2's deductions are the ones judge 1 made (the assumed-load deflection row, the unsupported restraint-spacing remark, the enlarged script) plus a hand-working line in the shear check that omits the division by 1000 while the printed result is right. Half a point lower, same rank.
+- On the notebook, judge 2 kept the 5 on calculation correctness and completeness and took points on engineering judgement for two assurances it found unsupported (that ignoring corner redistribution is conservative for `q_max`, and that the self-weight effects are modest without thickness data), for the EN 1997-1 6.5.2 inconsistency judge 1 noted without deducting, and for two consecutive code cells with no Markdown between them. It still ranked the draft second and usable.
+
+What the pattern can and cannot show: judge 2 is at least as lenient as judge 1 on every response it could be compared on, and lower only on the Claude model's three responses. That is consistent with same-family favouritism in judge 1, and it is also consistent with judge 2 systematically preferring terse responses (its top-ranked response on each task is the shortest correct one, and its Fable deductions are mostly about scope, wording and assurances rather than errors). Two judges cannot separate those explanations. A third judge from a third family, or a pooled panel, would.
+
+For reference only, the two-judge mean of the Fable technical rows would be 3.92 / 4.08 / 4.58 on the blind scale before any offset; the September offsets on the same three tasks are +0.42 / +0.08 / +0.71. The recorded scores remain judge 1's, under the standing rule that every other model in the repo was scored by a single judge of the same family.
+
+### Judge 2 replies, de-anonymised (verbatim)
+
+#### `v2-deep-02`
+
+Label key: A = `gpt5.6-sol-xhigh`, B = `gpt5.4-xhigh`, C = `minimax-m2.7-cloud`, D = `claude-fable-5.1-high`
+
+##### 1. Task summary
+
+Review the three supplied Python modules for major-axis steel beam ULS screening, prioritising calculation, unit, combination and reporting defects, explaining their engineering consequences and minimum fixes, and identifying issues deliberately left outside the review scope without rewriting the package.
+
+##### 2. Score table
+
+| Response | Correctness | Repo comprehension | Change safety | Engineering judgement | Maintainability | Clarity | Note |
+|---|---|---|---|---|---|---|---|
+| A | 5 | 5 | 5 | 4 | 5 | 4 | Correctly identifies and safely addresses all three primary defects, but elevates a conditional combination-contract concern and gives inaccurate reporting line references. |
+| B | 5 | 5 | 5 | 5 | 5 | 5 | Provides a focused, accurate review of all primary defects with proportionate fixes and sensible treatment of screening assumptions. |
+| C | 1 | 2 | 1 | 1 | 2 | 2 | Misses the factor-of-1000 resistance error, reverses the reporting selection's meaning and proposes an unsafe acceptance fix while escalating an unsupported standards issue. |
+| D | 4 | 4 | 3 | 2 | 3 | 3 | Explains all primary defects and their arithmetic well, but weakens the review with categorical overclaims, speculative release requirements and potentially disruptive interface changes. |
+
+##### 3. Top weaknesses per response
+
+**A**
+
+- Finding 5 escalates the unused `combination` label to Medium without evidence that different labels require different factors: rows could already contain the appropriate action components under a single supported expression; its conditional wording and request to define the contract appropriately limit this concern.
+- The reporting references are inaccurate: ascending sorting and truncation are at lines 17–18, not 14–15; the combination label is at line 12, not line 10; and the status comparison is at line 14, outside the cited 7–11 range.
+- The governing-summary alternative, “globally or per member,” leaves the required coverage unresolved; returning all rows is sound, but a summary needs an explicit contract and a check that distinct members and combinations are represented as intended.
+
+**B**
+
+- Finding 4's wording, “uses `< 1.0` rather than the raw value,” does not cleanly distinguish the comparison operator from the rounded operand; the subsequent minimum fix is nevertheless correct.
+- Regression tests are suggested for load factoring and resistance, but not for the ascending-sort/truncation defect; a mixed PASS/FAIL, multiple-member report case would strengthen protection of the most consequential reporting behaviour.
+- The “Not Escalated” paragraph treats `wL²/8` and omitted stability checks as scope assumptions without explicitly recommending that the simple-support, full-span UDL and screening limitations be documented. These are minor improvement opportunities, not missing primary findings.
+
+**C**
+
+- It explicitly states that “the `1e6` conversion is correct” and leaves that divisor in its proposed resistance fix. This misses a primary finding: `cm³ × MPa` requires division by `1e3` to give kNm, so the supplied resistance is 1000 times too small.
+- Finding 3 and the severity summary call the retained row the “worst-case beam.” Ascending sorting retains the lowest utilisation, potentially hiding governing failures; removing the slice is a valid fix, but the explanation reverses the engineering hazard.
+- Changing the status expression to `util <= 1.0` while retaining rounding permits a raw utilisation of `1.004` to round to `1.00` and PASS. Increasing rounding precision also leaves classification dependent on presentation. Exact unity fails in the original code because of `<`, not because floating-point arithmetic rarely reaches unity.
+- The Critical Eurocode partial-factor finding assumes an unspecified standard and national annex, conflates elastic analysis with the value of `γ_M0`, and claims a factor of 1.0 overstates resistance. The assertion that adding a factor requires changing every call site also ignores the centralised resistance function and its own proposed default argument.
+- “No type hints on function signatures” contradicts the supplied annotations, while “simply supported fixed-end-moment formula” confuses the support model. These statements further undermine confidence in the repository reading.
+
+**D**
+
+- The opening assertion that all three blockers independently give wrong answers “for every row” is too broad: omitting the Q factor has no effect when Q is zero, and truncation need not affect a single-row input. “Every failing member is silently dropped” is also false when the minimum-utilisation row itself fails.
+- “Today ... that row says FAIL” and “accidentally safe state” are not guaranteed: zero or sufficiently small demand can still pass despite the resistance error. The warning about correcting resistance while leaving other defects is valuable, but the claimed current safety is unsupported.
+- Finding 4 treats a combination label as proof that dispatch among 6.10, 6.10a/b, accidental and SLS rules was intended. The supplied contract establishes none of this; dropping the `combination` column could remove traceability and break consumers, while adding dispatch could reinterpret existing rows.
+- Finding 5 claims rounding moves the boundary “in an unpredictable direction.” With the existing rounded-value `< 1.0` rule, the demonstrated error is conservative false failure near unity; floating-point tie behaviour does not establish false passes in this code. Its proposed raw-value classification is correct.
+- Findings 6–7 and the release gate turn unestablished Eurocode, section-class and output-schema requirements into required changes. Documentation and additional report values could help, but their necessity is not demonstrated; the further claim that LTB “will govern” for an unrestrained beam of the example span cannot be established from the supplied information.
+
+##### 4. Ranking
+
+1. **B** — Best balance of complete primary-defect detection, correct fixes, restraint and clear engineering consequences.
+2. **A** — Equally strong on the primary calculations and reporting defect, with slightly weaker proportionality and source references.
+3. **D** — Correct core diagnosis and useful numerical illustration, diminished by unsupported certainty and unnecessary expansion of the release scope.
+4. **C** — Unreliable on the central unit and reporting checks, with a proposed change that can introduce false passes.
+
+##### 5. Practical significance
+
+A checking engineer could act on B's and A's primary findings as delivered, confirming the reporting contract and acceptance convention during implementation. D's first three fixes are also actionable, but its additional release requirements need independent justification. C requires substantial re-review before any changes are adopted. The decisive differences concern hidden governing failures, understated imposed-load demand and a resistance error of three orders of magnitude; A and B differ much less materially from each other.
+
+##### 6. Manual-review watch-outs
+
+- Numerical cross-checks support A's example: `1000 × 355 / 1000 = 355 kNm`, whereas the code gives `0.355 kNm`. D's example gives loads of 25.5 versus 21.5 kN/m, moments of 114.75 versus 96.75 kNm, and resistance of 521.85 versus 0.52185 kNm; its displayed utilisations of about 0.22 and 185 and 15.7% demand shortfall are consistent.
+- The 1000-fold utilisation increase describes the resistance defect in isolation. The missing Q factor partly offsets it in the combined calculation; the defects do not cancel or justify treating the package as safe.
+- Confirm the intended report coverage, characteristic versus already-combined input loads, and meaning of combination labels before accepting claims about additional combination logic or changing the output schema.
+- Confirm the intended equality convention separately from the definite need to classify using unrounded utilisation; C's suggested rounded-value `<=` fix is unsafe regardless of whether equality itself should pass.
+- No governing standard, national annex, section class or restraint data is supplied. D's approximate named-section properties and C/D's standards-specific assertions were not externally verified and receive no additional credit.
+- This judgement uses only the supplied pack and manual arithmetic; no response code was executed. The repository context supplies the requested Python files, so answering despite the original prompt's instruction to wait for those files is not a defect.
+
+#### `v2-anchor-07`
+
+Label key: A = `claude-fable-5.1-high`, B = `gpt5.6-sol-xhigh`, C = `minimax-m2.7-cloud`, D = `gpt5.4-xhigh`
+
+##### 1. Task summary
+
+Review the EC3 beam-check snippet, correct the planted minor-axis property and N·mm-to-kN·m conversion faults, provide sourced section properties and corrected working, and state the resulting cross-section bending adequacy without inventing a different loading or restraint problem.
+
+##### 2. Score table
+
+| Response | Correctness | Repo comprehension | Change safety | Engineering judgement | Maintainability | Clarity | Note |
+|---|---|---|---|---|---|---|---|
+| A | 4 | 4 | 4 | 3 | 4 | 4 | Corrects both planted faults and obtains the cross-section PASS, but adds speculative serviceability and restraint advice and contains an omitted conversion in its shear working. |
+| B | 5 | 5 | 5 | 4 | 5 | 5 | Provides a traceable, correct repair and explicitly scoped executable PASS, with some unnecessary extension into a conditional buckling calculation. |
+| C | 2 | 2 | 1 | 1 | 2 | 3 | Identifies both planted faults but substitutes a conflicting modulus and invents load factoring, producing an unreliable FAIL and unsupported resizing advice. |
+| D | 5 | 5 | 4 | 4 | 5 | 5 | Gives a concise, correct repair and cross-section verdict, but leaves the executable PASS unqualified and states an additional buckling verdict with limited supporting assumptions. |
+
+##### 3. Top weaknesses per response
+
+**A**
+
+- Section 3.6 invents a characteristic load range of `18.5/1.35` to `18.5/1.5`, then uses the resulting 28–31 mm deflection to suggest failure against selected limits; neither the action split nor the serviceability criterion is supplied, so this moves beyond the planted-error objective.
+- The claim that restraints at “roughly 1.5 m centres or closer” would suffice has no supporting calculation or restraint specification; it is actionable design advice that the supplied problem does not establish.
+- “Adequate in bending only if the compression flange is fully laterally restrained” overstates a necessary condition: adequate discrete restraints and a satisfactory member check can also establish adequacy, as A itself subsequently acknowledges.
+- Section 3.4 writes `1781 × 275 / 1.732 / 1.0 = 282.8 kN` without the required division by 1,000; the numerical result and subsequent Python conversion are consistent, but this hand-working line omits precisely the kind of unit conversion under review.
+
+**B**
+
+- The additional `M_b,Rd ≈ 31.46 kN·m` and utilisation `2.83` depend on the applicability of the cited buckling table and its boundary conditions, which the prompt does not establish; the final load-height caveat limits the claim but does not validate those assumptions.
+- Linear interpolation between the quoted 6.0 m and 7.0 m resistances is labelled approximate, but its accuracy or conservatism is not demonstrated; it should remain an illustration rather than an established design resistance for this beam.
+- The final wording “adequate for cross-sectional bending only if its compression flange is adequately restrained” conflates two checks: the calculated cross-section resistance is distinct from whether member stability permits that resistance to be developed.
+
+**C**
+
+- `Wpl_y = 106.0e3 mm³` conflicts with the `353e3 mm³` property consistently identified and sourced by A, B and D; it produces `29.15 kN·m` instead of `97.075 kN·m` and changes the unchanged-load verdict from PASS at approximately `0.916` to FAIL at approximately `3.05`.
+- It declares `18.5 kN/m` characteristic and applies `gamma_G = 1.35`, changing the main design moment from `88.8925` to approximately `120.00 kN·m` without evidence that factoring is missing or that the load is wholly permanent; the later already-factored alternative does not repair this unjustified default.
+- Its section-property account is internally inconsistent: the opening table calls `49.0e3 mm³` the minor-axis value, while the source section gives approximately `23e3 mm³`; the generic Blue Book attribution does not reconcile these claims or substantiate the major-axis value.
+- The conclusion that the beam is “heavily over-stressed” and needs a `305×102×33 UB` or `305×165×46 UB` follows from the defective calculation, and neither suggested replacement is checked for the stated loading or member stability.
+
+**D**
+
+- The corrected code still prints a bare `STATUS: PASS`, without carrying the prose's “cross-section bending only” qualification into the executable result; the ULS-load and restraint assumptions are also absent from its code comments.
+- The additional unrestrained-member FAIL relies on a stated `31 to 32 kN·m` resistance without showing the table entries or calculation and without specifying the end-restraint and load-height assumptions needed to apply it.
+- “That is only enough if the compression flange is laterally restrained” is too absolute as a description of the cross-section check: adequacy may also be demonstrated through a separate satisfactory LTB check, rather than treating restraint as a prerequisite to the cross-section resistance itself.
+
+##### 4. Ranking
+
+1. **B** — Best combination of correct planted-error repair, explicit working, property attribution and a code output that clearly limits its PASS to cross-section bending.
+2. **D** — Equally successful on the central calculation and closely focused on the snippet, but less safe when its standalone code or additional buckling verdict is reused.
+3. **A** — Correct on the central calculation, but speculative serviceability and restraint advice reduces proportionality and introduces avoidable technical weaknesses.
+4. **C** — Recognises the fault types but fails to deliver a trustworthy corrected result because its replacement property and default loading basis are defective.
+
+##### 5. Practical significance
+
+A checking engineer could use B and D as the basis for the intended snippet correction, and A's core bending correction is also usable after separating it from the speculative extensions. With `Wpl_y = 353e3 mm³` and the supplied load treated as the design load, the working gives `M_Ed = 88.8925 kN·m`, `M_Rd = 97.075 kN·m` and utilisation approximately `0.9157`: a cross-section bending PASS. B's scoped output reduces the chance of mistaking that result for complete member adequacy. C requires substantial correction and could prompt unnecessary rejection or resizing. None of the responses establishes unconditional whole-beam adequacy from the information supplied.
+
+##### 6. Manual-review watch-outs
+
+- The pack supplies no separate reference solution or authoritative numerical property table; its evaluator notes identify the two planted faults. The `353e3 mm³` value is supported by the mutually consistent, attributed claims in A, B and D, but their cited sources were not independently opened or verified.
+- A human reviewer should confirm the exact section-table row, axis labels, property values and cited page references before relying on the resistance values; agreement between responses is not independent source verification.
+- Check whether `18.5 kN/m` is already the complete ULS design load. Its status is unspecified, so clarification is appropriate, but automatically applying `1.35` is not justified by the prompt.
+- Verify actual restraints, end conditions, load application height and the basis of any tabulated buckling resistance before adopting the additional `31–32 kN·m` member capacities or A's suggested restraint spacing.
+- No response code was executed; the arithmetic and units were assessed from the supplied text. “Repo comprehension” here concerns the supplied snippet and task scope, since no wider repository context is included.
+- The ranking prioritises correction of the two planted faults and the resulting adequacy statement; extra LTB or serviceability calculations are not requirements for a high score and were assessed for their accuracy, qualifications and proportionality.
+
+#### `v3-notebook-01`
+
+Label key: A = `gemma4:31b-cloud`, B = `gpt5.4-xhigh`, C = `claude-fable-5.1-high`, D = `gpt5.6-sol-xhigh`
+
+##### 1. Task summary
+
+Evaluate four notebook drafts for selecting the smallest square footing from 2.4–3.2 m that satisfies service-load bearing and no-uplift checks, with the reference requiring 3.0 m × 3.0 m governed by LC2 because its minimum pressure at 2.9 m is −0.410 kPa.
+
+##### 2. Score table
+
+| Response | Calculation correctness | Code quality and executability | Engineering judgement | Unit and assumption handling | Notebook traceability and clarity | Completeness of deliverable | Note |
+|---|---|---|---|---|---|---|---|
+| A | 4 | 4 | 3 | 4 | 3 | 3 | The search correctly checks both criteria, but the governing-case logic identifies LC3 and the conclusion leaves the selected size and case as variable names. |
+| B | 5 | 5 | 5 | 5 | 5 | 5 | Correct mechanics, explicit directional conventions, an auditable four-corner calculation and candidate search support the correct size and LC2 governing conclusion. |
+| C | 5 | 4 | 3 | 4 | 4 | 5 | Correct calculations and a thorough derivation support the selection, but unsupported engineering assurances, inconsistent general sign reporting and minor notebook/code issues weaken the draft. |
+| D | 5 | 5 | 4 | 3 | 4 | 4 | Correct calculations and reported results establish the selection, but the required stress derivation, eccentricity directions and model justification are incomplete. |
+
+##### 3. Top weaknesses per response
+
+**A**
+
+- The results cell sets `governing_case` solely through `if q_max > max_q_found`, so the final summary would name LC3; LC3 governs maximum bearing pressure, whereas LC2 governs size through uplift, with reference `qmin = −0.410 kPa` at 2.9 m and `+2.222 kPa` at 3.0 m.
+- The conclusion gives literal placeholders `selected_B`, `governing_case` and `max_q_found`, rather than an explicit numerical footing size and named governing case; it also supplies no explanation of why the smaller candidates fail.
+- The statement that `q = N/A ± Mx/Zx ± My/Zy` applies “at any point (x, y)” is incorrect: section-modulus terms represent extreme-fibre contributions, not arbitrary coordinates; the derivation never shows `Mx*y/Ix` and `My*x/Iy` or obtains `Z` from `I/(B/2)`.
+- “Positive moments acting about” the axes does not identify which pressure edge becomes more compressed, and the unqualified `Mx + My` extrema formula assumes the supplied positive moments; opposite signs would require corner evaluation or absolute moment magnitudes.
+- The outline has five numbered sections, places inputs in an unlabelled code cell instead of the requested Input data section, and does not clearly label alternating notebook cells; the calculation code also lacks a no-passing-candidate guard before using `selected_B`.
+
+**B**
+
+- `selected = next(row for row in search_results if row["all_ok"])` has no fallback, so an unsuccessful search would raise an unexplained `StopIteration`; the supplied data do contain a passing candidate, so this is a robustness limitation rather than an execution failure here.
+- `max(first_passing_width_by_case, key=first_passing_width_by_case.get)` reports only one selection-governing case if several cases share the same first passing width; LC2 is uniquely governing for the given cases, so the reported result is correct.
+- The model discussion does not explicitly distinguish a negative full-contact pressure prediction from physically admissible soil contact pressure or explain the need for a different contact model after separation; the implemented rejection and stated no-uplift criterion nevertheless handle this task correctly.
+
+**C**
+
+- Section 1.2 asserts that ignoring real pressure redistribution is “conservative for q_max,” and the conclusion says `q_min ≥ 0` “guarantees the model's validity”; nonnegative computed pressure establishes full contact within the assumed model, not actual footing rigidity, uniform soil stiffness or conservatism.
+- Section 1.1 calls EN 1997-1 §6.5.2 a “serviceability-type verification,” while later sections identify the same clause with ULS bearing resistance; this internal inconsistency and the additional standards attributions are unsupported by the pack and should not increase confidence in the analysis.
+- The self-weight discussion calls its bearing effect “slight” and both effects “modest at 0.81 utilisation,” despite having no footing thickness, weight or backfill data; extending the calculation also requires a consistent net-pressure basis rather than an unqualified addition to axial load.
+- Section 1.4 defines signed eccentricities and then fixes the maximum at `(+B/2, +B/2)`, while `check_case` stores `abs(My)/N` and `abs(Mx)/N`; these statements coincide for the supplied positive moments but would misreport directions and corner locations for negative moments, although the pressure extrema remain correct.
+- `round_up_to_increment` rounds `x / step` internally to nine decimal places despite the reporting-only rounding requirement, and Code Cells 2 and 3 are consecutive without an intervening Markdown cell; neither issue changes the supplied selection, but both depart from the requested notebook discipline.
+
+**D**
+
+- Markdown Cells 1 and 3 state `6|M|/B³` directly without deriving it from `q = N/A ± Mx*y/Ix ± My*x/Iy`, `I = B⁴/12` and corner coordinates; the explicit mechanics-derivation requirement is unmet.
+- No cell defines `ex = My/N`, `ey = Mx/N`, their directions or the positive-moment compression edges; saying only that the moments act about centroidal axes does not fulfil the requested directional convention.
+- The rigid, linear-pressure assumption is stated but not briefly justified for this preliminary check; the otherwise correct pressure decomposition does not supply that missing explanation.
+
+##### 4. Ranking
+
+1. **B** — Best overall: correct selection, preferred mechanics derivation, clear signs and units, and consistent identification of both selection-governing and bearing-governing cases.
+2. **C** — Second on the strength of its mechanics derivation, full candidate matrix and independent sizing cross-check, although its engineering assurances require correction.
+3. **D** — Correct and coherent computationally, but omission of the specifically requested derivation and eccentricity conventions places it narrowly behind C despite equal aggregate scores.
+4. **A** — Its pressure calculation and search are sound for these inputs, but the wrong governing-case summary and unfinished numerical conclusion materially weaken the deliverable.
+
+##### 5. Practical significance
+
+A checking engineer could act on B as a complete preliminary sizing draft. C and D also establish the correct 3.0 m square selection: C needs qualification of its unsupported engineering claims, while D needs the missing mechanics and directional explanation. A needs its conclusion completed and governing-case logic corrected. The consequential distinction is LC2's uplift rejection at 2.9 m, rather than LC3's acceptable 178.889 kPa maximum pressure at 3.0 m; none of the responses selects 2.9 m by checking bearing alone.
+
+##### 6. Manual-review watch-outs
+
+- Assessment is based solely on the pack and static code inspection; no response code was executed, and no external standards or other files were consulted.
+- Reference checks at 3.0 m are `(qmax, qmin)` in kPa: LC1 `(155.556, 88.889)`, LC2 `(153.333, 2.222)` and LC3 `(178.889, 98.889)`; LC2 at 2.9 m is `(166.879, −0.410)`, so a rounded display must not conceal uplift.
+- Distinguish the size-governing LC2 uplift condition from the LC3 maximum-bearing condition; A's search itself includes uplift and should not be misclassified as a bearing-only search.
+- D explicitly carries a copying-related formatting-loss notice; its scores assess the labelled cell content and do not penalise the enclosing text fence or damaged table/equation formatting.
+- C's standards references and physical-model assurances need independent review before reliance; its Python type annotations also assume Python 3.9 or later, while its internal rounding helper does not affect this case's selected size.
+- B's listed weaknesses concern extensions or explanatory refinements, not failures on the specified data; D's `1e-9 kPa` comparison tolerance likewise has no material effect on the supplied pass/fail decisions.
