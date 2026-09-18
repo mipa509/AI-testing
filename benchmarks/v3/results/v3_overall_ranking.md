@@ -2,16 +2,16 @@
 
 ## Cross-Task Average Scores
 
-| Criterion | gemma4:31b-cloud | glm-5.1:cloud | gpt5.4-xhigh | qwen-3.6plus | minimax-m2.7-cloud | kimi-k2-thinking | deepseek-v3.2 | gpt5.6-sol-xhigh | gpt5.6-luna-max | deepseek-v4.1-flash |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---: |---:|
-| Calculation correctness | 4 | 5 | 5 | 4 | 5 | 5 | 5 | 5 | 3 | 5 |
-| Code quality/executability | 4 | 5 | 5 | 4 | 5 | 5 | 5 | 5 | 3 | 5 |
-| Engineering judgement | 3 | 5 | 5 | 3 | 4 | 4 | 4 | 4 | 4 | 5 |
-| Unit/assumption handling | 4 | 5 | 5 | 5 | 4 | 4 | 3 | 4 | 4 | 5 |
-| Notebook traceability/clarity | 3 | 4 | 5 | 4 | 4 | 4 | 4 | 4 | 4 | 5 |
-| Completeness of deliverable | 4 | 5 | 5 | 4 | 5 | 5 | 5 | 4 | 4 | 5 |
-| Practical usability | 4 | 4 | 4 | 4 | 4 | 3 | 3 | 4 | 3 | 3 |
-| Overall average | 3.71 | 4.71 | 4.86 | 4.00 | 4.43 | 4.29 | 4.14 | 4.29 | 3.57 | 4.71 |
+| Criterion | gemma4:31b-cloud | glm-5.1:cloud | gpt5.4-xhigh | qwen-3.6plus | minimax-m2.7-cloud | kimi-k2-thinking | deepseek-v3.2 | gpt5.6-sol-xhigh | gpt5.6-luna-max | deepseek-v4.1-flash | glm-5.3-flash |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---: |---: |---:|
+| Calculation correctness | 4 | 5 | 5 | 4 | 5 | 5 | 5 | 5 | 3 | 5 | 4 |
+| Code quality/executability | 4 | 5 | 5 | 4 | 5 | 5 | 5 | 5 | 3 | 5 | 4 |
+| Engineering judgement | 3 | 5 | 5 | 3 | 4 | 4 | 4 | 4 | 4 | 5 | 4 |
+| Unit/assumption handling | 4 | 5 | 5 | 5 | 4 | 4 | 3 | 4 | 4 | 5 | 5 |
+| Notebook traceability/clarity | 3 | 4 | 5 | 4 | 4 | 4 | 4 | 4 | 4 | 5 | 4 |
+| Completeness of deliverable | 4 | 5 | 5 | 4 | 5 | 5 | 5 | 4 | 4 | 5 | 4 |
+| Practical usability | 4 | 4 | 4 | 4 | 4 | 3 | 3 | 4 | 3 | 3 | 3 |
+| Overall average | 3.71 | 4.71 | 4.86 | 4.00 | 4.43 | 4.29 | 4.14 | 4.29 | 3.57 | 4.71 | 4.00 |
 
 ## Overall Ranking
 
@@ -22,13 +22,15 @@
 5. `kimi-k2-thinking` - `4.29`
 6. `gpt5.6-sol-xhigh` - `4.29`
 7. `deepseek-v3.2` - `4.14`
-8. `qwen-3.6plus` - `4.00`
-9. `gemma4:31b-cloud` - `3.71`
-10. `gpt5.6-luna-max` - `3.57`
+8. `glm-5.3-flash` - `4.00`
+9. `qwen-3.6plus` - `4.00`
+10. `gemma4:31b-cloud` - `3.71`
+11. `gpt5.6-luna-max` - `3.57`
 
 September 2026 note: `gpt5.6-sol-xhigh` and `gpt5.6-luna-max` were scored blind by a new judge alongside April anchor responses and shifted onto the April scale with a per-task calibration offset (see `benchmarks/refresh_2026-09_calibration.md`). Ties on the overall average are ordered by the six-criterion technical mean. April rows are unchanged.
-
 DeepSeek V4.1 Flash addendum (2026-09-18): `deepseek-v4.1-flash` was scored blind on this task with the same procedure and the September calibration offset (see `benchmarks/addendum_2026-09-18_deepseek-v4.1-flash.md`); it was run on three tasks only. Its tie with `glm-5.1:cloud` on the overall average is ordered by the six-criterion technical mean.
+
+GLM 5.3 Flash addendum (2026-09-18): `glm-5.3-flash` was scored blind on this task with the same procedure; its anchors met the calibration gate, so no offset was applied (see `benchmarks/addendum_2026-09-18_glm-5.3-flash.md`). It was run on three tasks only. Its tie with `qwen-3.6plus` on the overall average is ordered by the six-criterion technical mean.
 
 ## Recommended Use Cases
 
@@ -38,3 +40,4 @@ DeepSeek V4.1 Flash addendum (2026-09-18): `deepseek-v4.1-flash` was scored blin
 - Biggest operational weakness observed: Long think time on several otherwise strong models, plus conclusion-level governing-case mistakes in some outputs that would need human review before use.
 - September 2026 note: `gpt5.6-sol-xhigh` (4.29) did not match its predecessor on this task because it quoted the compact pressure formula without the requested derivation or eccentricity definitions; `gpt5.6-luna-max` (3.57) stated the correct answer but its notebook stops on its own consistency assert until a one-line formula fix is applied.
 - DeepSeek V4.1 Flash addendum (2026-09-18): `deepseek-v4.1-flash` (4.71) matches `glm-5.1:cloud` on this task at the second-lowest list price in the slate ($0.15 / $0.60 per 1M tokens), with a working notebook and a kern-rule cross-check; single task, 4 min 15 s run.
+- GLM 5.3 Flash addendum (2026-09-18): `glm-5.3-flash` (4.00) reaches `3.0 m` and `LC2` in its conclusion with the fullest written derivation among the addendum models, but its code prints `LC3` as the governing case and its middle-third explanation is wrong for biaxial loading; single task, 5 min 56 s run.

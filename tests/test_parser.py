@@ -122,7 +122,7 @@ def test_discover_rounds():
     assert "v1" not in round_ids
 
     v2 = next(r for r in rounds if r["round_id"] == "v2")
-    assert len(v2["models"]) == 10
+    assert len(v2["models"]) == 11
     assert v2["models"][0]["model_id"] == "gemma4:31b-cloud"
     v2_model_ids = {m["model_id"] for m in v2["models"]}
     assert {"gpt5.6-sol-xhigh", "gpt5.6-luna-max"} <= v2_model_ids
@@ -159,7 +159,12 @@ def test_discover_rounds():
     ds_model = next(m for m in v2["models"] if m["model_id"] == "deepseek-v4.1-flash")
     assert ds_model["cost_tier"] == 2
     assert ds_model["blended_price_usd_per_1m"] == 0.2625         # 0.75*0.15 + 0.25*0.60
-    assert "deepseek-v4.1-flash" not in v2["ranking"]              # no v2 cross-task average
+    # partial models carry a provisional v2 average (Task 2 and anchor only) in the ranking table
+    assert v2["ranking"]["deepseek-v4.1-flash"]["Overall average"] == 3.43
+    glm_model = next(m for m in v2["models"] if m["model_id"] == "glm-5.3-flash")
+    assert glm_model["cost_tier"] == 2
+    assert glm_model["blended_price_usd_per_1m"] == 0.1425        # 0.75*0.09 + 0.25*0.30
+    assert v2["ranking"]["glm-5.3-flash"]["Overall average"] == 3.79
 
 
 def test_discover_rounds_explicit_cost_tier_overrides_provider_keyword(tmp_path):
@@ -260,6 +265,7 @@ def test_discover_rounds_collects_usage_only_where_tokens_were_recorded():
     # 2026-09-18 addendum records carry token figures too
     assert usage["v2-deep-02"]["deepseek-v4.1-flash"]["tokens_k"] == 35
     assert usage["v2-anchor-07"]["deepseek-v4.1-flash"]["tokens_k"] == 55
+    assert usage["v2-anchor-07"]["glm-5.3-flash"]["tokens_k"] == 32
     v3 = next(r for r in rounds if r["round_id"] == "v3")
     assert v3["usage"]["v3-notebook-01"]["gpt5.6-sol-xhigh"]["tokens_k"] == 23
     assert v3["usage"]["v3-notebook-01"]["deepseek-v4.1-flash"]["tokens_k"] == 59

@@ -152,7 +152,7 @@
     "provider": "OpenRouter API",
     "cost_tier": 2,
     "cost_label": "Paid API",
-    "notes": "September 2026 addition. OpenRouter model deepseek/deepseek-v4.1-flash at reasoning effort high, run from a VS Code agent chat. Run on three tasks only (v2-deep-02, v2-anchor-07, v3-notebook-01), so it has no v2 cross-task average.",
+    "notes": "September 2026 addition. OpenRouter model deepseek/deepseek-v4.1-flash at reasoning effort high, run from a VS Code agent chat. Run on three tasks only (v2-deep-02, v2-anchor-07, v3-notebook-01), so its v2 average is provisional over the tasks run.",
     "pricing": {
       "input_usd_per_1m": 0.15,
       "output_usd_per_1m": 0.6,
@@ -161,6 +161,24 @@
       "source": "https://openrouter.ai/api/v1/models",
       "source_model_id": "deepseek/deepseek-v4.1-flash",
       "note": "OpenRouter listing. Benchmark runs were billed through OpenRouter: about $0.0135 (deep-02), $0.05 (anchor) and $0.04 (v3)."
+    }
+  },
+  {
+    "model_id": "glm-5.3-flash",
+    "display_name": "GLM 5.3 Flash",
+    "role": "low-cost candidate (three-task subset)",
+    "provider": "OpenRouter API",
+    "cost_tier": 2,
+    "cost_label": "Paid API",
+    "notes": "September 2026 addition. OpenRouter model z-ai/glm-5.3-flash at reasoning effort high, run from a VS Code agent chat. Run on three tasks only (v2-deep-02, v2-anchor-07, v3-notebook-01); its v2 average is provisional over the tasks run.",
+    "pricing": {
+      "input_usd_per_1m": 0.09,
+      "output_usd_per_1m": 0.3,
+      "unit": "USD per 1M tokens, list price",
+      "as_of": "2026-09-17",
+      "source": "https://openrouter.ai/api/v1/models",
+      "source_model_id": "z-ai/glm-5.3-flash",
+      "note": "OpenRouter listing (unchanged on 2026-09-18). Benchmark runs were billed through OpenRouter: about $0.0119 (deep-02), $0.0094 (v3) and $0.0065 (anchor)."
     }
   }
 ]

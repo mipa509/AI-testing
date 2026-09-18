@@ -7,3 +7,5 @@
 September 2026 refresh: the winner is unchanged. `gpt5.6-sol-xhigh` scored 4.29 overall (correct `3.0 m` and `LC2`, executable, but no derivation or eccentricity definitions) and `gpt5.6-luna-max` scored 3.57 (correct narrative answer, but the code fails its own consistency assert at code cell 4 and produces no result).
 
 DeepSeek V4.1 Flash addendum (2026-09-18): the winner is unchanged. `deepseek-v4.1-flash` scored 4.71 overall (correct `3.0 m` and `LC2`, runs end to end, kern-rule cross-check; loose cell alternation and a section-modulus derivation), level with `glm-5.1:cloud`.
+
+GLM 5.3 Flash addendum (2026-09-18): the winner is unchanged. `glm-5.3-flash` scored 4.00 overall (correct `3.0 m` and `LC2` in the Markdown with a full derivation and sweep, but the code prints `LC3` as governing and the middle-third equivalence claim is wrong for biaxial loading).
