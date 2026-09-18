@@ -871,7 +871,11 @@ function renderUsageChart(round) {
   const datasets = modelIds.map((id, i) => {
     const m = byId[id];
     let color = TIER_COLOR[m.cost_tier];
-    if (usedColors.has(color)) color = SERIES_SLOT.find(c => !usedColors.has(c)) || color;   // same-tier fallback
+    let hollow = false;
+    if (usedColors.has(color)) {
+      const free = SERIES_SLOT.find(c => !usedColors.has(c));   // same-tier fallback to a free slot
+      if (free) color = free; else hollow = true;                // more series than slots: outline, never a new hue
+    }
     usedColors.add(color);
     const vals = taskIds.map(t => {
       const u = usage[t][id];
@@ -885,9 +889,9 @@ function renderUsageChart(round) {
     return {
       label: m.display_name,
       data: [...vals, total],
-      backgroundColor: color,
+      backgroundColor: hollow ? 'transparent' : color,
       borderColor: color,
-      borderWidth: 0,
+      borderWidth: hollow ? 2 : 0,
       borderRadius: 4,
       borderSkipped: 'bottom',
       maxBarThickness: 24,
