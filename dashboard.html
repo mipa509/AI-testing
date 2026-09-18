@@ -851,7 +851,8 @@ function renderUsageChart(round) {
     'Grouped bars per task for the models with recorded usage. Toggle between Codex-reported tokens and the estimated cost at list price.';
   document.getElementById('usage-chart-note').textContent =
     `Usage recorded for ${recorded} of ${round.models.length} models; the April 2026 run records carry no token counts. `
-    + 'Codex reports one total token figure per run (input, output and reasoning together), so the estimated cost prices every token at the model\'s output list rate and is an upper bound.';
+    + 'Codex reports one total token figure per run (input, output and reasoning together), so the estimated cost prices every token at the model\'s output list rate and is an upper bound. '
+    + 'A Total bar is drawn only for models with usage recorded on every task in the round; partial sums are marked in the table view.';
 
   if (usageChart) { usageChart.destroy(); usageChart = null; }
   document.getElementById('usage-table').innerHTML = '';
@@ -877,7 +878,10 @@ function renderUsageChart(round) {
       if (!u) return null;
       return isCost ? u.est_cost_usd : u.tokens_k;
     });
-    const total = vals.reduce((s, v) => s + (v || 0), 0);
+    // A Total bar only when the model has usage on every task in the round: a partial sum
+    // drawn next to full totals invites a false comparison. Partial sums stay in the table view.
+    const covered = vals.every(v => v !== null);
+    const total = covered ? vals.reduce((s, v) => s + v, 0) : null;
     return {
       label: m.display_name,
       data: [...vals, total],
@@ -927,7 +931,9 @@ function renderUsageChart(round) {
               if (ctx.label === 'Total') {
                 const t = taskIds.reduce((s, tk) => s + ((usage[tk][id] || {}).tokens_k || 0), 0);
                 const c = taskIds.reduce((s, tk) => s + ((usage[tk][id] || {}).est_cost_usd || 0), 0);
-                return `${name}: ${t}k tokens · ${fmtUsd(c, 2)} est.`;
+                const n = taskIds.filter(tk => usage[tk][id]).length;
+                const scope = n < taskIds.length ? ` over ${n} of ${taskIds.length} tasks` : '';
+                return `${name}: ${t}k tokens · ${fmtUsd(c, 2)} est.${scope}`;
               }
               const u = usage[ctx.label] && usage[ctx.label][id];
               if (!u) return `${name}: no usage recorded`;
@@ -959,7 +965,9 @@ function renderUsageChart(round) {
       if (t === 'Total') {
         const tk = taskIds.reduce((s, x) => s + ((usage[x][id] || {}).tokens_k || 0), 0);
         const c  = taskIds.reduce((s, x) => s + ((usage[x][id] || {}).est_cost_usd || 0), 0);
-        tr.appendChild(el('td', `${tk}k`, 'num')); tr.appendChild(el('td', fmtUsd(c, 2), 'num')); tr.appendChild(el('td', ''));
+        const n  = taskIds.filter(x => usage[x][id]).length;
+        const scope = n < taskIds.length ? `${n} of ${taskIds.length} tasks only; no total bar` : '';
+        tr.appendChild(el('td', `${tk}k`, 'num')); tr.appendChild(el('td', fmtUsd(c, 2), 'num')); tr.appendChild(el('td', scope));
       } else {
         const u = usage[t][id];
         tr.appendChild(el('td', u ? `${u.tokens_k}k` : '–', 'num'));
