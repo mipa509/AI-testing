@@ -243,7 +243,7 @@ C and B are both usable as-is by a checking engineer; the gap between them is de
 
 ## 6. Second judge from a different model family (2026-09-19)
 
-Because the first judge, the orchestrator and the model under test are all Claude models, the user ran the same three packs (unchanged, same A to D labels) through a judge from a different model family, one fresh chat per pack: pack only, no web, no code execution, no vendor guessing, six integer scores in the pack's column order. The judge's identity and settings are recorded below when supplied by the user. The replies were de-anonymised with the recorded mapping. **No score in this record or in the repository was changed on the strength of this comparison**; it is recorded as evidence about the first judge.
+Because the first judge, the orchestrator and the model under test are all Claude models, the user ran the same three packs (unchanged, same A to D labels) through a judge from a different model family, one fresh chat per pack: pack only, no web, no code execution, no vendor guessing, six integer scores in the pack's column order. The judge was GPT-6 Astra at reasoning effort xhigh, run in the Codex VS Code extension (one fresh session per pack, agent mode, reading only the prompt and the named pack). The replies were de-anonymised with the recorded mapping. **No score in this record or in the repository was changed on the strength of this comparison**; it is recorded as evidence about the first judge.
 
 | Task | Response | April | Judge 1 (Claude) | Judge 2 (other family) | J2 - J1 |
 |---|---|---:|---:|---:|---:|
