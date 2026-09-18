@@ -49,9 +49,9 @@ Overall anchor MAD 0.639 (six rows, 36 criterion pairs), signed -0.583, worst ro
 
 | Task | Technical (April scale) | Practicality | Overall mean | April winner (overall) | Winner changed? |
 |---|---|---:|---:|---|---|
-| `v2-deep-02` | [5, 5, 4, 5, 5, 4] (4.67) | 3 | 4.43 | `gemma4:31b-cloud` (4.71) | no |
-| `v2-anchor-07` | [5, 5, 4, 4, 4, 4] (4.33) | 2 | 4.00 | `gpt5.4-xhigh` (4.43) | no |
-| `v3-notebook-01` | [5, 5, 5, 5, 5, 5] (5.00) | 3 | 4.71 | `gpt5.4-xhigh` (4.86) | no |
+| `v2-deep-02` | [5, 5, 4, 4, 4.5, 4] (4.42), two-judge mean; judge 1 alone [5, 5, 4, 5, 5, 4] (4.67) | 3 | 4.21 | `gemma4:31b-cloud` (4.71) | no |
+| `v2-anchor-07` | [4.5, 4.5, 4, 3.5, 4, 4] (4.08), two-judge mean; judge 1 alone [5, 5, 4, 4, 4, 4] (4.33) | 2 | 3.79 | `gpt5.4-xhigh` (4.43) | no |
+| `v3-notebook-01` | [5, 4.5, 4, 4.5, 4.5, 5] (4.58), two-judge mean; judge 1 alone [5, 5, 5, 5, 5, 5] (5.00) | 3 | 4.36 | `gpt5.4-xhigh` (4.86) | no |
 
 On the six technical criteria alone the model ranked first in its blind pack on the repo review (4.67 against `gpt5.4-xhigh` 4.33 and `gpt5.6-sol-xhigh` 4.50) and on the notebook (5.00 against 4.67 and 3.50), and third of the three correct answers on the anchor (4.33 against 4.67 and 4.83) for scope drift. The overall means are pulled down by the practicality column, where latency puts it at the floor for usable runs on the anchor and one step above it on the other two tasks.
 
@@ -243,7 +243,7 @@ C and B are both usable as-is by a checking engineer; the gap between them is de
 
 ## 6. Second judge from a different model family (2026-09-19)
 
-Because the first judge, the orchestrator and the model under test are all Claude models, the user ran the same three packs (unchanged, same A to D labels) through a judge from a different model family, one fresh chat per pack: pack only, no web, no code execution, no vendor guessing, six integer scores in the pack's column order. The judge was GPT-6 Astra at reasoning effort xhigh, run in the Codex VS Code extension (one fresh session per pack, agent mode, reading only the prompt and the named pack). The replies were de-anonymised with the recorded mapping. **No score in this record or in the repository was changed on the strength of this comparison**; it is recorded as evidence about the first judge.
+Because the first judge, the orchestrator and the model under test are all Claude models, the user ran the same three packs (unchanged, same A to D labels) through a judge from a different model family, one fresh chat per pack: pack only, no web, no code execution, no vendor guessing, six integer scores in the pack's column order. The judge was GPT-6 Astra at reasoning effort xhigh, run in the Codex VS Code extension (one fresh session per pack, agent mode, reading only the prompt and the named pack). The replies were de-anonymised with the recorded mapping. At first no score was changed on the strength of this comparison; the user then decided to record the two-judge mean (section 7), and the section 4 table shows both.
 
 | Task | Response | April | Judge 1 (Claude) | Judge 2 (other family) | J2 - J1 |
 |---|---|---:|---:|---:|---:|
@@ -474,3 +474,21 @@ A checking engineer could act on B as a complete preliminary sizing draft. C and
 - D explicitly carries a copying-related formatting-loss notice; its scores assess the labelled cell content and do not penalise the enclosing text fence or damaged table/equation formatting.
 - C's standards references and physical-model assurances need independent review before reliance; its Python type annotations also assume Python 3.9 or later, while its internal rounding helper does not affect this case's selected size.
 - B's listed weaknesses concern extensions or explanatory refinements, not failures on the specified data; D's `1e-9 kPa` comparison tolerance likewise has no material effect on the supplied pass/fail decisions.
+
+## 7. Two-judge mean (user decision, 2026-09-19)
+
+The user read the section 6 pattern as the same-family judge favouring its own model and chose to record Fable's technical rows as the mean of the two judges. Method: each judge is first put on the April scale through its own anchors (judge 1 with the September per-task offsets; judge 2 with the offset implied by its own two anchor rows on that task, since its scale differs from judge 1's), then the two April-scale rows are averaged per criterion and recorded unrounded: a 4.5 marks a criterion where the two judges differ by one point after calibration, and rounding it either way would shift every such criterion in one direction. The dashboard parser and the ranking scripts read the cells as numbers, so half values are safe. Practicality is unchanged. Every other model in the repository keeps its single same-family judge, so this is a targeted correction for the one model whose judge shares its family.
+
+| Task | Judge 1 blind | Sept offset | Judge 1 on April scale | Judge 2 blind | Judge 2 offset | Judge 2 on April scale | Recorded mean |
+|---|---|---:|---|---|---:|---|---|
+| `v2-deep-02` | [5, 5, 4, 5, 5, 4] | +0.42 | [5, 5, 4, 5, 5, 4] (4.67) | [4, 4, 3, 2, 3, 3] | +0.67 | [5, 5, 4, 3, 4, 4] (4.17) | [5, 5, 4, 4, 4.5, 4] (4.42) |
+| `v2-anchor-07` | [5, 5, 4, 4, 4, 4] | +0.08 | [5, 5, 4, 4, 4, 4] (4.33) | [4, 4, 4, 3, 4, 4] | +0.42 | [4, 4, 4, 3, 4, 4] (3.83) | [4.5, 4.5, 4, 3.5, 4, 4] (4.08) |
+| `v3-notebook-01` | [5, 5, 5, 5, 5, 5] | +0.71 | [5, 5, 5, 5, 5, 5] (5.00) | [5, 4, 3, 4, 4, 5] | +0.08 | [5, 4, 3, 4, 4, 5] (4.17) | [5, 4.5, 4, 4.5, 4.5, 5] (4.58) |
+
+| Task | Technical (recorded) | Practicality | Overall | Was (judge 1 alone) | April winner (overall) | Winner changed? |
+|---|---|---:|---:|---:|---|---|
+| `v2-deep-02` | [5, 5, 4, 4, 4.5, 4] (4.42) | 3 | 4.21 | 4.43 | `gemma4:31b-cloud` (4.71) | no |
+| `v2-anchor-07` | [4.5, 4.5, 4, 3.5, 4, 4] (4.08) | 2 | 3.79 | 4.00 | `gpt5.4-xhigh` (4.43) | no |
+| `v3-notebook-01` | [5, 4.5, 4, 4.5, 4.5, 5] (4.58) | 3 | 4.36 | 4.71 | `gpt5.4-xhigh` (4.86) | no |
+
+Provisional v2 average over Task 2 and the anchor: 4.00 (was 4.21). v3: 4.36 (was 4.71).

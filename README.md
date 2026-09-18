@@ -98,9 +98,9 @@ The unchanged EC3 trap task is reported separately as an anchor comparison and i
 Headline v2 ranking (September 2026 refresh rows scored blind with calibration against April anchors; April rows unchanged):
 1. `gpt5.6-luna-max` - `4.48`
 2. `gpt5.6-sol-xhigh` - `4.45`
-3. `claude-fable-5.1-high` - `4.21` (provisional: Task 2 and the anchor only)
-4. `gpt5.4-xhigh` - `4.14`
-5. `gemma4:31b-cloud` - `4.10`
+3. `gpt5.4-xhigh` - `4.14`
+4. `gemma4:31b-cloud` - `4.10`
+5. `claude-fable-5.1-high` - `4.00` (provisional: Task 2 and the anchor only)
 6. `glm-5.1:cloud` - `3.88`
 7. `glm-5.3-flash` - `3.79` (provisional: Task 2 and the anchor only)
 8. `qwen-3.6plus` - `3.74`
@@ -162,9 +162,9 @@ Headline v3 ranking (September 2026 refresh rows scored blind with calibration a
 1. `gpt5.4-xhigh` - `4.86`
 2. `deepseek-v4.1-flash` - `4.71` (2026-09-18 addendum)
 3. `tencent-hy4-preview` - `4.71` (2026-09-18 addendum)
-4. `claude-fable-5.1-high` - `4.71` (2026-09-19 addendum)
-5. `glm-5.1:cloud` - `4.71`
-6. `minimax-m2.7-cloud` - `4.43`
+4. `glm-5.1:cloud` - `4.71`
+5. `minimax-m2.7-cloud` - `4.43`
+6. `claude-fable-5.1-high` - `4.36` (2026-09-19 addendum)
 7. `kimi-k2-thinking` - `4.29`
 8. `gpt5.6-sol-xhigh` - `4.29`
 9. `deepseek-v3.2` - `4.14`
@@ -189,7 +189,7 @@ Current v3 takeaways:
 - 2026-09-18 addendum: `deepseek-v4.1-flash` scores 4.71, level with `glm-5.1:cloud`, with a notebook that runs end to end and a kern-rule cross-check; weakest on the EC3 anchor (3.00), where it headlined an unrequested LTB verdict
 - 2026-09-18 addendum: `glm-5.3-flash` scores 4.00 with the fullest written derivation of the addendum models, but its code prints `LC3` as governing against the `LC2` in its text; steadier on the EC3 anchor (3.71)
 - 2026-09-18 addendum: `tencent-hy4-preview` scores 4.71, level with `deepseek-v4.1-flash`, with the richest derivation and diagnostics of the addendum models; weakest of all on the EC3 anchor (2.86), where it answered an unrequested LTB and deflection question
-- 2026-09-19 addendum: `claude-fable-5.1-high` (Anthropic, run in Claude Code) scores 4.71, level with the other 4.71 entries, with a straight 5.00 on the technical criteria and the fullest audit document in the set, held below the winner only by the slowest and most expensive v3 run recorded; on the EC3 anchor it scores 4.00, the best of the addendum models, keeping the planted PASS as its headline
+- 2026-09-19 addendum: `claude-fable-5.1-high` (Anthropic, run in Claude Code) scores 4.36 as the mean of a Claude judge and a GPT-6 Astra judge (4.71 on the Claude judge alone), just below the 4.71 group, with 4.58 on the technical criteria as the two-judge mean and the fullest audit document in the set, held below the winner only by the slowest and most expensive v3 run recorded; on the EC3 anchor it scores 4.00, the best of the addendum models, keeping the planted PASS as its headline
 - 2026-09-19 addendum: `gemma4:26b-local` (free, local) scores 2.86, the lowest in the table: correct derivation, but the notebook does not run and the conclusion states the 2.9 m trap value with LC1 governing
 
 ## Repository Structure
