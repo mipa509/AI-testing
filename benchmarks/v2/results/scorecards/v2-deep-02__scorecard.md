@@ -20,6 +20,7 @@
 | `gpt5.6-sol-xhigh` | 5 | 4 | 5 | 4 | 4 | 5 | 3 | Found all three planted blockers with a full dimensional derivation plus a well-argued extra finding on the unused combination label, but its line references do not match the supplied files and it rated the under-factored imposed load only High. |
 | `gpt5.6-luna-max` | 5 | 5 | 5 | 4 | 4 | 4 | 3 | Found all three planted blockers with a correct worked numeric example and useful notes on the combination label and package imports, though its finding-1 fix direction (psi factors, combination as input) over-reaches the minimum fix. |
 | `deepseek-v4.1-flash` | 4 | 5 | 4 | 3 | 4 | 4 | 3 | Found all three planted blockers with correct numeric examples and the strongest not-escalated section, but it over-escalates rounding to High, infers SLS rows from the combination label, wrongly claims the two numeric errors mask each other, and runs to three times the requested length. |
+| `glm-5.3-flash` | 4 | 4 | 4 | 4 | 4 | 4 | 3 | Found all three planted blockers with good numeric examples, but it asserts an unconservative rounding path (1.004 rounding to PASS) that cannot occur under the code's strict less-than test and rates rounding High on that basis, offers reverse=True on a one-row return as the primary reporting fix, and is the longest of the responses judged. |
 
 ## Judge Output Summary
 
@@ -38,6 +39,12 @@ Task summary: Review a steel beam ULS screening package for unit conversion, loa
 - Blind pack (one judging round, 2026-09-18): `gpt5.4-xhigh` 4.50, `gpt5.6-sol-xhigh` 4.33, `deepseek-v4.1-flash` 4.00, `minimax-m2.7-cloud` 2.33 on the six technical criteria.
 - DeepSeek V4.1 Flash found all three planted blockers (unused `ULS_GAMMA_Q`, `1e6` instead of `1e3`, ascending sort plus `[:1]`) with correct numeric examples and the strongest deliberately-not-escalated section; the judge said any of the top three responses would lead a maintainer to the same fixes.
 - Deductions: rounding-before-status escalated to High, an SLS-rows inference from the `combination` label presented as fact, a wrong claim that the two numeric errors mask each other, a float-equality test suggestion, and about three times the requested length.
+
+### GLM 5.3 Flash addendum (2026-09-18)
+
+- Blind pack (one judging round, 2026-09-18): `gpt5.4-xhigh` 4.83, `gpt5.6-sol-xhigh` 4.33, `glm-5.3-flash` 4.00, `minimax-m2.7-cloud` 2.50 on the six technical criteria.
+- GLM 5.3 Flash found all three planted blockers (`1e6` instead of `1e3`, unused `ULS_GAMMA_Q`, ascending sort plus `[:1]`) with good numeric examples; the judge said none of the top three responses would lead to an unsafe merge.
+- Deductions: it asserts an unconservative rounding path (1.004 rounding to PASS) that cannot occur under the code's strict `< 1.0` test and rates rounding High on that basis, offers `reverse=True` on a one-row return as the primary reporting fix, and is the longest of the four responses.
 
 ## Manual Override Notes
 
@@ -89,6 +96,12 @@ Provisional `gemma4:31b-cloud` review:
 - Manual overrides: none. The de-anonymised judgement was checked against the evaluator notes; all three planted findings are present and no score was changed.
 - Practicality `deepseek-v4.1-flash` = 3: 2 min 45 s and about 35k tokens on a cheap paid API route (about $0.0135 billed through OpenRouter), no refusal or truncation, followed the instruction to read only the task folder; scored as `gpt5.6-luna-max` on this task.
 
+### GLM 5.3 Flash addendum (2026-09-18)
+
+- Scoring: technical criteria for `glm-5.3-flash` were scored blind on 2026-09-18 by the same judge family as the September refresh, in a pack with the same two April anchors plus `gpt5.6-sol-xhigh` as a consistency check. The anchors met the calibration gate (overall MAD 0.50, no row above 1.0), so the blind scores are used as-is with no offset (see `benchmarks/addendum_2026-09-18_glm-5.3-flash.md`). Earlier rows above are unchanged.
+- Manual overrides: none. The de-anonymised judgement was checked against the evaluator notes and the supplied code: `round(1.004, 2) < 1.0` is False, so the judge's point stands; all three planted findings are present and no score was changed.
+- Practicality `glm-5.3-flash` = 3: 4 min 30 s and about 33k tokens on a cheap paid API route (about $0.012 billed through OpenRouter), no refusal or truncation, followed the instruction to read only the task folder and wrote the review file as asked; as `gpt5.6-luna-max` and `deepseek-v4.1-flash` on this task.
+
 ## Winner
 
 - Winner: `gemma4:31b-cloud`
@@ -98,3 +111,5 @@ Provisional `gemma4:31b-cloud` review:
 September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.29) and `gpt5.6-luna-max` (4.29) do not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.
 
 DeepSeek V4.1 Flash addendum (2026-09-18): `deepseek-v4.1-flash` (overall mean 3.86) does not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.
+
+GLM 5.3 Flash addendum (2026-09-18): `glm-5.3-flash` (overall mean 3.86) does not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.

@@ -20,6 +20,7 @@
 | `gpt5.6-sol-xhigh` | 5 | 5 | 4 | 4 | 4 | 4 | 4 | Correct, executable and self-verified notebook (3.0 m, LC2 governing, 2.9 m rejected at qmin = -0.41 kPa) with all six sections, but it quotes the compact 6|M|/B^3 formula without derivation, gives no justification for the rigid linear model and never defines eccentricities; the copy-time loss of formatting was not penalised. |
 | `gpt5.6-luna-max` | 3 | 3 | 4 | 4 | 4 | 4 | 3 | Narrative, closed-form equations and final answers are right and derived from N/A +/- M*y/I, but the coded point-pressure function uses 6*M*x/B^3 instead of 12*M*x/B^4, so its own consistency assert fails at the first candidate and the notebook does not run past code cell 3 (verified by execution). |
 | `deepseek-v4.1-flash` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Correct, unit-suffixed, guarded notebook that runs end to end (verified by execution), selects 3.0 m with LC2 governing, explains the 2.9 m rejection and cross-checks against the kern rule; deductions in the blind pack only for loose cell alternation, a section-modulus rather than second-moment derivation, and length. |
+| `glm-5.3-flash` | 4 | 4 | 4 | 5 | 4 | 4 | 3 | Fullest written treatment among the addendum models (derivation via S = B^3/6, model justification, eccentricity directions, a full candidate sweep) and a Markdown conclusion of 3.0 m with LC2 governing, but its code prints LC3 as the governing case, contradicting the text (verified by execution), and its middle-third equivalence claim is wrong for biaxial loading. |
 
 ## Judge Output Summary
 
@@ -41,6 +42,12 @@
 - DeepSeek V4.1 Flash selected `3.0 m` with `LC2` governing through no-uplift, explained the `2.9 m` rejection at `qmin = -0.41 kPa`, cross-checked the no-uplift criterion against the kern rule `e_x + e_y <= B/6`, and its six code cells run end to end (verified by execution).
 - Deductions: cell alternation is loose (three Markdown cells then four code cells), the derivation goes through `S = B^3/6` rather than `I = B^4/12`, and the draft is long for a preliminary sizing note.
 
+### GLM 5.3 Flash addendum (2026-09-18)
+
+- Blind pack (one judging round, 2026-09-18): `gpt5.4-xhigh` 5.00, `gpt5.6-sol-xhigh` 4.33, `glm-5.3-flash` 4.17, `gemma4:31b-cloud` 2.67; the judge ranked GLM third, below Sol, on the grounds that an internally consistent notebook with omissions is preferable to one that contradicts itself.
+- GLM 5.3 Flash met every analysis-note requirement (derivation via `S = B^3/6`, model justification, `e_x` and `e_y` directions, a full candidate sweep printing `qmax` and `qmin` for every case) and its Markdown selects `3.0 m` with `LC2` governing and explains the `2.9 m` rejection; the four code cells run end to end (verified by execution).
+- Deductions: Code Cell 4 defines the governing case as the highest `qmax / q_allow` and prints `LC3`, contradicting the Markdown conclusion, and the claim that keeping each eccentricity within `B/6` is exactly equivalent to `qmin >= 0` is wrong for biaxial loading (the condition is `6e_x/B + 6e_y/B <= 1`), so the conclusion's middle-third explanation of the 2.9 m failure is incorrect.
+
 ## Manual Override Notes
 
 - Scores were locked by manual engineering review plus direct execution of the calculation cells.
@@ -60,6 +67,12 @@
 - Manual overrides: none. The judge's executability reading was verified by running the six fenced code cells in order with standard-library Python: the notebook runs end to end, selects `3.0 m`, names `LC2` and reports `2.9 m` rejected at `-0.410 kPa`.
 - Practicality `deepseek-v4.1-flash` = 3: 4 min 15 s and about 59k tokens, inflated by reading the other task folders unasked, with a notebook that runs end to end (about $0.04 billed); matches the September score for `gpt5.6-luna-max` at similar latency.
 
+### GLM 5.3 Flash addendum (2026-09-18)
+
+- Scoring: technical criteria for `glm-5.3-flash` were scored blind on 2026-09-18 by the same judge family as the September refresh, in a pack with the same two April anchors plus `gpt5.6-sol-xhigh` as a consistency check. The anchors met the calibration gate (overall MAD 0.50, no row above 1.0), so the blind scores are used as-is with no offset (see `benchmarks/addendum_2026-09-18_glm-5.3-flash.md`). Earlier rows above are unchanged.
+- Manual overrides: none. The judge's reading was verified by running the four fenced code cells in order with standard-library Python: the notebook runs end to end, selects `3.0 m`, and prints `Governing case (highest qmax/q_allow): LC3`, contradicting the Markdown's `LC2`. No score was changed.
+- Practicality `glm-5.3-flash` = 3: 5 min 56 s and about 35k tokens (about $0.0094 billed) with a notebook that runs end to end but prints a governing case that contradicts its own conclusion; matches the September score for `gpt5.6-luna-max`.
+
 ## Winner
 
 - Winner: `gpt5.4-xhigh`
@@ -69,3 +82,5 @@
 September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.29) and `gpt5.6-luna-max` (3.57) do not beat the April result of `gpt5.4-xhigh` (4.86), so the winner line is unchanged.
 
 DeepSeek V4.1 Flash addendum (2026-09-18): `deepseek-v4.1-flash` (overall mean 4.71) does not beat the April result of `gpt5.4-xhigh` (4.86), so the winner line is unchanged.
+
+GLM 5.3 Flash addendum (2026-09-18): `glm-5.3-flash` (overall mean 4.00) does not beat the April result of `gpt5.4-xhigh` (4.86), so the winner line is unchanged.
