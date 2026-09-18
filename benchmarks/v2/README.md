@@ -12,12 +12,14 @@ Current scored model slate:
 - `deepseek-v3.2`
 - `gpt5.6-sol-xhigh` (September 2026 refresh; successor to `gpt5.4-xhigh`)
 - `gpt5.6-luna-max` (September 2026 refresh; budget API tier)
+- `deepseek-v4.1-flash` (2026-09-18 addendum; OpenRouter API; Task 2 and anchor only)
 
 Practical access note:
 - `gemma4:31b-cloud`, `glm-5.1:cloud`, `minimax-m2.7-cloud`, and `kimi-k2-thinking` were runnable via the free Ollama cloud route.
 - `qwen-3.6plus` used a paid API/OpenRouter route.
 - `gpt5.4-xhigh` is treated as a premium reference model and should be interpreted separately from the free/cloud value story.
 - `gpt5.6-sol-xhigh` and `gpt5.6-luna-max` were run in September 2026 through the Codex VS Code extension (the same route as `gpt5.4-xhigh`) and scored blind with calibration against the April results; see `benchmarks/refresh_2026-09_summary.md` and `benchmarks/refresh_2026-09_calibration.md`.
+- `deepseek-v4.1-flash` was run on 2026-09-18 from a VS Code agent chat via OpenRouter on Task 2 and the anchor only, and scored with the same blind procedure; see `benchmarks/addendum_2026-09-18_deepseek-v4.1-flash.md`.
 
 Benchmark split:
 - `6` new v2 tasks

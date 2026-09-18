@@ -12,8 +12,9 @@ Current scored model slate:
 - `deepseek-v3.2`
 - `gpt5.6-sol-xhigh` (September 2026 refresh; successor to `gpt5.4-xhigh`)
 - `gpt5.6-luna-max` (September 2026 refresh; budget API tier)
+- `deepseek-v4.1-flash` (2026-09-18 addendum; OpenRouter API)
 
-The September 2026 rows were scored blind with calibration against the April results; see `benchmarks/refresh_2026-09_summary.md` and `benchmarks/refresh_2026-09_calibration.md`.
+The September 2026 rows were scored blind with calibration against the April results; see `benchmarks/refresh_2026-09_summary.md` and `benchmarks/refresh_2026-09_calibration.md`. The 2026-09-18 addendum row (`deepseek-v4.1-flash`) followed the same procedure; see `benchmarks/addendum_2026-09-18_deepseek-v4.1-flash.md`.
 
 Benchmark shape:
 - `1` deterministic notebook-style task
