@@ -8,11 +8,11 @@
 - `prompt_version`: `tasks/deep_02_repo_review_traps/prompt.md`
 - `context_files_shared`: `context/load_factors.py`, `context/beam_capacity.py`, `context/reporting.py` (pasted as `context_combined.md`)
 - `raw_output_path`: `runs/raw_outputs/v2-deep-02__gemma4-26b-local__raw.md`
-- `run_route`: `ollama run gemma4:26b in a plain terminal on the user's machine (local weights, no harness, tools or skills)`
+- `run_route`: `ollama run gemma4:26b in a PowerShell terminal on the user's machine (local weights, no harness, tools, skills or web access)`
 - `rate_limit_or_refusal_notes`: none; no refusal or truncation
 - `latency_notes`: not captured (plain terminal run). `ollama run <model> --verbose` would print duration and token counts after the reply.
 - `token_usage_or_cost`: not captured; free local inference, no API cost.
-- `manual_observations`: Second task for this local model (after the v3 notebook). Whether the model waited for the context before answering was not recorded; the review cites the three real files and their functions, so it had the code. The response is short and follows the four-part structure the prompt asks for (findings, significance, minimum fix, non-escalated).
+- `manual_observations`: Second task for this local model (after the v3 notebook). User's note: the model waited for the pasted context before answering, as the two-message protocol requires. The review cites the three real files and their functions. The response is short and follows the four-part structure the prompt asks for (findings, significance, minimum fix, non-escalated).
 
 ## First-Pass Output Summary
 
@@ -23,4 +23,4 @@ Three findings in severity order: the report returning only the safest row (crit
 - Did the model appear to understand the codebase shape? Yes; all three files and functions are cited correctly.
 - Did it truncate, refuse, or drift? No.
 - Did it require a larger-than-expected amount of context steering? No.
-- Did it start answering before the context files were supplied? Not recorded.
+- Did it start answering before the context files were supplied? No; it waited for the context message.
