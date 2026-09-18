@@ -174,3 +174,18 @@ Read:
 - Time is the drag: API times of 4 to 6 minutes (wall clock 6 to 11 minutes), the slowest run recorded on the repo review and the notebook, mid-pack on the anchor. The practicality column (3 / 2 / 3, latency only, since the runs were on a subscription plan) is what holds it below the April winners. Had the same runs been API-billed, the $5.42 session total would have been sixteen times Tencent Hy4 and about a hundred times the flash models, which is the case for a separate API-cost view of the results for readers billed that way (for example enterprise accounts).
 
 Four-model pattern on the anchor: the two models that headlined an unrequested LTB verdict (`deepseek-v4.1-flash`, `tencent-hy4-preview`) sit at the bottom of the anchor table, `glm-5.3-flash`, which kept LTB as a validity condition, sits mid-table, and `claude-fable-5.1-high`, which kept the planted PASS as the headline but surrounded it with a full design check, sits with the April mid-field. The task rewards answering the question asked, at the length asked.
+
+## Addendum 2026-09-19: Gemma 4 26B run locally, notebook task only
+
+`gemma4:26b-local` (Ollama `gemma4:26b` on the user's own machine, plain terminal, no harness, tools or skills; free) was run on the v3 notebook task only as a free-tier comparison point and scored the same way. Its anchors met the calibration gate (MAD 0.17), so the blind scores stand without an offset. It is a different model from the April `gemma4:31b-cloud` row. Full record: `benchmarks/addendum_2026-09-19_gemma4-26b-local.md`.
+
+| Task | Blind, six criteria | On April scale | Practicality | Overall | Position on the task |
+|---|---:|---:|---:|---:|---|
+| v3 Task 1 - Pad footing notebook | 1.83 | 1.83 | 3 | 2.00 | 14th of 14, below `gpt5.6-luna-max` (3.57); winner `gpt5.4-xhigh` (4.86) unchanged |
+
+Read:
+
+- The derivation is right: corner pressure from axial plus bending stress with `I = B^4/12` and `c = B/2`, compression-positive convention, a sensible exclusions list, and a search loop that tests both criteria.
+- The deliverable is not: cell 1 has a non-breaking space inside the LC1 load literal (a SyntaxError), the candidate widths are scaled twice to 0.24 to 0.32 m so a repaired notebook still selects nothing, the governing case is tracked by the largest `q_max`, and the conclusion states 2.9 m with LC1 governing, hedged as depending on execution. 2.9 m is the value the task plants as the trap. Two of the six required sections are missing.
+- Against its cloud sibling: April's `gemma4:31b-cloud` reached 3.0 m with runnable code and scored 3.71 overall with the same LC3-by-`q_max` slip; the 26B local model at 2.00 shows what the smaller weights lose on this task.
+- Cost: none. Latency was not captured; `ollama run <model> --verbose` would record it next time.

@@ -217,5 +217,24 @@
       "source_model_id": "claude-fable-5-1",
       "note": "Anthropic first-party API rate (cache reads $0.25 per 1M). Benchmark runs used Claude Code on a subscription plan; the session cost summaries ($1.29, $1.48, $2.65) are recorded in the run records and not scored."
     }
+  },
+  {
+    "model_id": "gemma4:26b-local",
+    "display_name": "Gemma 4 26B (local)",
+    "role": "free local candidate (v3 only)",
+    "provider": "Ollama local",
+    "cost_tier": 1,
+    "cost_label": "Free/Cloud",
+    "cost_route": "local",
+    "notes": "September 2026 addition. Ollama model gemma4:26b run locally on the user's machine from a plain terminal (no harness, tools or skills), 2026-09-19. Run on the v3 notebook task only; latency and token counts not captured. Distinct from the April gemma4:31b-cloud row (Ollama cloud, 31B).",
+    "pricing": {
+      "input_usd_per_1m": 0.0,
+      "output_usd_per_1m": 0.0,
+      "unit": "USD per 1M tokens, list price",
+      "as_of": "2026-09-19",
+      "source": "https://ollama.com/library/gemma4",
+      "source_model_id": "gemma4:26b",
+      "note": "Local inference on the user's own hardware; no per-token price. Recorded as zero so the price chart can place it; electricity and hardware are not costed."
+    }
   }
 ]

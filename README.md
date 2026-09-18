@@ -13,7 +13,7 @@ Artifacts include benchmark packs, written reports, per-task result summaries, p
 |---|---|---|---|---|
 | `v1` | Short coding and review prompts | `6` tasks, `3` models | `gemma4:31b-cloud` (`3.93`) | `benchmarks/v1/`, `structural_engineering_benchmark_report.md` |
 | `v2` | Larger-context repo reading and change design | `6` primary tasks + `1` historical anchor, `7` models (April 2026) + `2` (September 2026 refresh) + `3` partial (2026-09-18 addenda) + `1` partial (2026-09-19 addendum, Claude Fable 5.1), Task 2 and anchor only, provisional averages | `gpt5.6-luna-max` (`4.48`), `gpt5.6-sol-xhigh` (`4.45`); April leader `gpt5.4-xhigh` (`4.14`) | `benchmarks/v2/`, `structural_engineering_benchmark_report_v2.md`, `benchmarks/refresh_2026-09_summary.md` |
-| `v3` | Deterministic notebook-style code generation | `1` notebook task, `7` models (April 2026) + `2` (September 2026 refresh) + `3` (2026-09-18 addenda) + `1` (2026-09-19 addendum, Claude Fable 5.1) | `gpt5.4-xhigh` (`4.86`) | `benchmarks/v3/`, `benchmarks/v3/results/`, `benchmarks/refresh_2026-09_summary.md` |
+| `v3` | Deterministic notebook-style code generation | `1` notebook task, `7` models (April 2026) + `2` (September 2026 refresh) + `3` (2026-09-18 addenda) + `1` (2026-09-19 addendum, Claude Fable 5.1) + `1` (2026-09-19 addendum, Gemma 4 26B local, v3 only) | `gpt5.4-xhigh` (`4.86`) | `benchmarks/v3/`, `benchmarks/v3/results/`, `benchmarks/refresh_2026-09_summary.md` |
 
 September 2026 refresh: `gpt5.6-sol-xhigh` (successor to `gpt5.4-xhigh`) and `gpt5.6-luna-max` (budget API tier) were run on the unchanged v2 and v3 tasks and scored blind with calibration against the April results. The then-vs-now comparison is in `benchmarks/refresh_2026-09_summary.md`; the calibration procedure and judge replies are in `benchmarks/refresh_2026-09_calibration.md`. The April full reports are unchanged. Three 2026-09-18 addenda add `deepseek-v4.1-flash`, `glm-5.3-flash` and `tencent-hy4-preview` on three tasks each (v2 Task 2, the anchor and the v3 notebook), scored the same way; see `benchmarks/addendum_2026-09-18_deepseek-v4.1-flash.md`, `benchmarks/addendum_2026-09-18_glm-5.3-flash.md`, `benchmarks/addendum_2026-09-18_tencent-hy4-preview.md` and the addendum sections of the summary. Their v2 averages are provisional (Task 2 and anchor only). A 2026-09-19 addendum adds `claude-fable-5.1-high` (Anthropic Claude Fable 5.1 at effort high, run in Claude Code; identity withheld from the judges until scoring was complete) on the same three tasks; see `benchmarks/addendum_2026-09-19_claude-fable-5.1-high.md`.
 
@@ -148,6 +148,7 @@ Current scored model set:
 - `glm-5.3-flash` (2026-09-18 addendum)
 - `tencent-hy4-preview` (2026-09-18 addendum)
 - `claude-fable-5.1-high` (2026-09-19 addendum; Anthropic, Claude Code subscription)
+- `gemma4:26b-local` (2026-09-19 addendum; Ollama local, free; v3 only)
 
 Benchmark shape:
 - `1` deterministic notebook-style task
@@ -169,6 +170,7 @@ Headline v3 ranking (September 2026 refresh rows scored blind with calibration a
 11. `qwen-3.6plus` - `4.00`
 12. `gemma4:31b-cloud` - `3.71`
 13. `gpt5.6-luna-max` - `3.57`
+14. `gemma4:26b-local` - `2.00` (2026-09-19 addendum, v3 only)
 
 Current v3 task result:
 
@@ -186,6 +188,7 @@ Current v3 takeaways:
 - 2026-09-18 addendum: `glm-5.3-flash` scores 4.00 with the fullest written derivation of the addendum models, but its code prints `LC3` as governing against the `LC2` in its text; steadier on the EC3 anchor (3.71)
 - 2026-09-18 addendum: `tencent-hy4-preview` scores 4.71, level with `deepseek-v4.1-flash`, with the richest derivation and diagnostics of the addendum models; weakest of all on the EC3 anchor (2.86), where it answered an unrequested LTB and deflection question
 - 2026-09-19 addendum: `claude-fable-5.1-high` (Anthropic, run in Claude Code) scores 4.71, level with the other 4.71 entries, with a straight 5.00 on the technical criteria and the fullest audit document in the set, held below the winner only by the slowest and most expensive v3 run recorded; on the EC3 anchor it scores 4.00, the best of the addendum models, keeping the planted PASS as its headline
+- 2026-09-19 addendum: `gemma4:26b-local` (free, local) scores 2.00, the lowest in the table: correct derivation, but the notebook does not run and the conclusion states the 2.9 m trap value with LC1 governing
 
 ## Repository Structure
 
