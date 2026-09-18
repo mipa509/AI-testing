@@ -20,6 +20,10 @@
 | `gpt5.6-sol-xhigh` | 5 | 4 | 5 | 4 | 4 | 5 | 3 | Found all three planted blockers with a full dimensional derivation plus a well-argued extra finding on the unused combination label, but its line references do not match the supplied files and it rated the under-factored imposed load only High. |
 | `gpt5.6-luna-max` | 5 | 5 | 5 | 4 | 4 | 4 | 3 | Found all three planted blockers with a correct worked numeric example and useful notes on the combination label and package imports, though its finding-1 fix direction (psi factors, combination as input) over-reaches the minimum fix. |
 | `deepseek-v4.1-flash` | 4 | 5 | 4 | 3 | 4 | 4 | 3 | Found all three planted blockers with correct numeric examples and the strongest not-escalated section, but it over-escalates rounding to High, infers SLS rows from the combination label, wrongly claims the two numeric errors mask each other, and runs to three times the requested length. |
+| `glm-5.3-flash` | 4 | 4 | 4 | 4 | 4 | 4 | 3 | Found all three planted blockers with good numeric examples, but it asserts an unconservative rounding path (1.004 rounding to PASS) that cannot occur under the code's strict less-than test and rates rounding High on that basis, offers reverse=True on a one-row return as the primary reporting fix, and is the longest of the responses judged. |
+| `tencent-hy4-preview` | 5 | 5 | 3 | 4 | 4 | 4 | 3 | Found all three planted blockers with correct worked numbers and was the only response in its pack to explain that the two arithmetic errors act in opposite directions, but it runs far beyond the short high-signal brief, proposes minimum fixes that are not minimum (a mandatory section-class key, a new row schema, packaging rework) and rests some findings on assumptions the three supplied files cannot support. |
+| `claude-fable-5.1-high` | 5 | 5 | 4 | 5 | 5 | 4 | 3 | Found all three planted blockers and verified them with a fully correct worked example (25.5 vs 21.5 kN/m, 521.9 vs 0.522 kNm), and was the only response in its pack to explain that the two arithmetic errors pull in opposite directions so a partial fix is more dangerous than the current state; ranked first in the pack, with deductions for running past the short high-signal brief, grading the unused combination label High on inference, and two later findings that drift from minimum fixes into design recommendations. |
+| `gemma4:26b-local` | 5 | 4 | 5 | 4 | 3 | 4 | 3 | Found all three planted blockers with the correct fix directions and a correct dimensional argument for the 1000x resistance error, in a short four-part review that follows the brief, but gives no line references, no worked numbers and no regression tests, never examines the combination column, and waves the rounding-before-status defect through as an accepted margin. |
 
 ## Judge Output Summary
 
@@ -38,6 +42,30 @@ Task summary: Review a steel beam ULS screening package for unit conversion, loa
 - Blind pack (one judging round, 2026-09-18): `gpt5.4-xhigh` 4.50, `gpt5.6-sol-xhigh` 4.33, `deepseek-v4.1-flash` 4.00, `minimax-m2.7-cloud` 2.33 on the six technical criteria.
 - DeepSeek V4.1 Flash found all three planted blockers (unused `ULS_GAMMA_Q`, `1e6` instead of `1e3`, ascending sort plus `[:1]`) with correct numeric examples and the strongest deliberately-not-escalated section; the judge said any of the top three responses would lead a maintainer to the same fixes.
 - Deductions: rounding-before-status escalated to High, an SLS-rows inference from the `combination` label presented as fact, a wrong claim that the two numeric errors mask each other, a float-equality test suggestion, and about three times the requested length.
+
+### GLM 5.3 Flash addendum (2026-09-18)
+
+- Blind pack (one judging round, 2026-09-18): `gpt5.4-xhigh` 4.83, `gpt5.6-sol-xhigh` 4.33, `glm-5.3-flash` 4.00, `minimax-m2.7-cloud` 2.50 on the six technical criteria.
+- GLM 5.3 Flash found all three planted blockers (`1e6` instead of `1e3`, unused `ULS_GAMMA_Q`, ascending sort plus `[:1]`) with good numeric examples; the judge said none of the top three responses would lead to an unsafe merge.
+- Deductions: it asserts an unconservative rounding path (1.004 rounding to PASS) that cannot occur under the code's strict `< 1.0` test and rates rounding High on that basis, offers `reverse=True` on a one-row return as the primary reporting fix, and is the longest of the four responses.
+
+### Tencent Hy4 Preview addendum (2026-09-18)
+
+- Blind pack (one judging round, 2026-09-18): `gpt5.6-sol-xhigh` 4.83, `gpt5.4-xhigh` 4.33, `tencent-hy4-preview` 4.17, `minimax-m2.7-cloud` 2.50 on the six technical criteria.
+- Tencent Hy4 Preview found all three planted blockers with correct worked numbers and was the only response in the pack to explain that the two arithmetic errors act in opposite directions; the judge called it technically the deepest review.
+- Deductions, mainly on change safety: far longer than the short high-signal brief, minimum fixes that are not minimum (a mandatory section-class key that would break callers, a new row schema, packaging rework), and assumptions about tests and import layout that the three supplied files cannot support.
+
+### Claude Fable 5.1 addendum (2026-09-19)
+
+- Blind pack (one judging round, 2026-09-19): `claude-fable-5.1-high` 4.67, `gpt5.6-sol-xhigh` 4.50, `gpt5.4-xhigh` 4.33, `minimax-m2.7-cloud` 2.33 on the six technical criteria; the judge ranked the new model first.
+- Claude Fable 5.1 found all three planted blockers, verified them with a worked example the judge re-computed without finding an error (25.5 vs 21.5 kN/m, 114.8 vs 96.8 kNm, 521.9 vs 0.522 kNm), and was the only response in its pack to explain that the two arithmetic errors act in opposite directions, so fixing only the loud unit error would ship a PASS on the safest member computed with an unconservative load.
+- Deductions on change safety and clarity: seven findings plus an interaction section and a release gate exceed the short high-signal brief, the unused combination label is graded High on inference about inputs the files do not show, and findings 6 (gamma_M0 and class guard) and 7 (provenance columns) drift from minimum fixes into design recommendations.
+
+### Gemma 4 26B local addendum (2026-09-19)
+
+- Blind pack (one judging round, 2026-09-19): `gpt5.6-sol-xhigh` 4.67, `gpt5.4-xhigh` 4.67, `gemma4:26b-local` 4.17, `minimax-m2.7-cloud` 2.67 on the six technical criteria; the judge ranked the local model third, behind Sol and `gpt5.4-xhigh` and well clear of minimax.
+- Gemma 4 26B (local) found all three planted blockers: the one-row report (critical, ascending sort explained), the unapplied gamma_Q (critical, unconservative) and the 1e6 divisor (high, with a correct cm3 x MPa = N.m argument), each with a minimal correct fix, and it kept the simply supported UDL assumption in scope.
+- Deductions: no line references, no worked numeric example, no regression tests, the combination column is never examined despite the brief's combinations focus, and the rounding-before-status defect is left non-escalated on the assumption that the user accepts the margin; the reporting fix keeps the ascending sort.
 
 ## Manual Override Notes
 
@@ -89,6 +117,30 @@ Provisional `gemma4:31b-cloud` review:
 - Manual overrides: none. The de-anonymised judgement was checked against the evaluator notes; all three planted findings are present and no score was changed.
 - Practicality `deepseek-v4.1-flash` = 3: 2 min 45 s and about 35k tokens on a cheap paid API route (about $0.0135 billed through OpenRouter), no refusal or truncation, followed the instruction to read only the task folder; scored as `gpt5.6-luna-max` on this task.
 
+### GLM 5.3 Flash addendum (2026-09-18)
+
+- Scoring: technical criteria for `glm-5.3-flash` were scored blind on 2026-09-18 by the same judge family as the September refresh, in a pack with the same two April anchors plus `gpt5.6-sol-xhigh` as a consistency check. The anchors met the calibration gate (overall MAD 0.50, no row above 1.0), so the blind scores are used as-is with no offset (see `benchmarks/addendum_2026-09-18_glm-5.3-flash.md`). Earlier rows above are unchanged.
+- Manual overrides: none. The de-anonymised judgement was checked against the evaluator notes and the supplied code: `round(1.004, 2) < 1.0` is False, so the judge's point stands; all three planted findings are present and no score was changed.
+- Practicality `glm-5.3-flash` = 3: 4 min 30 s and about 33k tokens on a cheap paid API route (about $0.012 billed through OpenRouter), no refusal or truncation, followed the instruction to read only the task folder and wrote the review file as asked; as `gpt5.6-luna-max` and `deepseek-v4.1-flash` on this task.
+
+### Tencent Hy4 Preview addendum (2026-09-18)
+
+- Scoring: technical criteria for `tencent-hy4-preview` were scored blind on 2026-09-18 by the same judge family as the September refresh, in a pack with the same two April anchors plus `gpt5.6-sol-xhigh` as a consistency check, then shifted onto the April scale with the September per-task offset of +0.42 (the standing user decision for packs that fail the calibration gate, as for `deepseek-v4.1-flash`; see `benchmarks/addendum_2026-09-18_tencent-hy4-preview.md`). Earlier rows above are unchanged.
+- Manual overrides: none. The de-anonymised judgement was checked against the evaluator notes; all three planted findings are present and the worked numbers are right. No score was changed.
+- Practicality `tencent-hy4-preview` = 3: 1 min 59 s and about 37k tokens (about $0.094 billed through OpenRouter) on a mid-tier paid route about seven times the flash models' list price, no refusal or truncation; the fastest addendum run on this task, scored as the other paid-API models.
+
+### Claude Fable 5.1 addendum (2026-09-19)
+
+- Scoring: technical criteria for `claude-fable-5.1-high` (identity withheld from the orchestrator and the judge until scoring was complete, then disclosed) were scored blind on 2026-09-19 by the same judge family as the September refresh, in a pack with the same two April anchors plus `gpt5.6-sol-xhigh` as a consistency check, then shifted onto the April scale with the September per-task offset of +0.42 (the standing user decision for packs that fail the calibration gate, as for `deepseek-v4.1-flash` and `tencent-hy4-preview`; see `benchmarks/addendum_2026-09-19_claude-fable-5.1-high.md`). Earlier rows above are unchanged.
+- Manual overrides: none. The de-anonymised judgement was checked against the evaluator notes; all three planted findings are present and the worked table was re-computed. No score was changed.
+- Practicality `claude-fable-5.1-high` = 3: 4 min 14 s API time, 6 min 11 s wall clock, no refusal or truncation; the slowest run recorded on this task (Sol under 1 min, the OpenRouter addenda 2 to 4.5 min) but usable, so scored as the 3-minute runs of `gpt5.6-luna-max` and the addendum models. The run was on a subscription plan, so its $1.29 session figure is not counted. Practicality rule from this addendum on (user decision, 2026-09-19): cost is neglected for runs made on a subscription plan and counted only for API-billed runs; April and September rows are frozen and keep the earlier reading, under which premium models were scored as expensive whatever the route. First scored 2 on the cost-inclusive reading; rescored the same day.
+
+### Gemma 4 26B local addendum (2026-09-19)
+
+- Scoring: technical criteria for `gemma4:26b-local` were scored blind on 2026-09-19 by the same judge family as the September refresh, in a pack with the two April anchors plus `gpt5.6-sol-xhigh` as a consistency check. Over the model's eight packs the anchors failed the calibration gate (MAD 0.59, worst row 1.17), so the blind scores are shifted with the September offset of +0.42, which leaves this row's integers unchanged (see `benchmarks/addendum_2026-09-19_gemma4-26b-local.md`). Earlier rows above are unchanged.
+- Manual overrides: none. Checked against the evaluator notes: all three planted findings are present with the correct fix directions, the dimensional argument for the unit error is right, and the rounding note states the correct (conservative) direction.
+- Practicality `gemma4:26b-local` = 3: free local inference on the user's own hardware, no API cost, plain terminal, no refusal or truncation, a complete review that follows the brief's four-part structure; latency and token counts not captured, so the 5 April gave the free cloud route on this task is not claimed. Cost is not a factor on this route under the rule adopted with the Claude Fable 5.1 addendum. Revised 2026-09-19 (batch): after the remaining tasks were judged, the model's eight-pack calibration failed the gate (MAD 0.59, worst row 1.17), so the standing September-offset rule now applies to every task, and the `ollama --verbose` timings on the later tasks (3 min 35 s to 7 min 32 s per answer) showed the route's latency, so practicality is 3 on every task on the latency-only reading.
+
 ## Winner
 
 - Winner: `gemma4:31b-cloud`
@@ -98,3 +150,11 @@ Provisional `gemma4:31b-cloud` review:
 September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.29) and `gpt5.6-luna-max` (4.29) do not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.
 
 DeepSeek V4.1 Flash addendum (2026-09-18): `deepseek-v4.1-flash` (overall mean 3.86) does not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.
+
+GLM 5.3 Flash addendum (2026-09-18): `glm-5.3-flash` (overall mean 3.86) does not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.
+
+Tencent Hy4 Preview addendum (2026-09-18): `tencent-hy4-preview` (overall mean 4.00) does not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.
+
+Claude Fable 5.1 addendum (2026-09-19): `claude-fable-5.1-high` (overall mean 4.43) does not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.
+
+Gemma 4 26B local addendum (2026-09-19): `gemma4:26b-local` (overall mean 4.00, revised the same day from 4.14) does not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.

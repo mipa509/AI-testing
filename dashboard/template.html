@@ -652,7 +652,7 @@ function renderPriceChart(round) {
     };
   }).filter(p => p.x !== null && p.x !== undefined && p.x > 0 && p.y !== null);
 
-  const unpriced = round.models.filter(m => m.blended_price_usd_per_1m === null || m.blended_price_usd_per_1m === undefined);
+  const unpriced = round.models.filter(m => m.blended_price_usd_per_1m === null || m.blended_price_usd_per_1m === undefined || m.blended_price_usd_per_1m <= 0);
   const asOf = (round.models.find(m => m.pricing && m.pricing.as_of) || {}).pricing?.as_of || 'n/a';
 
   const tiers = [
@@ -710,7 +710,7 @@ function renderPriceChart(round) {
     + 'The frontier joins models that no cheaper model beats.';
   document.getElementById('price-chart-note').textContent =
     `List prices as of ${asOf}, from the sources recorded in models/fixed_model_slate.json. They are estimates, not billed amounts.`
-    + (unpriced.length ? ` Not plotted (no list price): ${unpriced.map(m => m.display_name).join(', ')}.` : '');
+    + (unpriced.length ? ` Not plotted (no list price, or free local inference): ${unpriced.map(m => m.display_name).join(', ')}.` : '');
 
   if (priceChart) priceChart.destroy();
   priceChart = new Chart(document.getElementById('priceChart'), {
@@ -848,11 +848,21 @@ function renderUsageChart(round) {
   const isCost = usageMeasure === 'cost';
   const labels = [...taskIds, 'Total'];
   const usedColors = new Set();
+  const usedHollow = new Set();
   const datasets = modelIds.map((id, i) => {
     const m = byId[id];
     let color = TIER_COLOR[m.cost_tier];
-    if (usedColors.has(color)) color = SERIES_SLOT.find(c => !usedColors.has(c)) || color;   // same-tier fallback
-    usedColors.add(color);
+    let hollow = false;
+    if (usedColors.has(color)) {
+      const free = SERIES_SLOT.find(c => !usedColors.has(c));   // same-tier fallback to a free slot
+      if (free) color = free;
+      else {                                                    // more series than slots: outline in the next unused
+        hollow = true;                                          // hollow slot colour, never a new hue
+        color = SERIES_SLOT.find(c => !usedHollow.has(c)) || color;
+        usedHollow.add(color);
+      }
+    }
+    if (!hollow) usedColors.add(color);
     const vals = taskIds.map(t => {
       const u = usage[t][id];
       if (!u) return null;
@@ -865,9 +875,9 @@ function renderUsageChart(round) {
     return {
       label: m.display_name,
       data: [...vals, total],
-      backgroundColor: color,
+      backgroundColor: hollow ? 'transparent' : color,
       borderColor: color,
-      borderWidth: 0,
+      borderWidth: hollow ? 2 : 0,
       borderRadius: 4,
       borderSkipped: 'bottom',
       maxBarThickness: 24,

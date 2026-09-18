@@ -152,7 +152,7 @@
     "provider": "OpenRouter API",
     "cost_tier": 2,
     "cost_label": "Paid API",
-    "notes": "September 2026 addition. OpenRouter model deepseek/deepseek-v4.1-flash at reasoning effort high, run from a VS Code agent chat. Run on three tasks only (v2-deep-02, v2-anchor-07, v3-notebook-01), so it has no v2 cross-task average.",
+    "notes": "September 2026 addition. OpenRouter model deepseek/deepseek-v4.1-flash at reasoning effort high, run from a VS Code agent chat. Run on three tasks only (v2-deep-02, v2-anchor-07, v3-notebook-01), so its v2 average is provisional over the tasks run.",
     "pricing": {
       "input_usd_per_1m": 0.15,
       "output_usd_per_1m": 0.6,
@@ -161,6 +161,80 @@
       "source": "https://openrouter.ai/api/v1/models",
       "source_model_id": "deepseek/deepseek-v4.1-flash",
       "note": "OpenRouter listing. Benchmark runs were billed through OpenRouter: about $0.0135 (deep-02), $0.05 (anchor) and $0.04 (v3)."
+    }
+  },
+  {
+    "model_id": "glm-5.3-flash",
+    "display_name": "GLM 5.3 Flash",
+    "role": "low-cost candidate (three-task subset)",
+    "provider": "OpenRouter API",
+    "cost_tier": 2,
+    "cost_label": "Paid API",
+    "notes": "September 2026 addition. OpenRouter model z-ai/glm-5.3-flash at reasoning effort high, run from a VS Code agent chat. Run on three tasks only (v2-deep-02, v2-anchor-07, v3-notebook-01); its v2 average is provisional over the tasks run.",
+    "pricing": {
+      "input_usd_per_1m": 0.09,
+      "output_usd_per_1m": 0.3,
+      "unit": "USD per 1M tokens, list price",
+      "as_of": "2026-09-17",
+      "source": "https://openrouter.ai/api/v1/models",
+      "source_model_id": "z-ai/glm-5.3-flash",
+      "note": "OpenRouter listing (unchanged on 2026-09-18). Benchmark runs were billed through OpenRouter: about $0.0119 (deep-02), $0.0094 (v3) and $0.0065 (anchor)."
+    }
+  },
+  {
+    "model_id": "tencent-hy4-preview",
+    "display_name": "Tencent Hy4 Preview",
+    "role": "mid-price candidate (three-task subset)",
+    "provider": "OpenRouter API",
+    "cost_tier": 2,
+    "cost_label": "Paid API",
+    "notes": "September 2026 addition. OpenRouter model tencent/hy4-preview at reasoning effort high, run from a VS Code agent chat. Run on three tasks only (v2-deep-02, v2-anchor-07, v3-notebook-01); its v2 average is provisional over the tasks run.",
+    "pricing": {
+      "input_usd_per_1m": 0.834,
+      "output_usd_per_1m": 2.501,
+      "unit": "USD per 1M tokens, list price",
+      "as_of": "2026-09-17",
+      "source": "https://openrouter.ai/api/v1/models",
+      "source_model_id": "tencent/hy4-preview",
+      "note": "OpenRouter listing (unchanged on 2026-09-18). Benchmark runs were billed through OpenRouter: about $0.094 (deep-02), $0.128 (v3) and $0.115 (anchor)."
+    }
+  },
+  {
+    "model_id": "claude-fable-5.1-high",
+    "display_name": "Claude Fable 5.1 High",
+    "role": "premium candidate (three-task subset)",
+    "provider": "Anthropic / Claude Code subscription",
+    "cost_tier": 3,
+    "cost_label": "Premium",
+    "notes": "September 2026 addition. Anthropic claude-fable-5-1 at reasoning effort high, run by the user on 2026-09-19 in Claude Code from the VS Code terminal on a subscription plan; the model's identity was withheld from the orchestrator and the judges until scoring was complete. Run on three tasks only (v2-deep-02, v2-anchor-07, v3-notebook-01); its v2 average is provisional over the tasks run. Subscription plan, so the session cost figures ($1.29 deep-02, $1.48 anchor, $2.65 v3) are recorded but not scored (practicality counts cost only for API-billed runs from this addendum on).",
+    "cost_route": "subscription",
+    "pricing": {
+      "input_usd_per_1m": 10.0,
+      "output_usd_per_1m": 50.0,
+      "unit": "USD per 1M tokens, list price",
+      "as_of": "2026-09-19",
+      "source": "https://docs.claude.com/en/docs/about-claude/pricing",
+      "source_model_id": "claude-fable-5-1",
+      "note": "Anthropic first-party API rate (cache reads $0.25 per 1M). Benchmark runs used Claude Code on a subscription plan; the session cost summaries ($1.29, $1.48, $2.65) are recorded in the run records and not scored."
+    }
+  },
+  {
+    "model_id": "gemma4:26b-local",
+    "display_name": "Gemma 4 26B (local)",
+    "role": "free local candidate",
+    "provider": "Ollama local",
+    "cost_tier": 1,
+    "cost_label": "Free/Cloud",
+    "cost_route": "local",
+    "notes": "September 2026 addition. Ollama model gemma4:26b run locally on the user's machine (i7-9700K, 64 GB, RTX 2070 SUPER 8 GB) from a PowerShell terminal with no harness, tools, skills or web access, 2026-09-19. Run on all six v2 primary tasks, the anchor and the v3 notebook; timings from ollama --verbose on five tasks (3.5 to 7.5 minutes per answer at 8 to 12 tokens/s). Distinct from the April gemma4:31b-cloud row (Ollama cloud, 31B).",
+    "pricing": {
+      "input_usd_per_1m": 0.0,
+      "output_usd_per_1m": 0.0,
+      "unit": "USD per 1M tokens, list price",
+      "as_of": "2026-09-19",
+      "source": "https://ollama.com/library/gemma4",
+      "source_model_id": "gemma4:26b",
+      "note": "Local inference on the user's own hardware; no per-token price. Recorded as zero so the price chart can place it; electricity and hardware are not costed."
     }
   }
 ]

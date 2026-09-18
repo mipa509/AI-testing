@@ -115,4 +115,89 @@ Read:
 - Cost and time: the three runs were billed about $0.10 in total through OpenRouter (list price $0.15 / $0.60 per 1M tokens); latencies were 2 min 45 s, about 15 min and 4 min 15 s.
 - Calibration: anchor MAD 0.64 and signed -0.47 against April with anchor order preserved on every task, and `gpt5.6-sol-xhigh` within 0.17 of its September blind scores, so the judge family is consistent with the September round.
 
-Caveats specific to this addendum: three tasks only, so no v2 cross-task average and no place in the v2 overall ranking; the agent read the task files from the workspace folder rather than receiving them as pasted messages, read the other task folders unasked on two runs, and on the anchor read the two header lines of the prompt file above the text block; web lookups were blocked on the anchor whereas the September models had them; one run per task.
+Caveats specific to this addendum: three tasks only, so its v2 average is provisional (Task 2 and the anchor, marked as such in the v2 ranking) until the remaining primary tasks are run; the agent read the task files from the workspace folder rather than receiving them as pasted messages, read the other task folders unasked on two runs, and on the anchor read the two header lines of the prompt file above the text block; web lookups were blocked on the anchor whereas the September models had them; one run per task.
+
+## Addendum 2026-09-18: GLM 5.3 Flash on the same three tasks
+
+`glm-5.3-flash` (OpenRouter `z-ai/glm-5.3-flash`, reasoning effort high, same VS Code agent route as the DeepSeek runs) was run on the same three tasks and scored the same way. Its anchors met the calibration gate (MAD 0.50, no row above 1.0), so the blind scores stand as-is with no offset. Full record: `benchmarks/addendum_2026-09-18_glm-5.3-flash.md`.
+
+| Task | Blind, six criteria | Practicality | Overall | Position on the task |
+|---|---:|---:|---:|---|
+| Task 2 - Repo review traps | 4.00 | 3 | 3.86 | 7th equal of 11 with `deepseek-v4.1-flash`; winner `gemma4:31b-cloud` (4.71) unchanged |
+| Anchor - EC3 planted-error trap | 4.00 | 2 | 3.71 | 8th of 11, between `qwen-3.6plus` (3.86) and `deepseek-v3.2` (3.43); winner `gpt5.4-xhigh` (4.43) unchanged |
+| v3 Task 1 - Pad footing notebook | 4.17 | 3 | 4.00 | 8th of 11, level with `qwen-3.6plus`; winner `gpt5.4-xhigh` (4.86) unchanged |
+
+Read:
+
+- Grounded and complete on the repo review: all three planted blockers found with numeric examples; deductions for a rounding-direction claim the code cannot produce and for length.
+- Steadier than DeepSeek on the anchor: both faults corrected, `PASS` at 0.920, LTB kept as a validity condition rather than a headline verdict, but a slightly off major-axis modulus (351.5 for 353) and a wrong minor-axis one (about 25.1 for about 54.8), with no web lookup.
+- Weaker than DeepSeek on the notebook: the Markdown has the fullest derivation and sweep of the addendum models and names `LC2`, but the code prints `LC3` as governing (verified by execution) and the middle-third equivalence used to explain the 2.9 m failure is wrong for biaxial loading.
+- Cost and time: about $0.03 for the three runs; 4 min 30 s, 5 min 56 s and 10 min 34 s.
+
+Provisional v2 averages: with two partial models in hand, the v2 cross-task table now carries provisional columns for `deepseek-v4.1-flash` and `glm-5.3-flash` averaged over the v2 tasks they ran (Task 2 and the anchor). They include the anchor, so they are not comparable with the six-task composite of the full models and will be replaced when the remaining tasks are run.
+
+## Addendum 2026-09-18: Tencent Hy4 Preview on the same three tasks
+
+`tencent-hy4-preview` (OpenRouter `tencent/hy4-preview`, reasoning effort high, same VS Code agent route, list price $0.83 / $2.50 per 1M tokens, about seven times the two flash models) was run on the same three tasks and scored the same way. Its anchors failed the calibration gate in the usual direction, so the September per-task offsets were applied, as for DeepSeek. Full record: `benchmarks/addendum_2026-09-18_tencent-hy4-preview.md`.
+
+| Task | Blind, six criteria | On April scale | Practicality | Overall | Position on the task |
+|---|---:|---:|---:|---:|---|
+| Task 2 - Repo review traps | 4.17 | 4.17 | 3 | 4.00 | 7th of 12, the best of the three addendum models; winner `gemma4:31b-cloud` (4.71) unchanged |
+| Anchor - EC3 planted-error trap | 3.00 | 3.00 | 2 | 2.86 | 11th of 12, above `minimax-m2.7-cloud` (2.43) only; winner `gpt5.4-xhigh` (4.43) unchanged |
+| v3 Task 1 - Pad footing notebook | 4.83 | 5.00 | 3 | 4.71 | 2nd equal of 12 with `deepseek-v4.1-flash` and `glm-5.1:cloud`; winner `gpt5.4-xhigh` (4.86) unchanged |
+
+Read:
+
+- The deepest repo review of the day: all three planted blockers with worked numbers, and the only response in its pack to explain that the two arithmetic errors pull in opposite directions. It lost points on change safety for proposing caller-breaking "minimum" fixes and for length.
+- The best notebook of the addendum models by the blind judge, ranked above `gpt5.4-xhigh` in its pack: an `M*c/I` derivation, exact-fraction arithmetic, all four corner pressures, closed-form minimum-width bounds and both governing cases identified; it runs end to end. Deductions only for reversed eccentricity naming and length.
+- The same anchor failure as DeepSeek, in a more elaborate form: correct diagnosis and numbers, then a NOT adequate headline on LTB and deflection checks the task did not pose, with factored self-weight added to the input load. Nearly 13 minutes.
+- Cost and time: about $0.34 for the three runs, ten times the flash models but still small; 1 min 59 s, 3 min 18 s and 12 min 50 s.
+
+Three-model pattern on the anchor: the two models that headlined an unrequested LTB verdict (`deepseek-v4.1-flash`, `tencent-hy4-preview`) sit at the bottom of the anchor table, while `glm-5.3-flash`, which kept LTB as a validity condition, sits mid-table. The task rewards answering the question asked.
+
+## Addendum 2026-09-19: Claude Fable 5.1 on the same three tasks
+
+`claude-fable-5.1-high` (Anthropic `claude-fable-5-1`, reasoning effort high, run in Claude Code from the VS Code terminal on a subscription plan; list price $10 / $50 per 1M tokens) was run on the same three tasks, one fresh session per task in a sandbox folder with the task files only, and scored the same way. The user withheld the model's identity from the orchestrator and the judges until scoring was complete. The anchors failed the calibration gate in the usual direction, so the September per-task offsets were applied. The runs were on a subscription plan; each session's own cost summary gives $1.29, $1.48 and $2.65, recorded but not scored under the practicality rule adopted with this addendum (cost neglected for subscription runs, counted for API-billed runs; earlier rows keep the frozen cost-inclusive reading). Full record: `benchmarks/addendum_2026-09-19_claude-fable-5.1-high.md`.
+
+| Task | Blind, six criteria | On April scale | Practicality | Overall | Position on the task |
+|---|---:|---:|---:|---:|---|
+| Task 2 - Repo review traps | 4.67 | 4.67 | 3 | 4.43 | 3rd equal of 13 with `gpt5.4-xhigh`, behind `gemma4:31b-cloud` and `kimi-k2-thinking`; the highest technical score of any model on this task since April (ranked first in its pack above `gpt5.4-xhigh` and Sol); winner `gemma4:31b-cloud` (4.71) unchanged |
+| Anchor - EC3 planted-error trap | 4.33 | 4.33 | 2 | 4.00 | 6th equal of 13 with `gemma4:31b-cloud`; the best addendum result on the anchor by a wide margin; winner `gpt5.4-xhigh` (4.43) unchanged |
+| v3 Task 1 - Pad footing notebook | 5.00 | 5.00 | 3 | 4.71 | 2nd equal of 13 with `deepseek-v4.1-flash`, `tencent-hy4-preview` and `glm-5.1:cloud`; a straight 5.00 on the technical criteria, ranked first in its pack above `gpt5.4-xhigh`; winner `gpt5.4-xhigh` (4.86) unchanged |
+
+Read:
+
+- The strongest technical showing of any addendum model, and on two of the three tasks the strongest of any model in the repo: first in its blind pack on the repo review (4.67 against `gpt5.4-xhigh` 4.33) and on the notebook (5.00 against 4.67), where the judge re-computed its worked numbers and found no errors.
+- The repo review found all three planted blockers, tabulated correct-versus-coded values, and was the only response in its pack to argue that the two arithmetic errors pull in opposite directions, so fixing only the loud one would ship a hidden unconservative PASS. It lost a point each on change safety and clarity for length and for two later findings that drift into design recommendations.
+- The notebook is the fullest audit document in the v3 set: Navier derivation with the kern limit, reference eccentricity convention, a hand-check cell, a full pass/fail matrix with failure-type flags, a closed-form minimum-width cross-check and commentary on the thin uplift margin; the six code cells run end to end.
+- The anchor is where it gave ground, and differently from the 2026-09-18 addenda: it kept the planted objective (0.92 PASS if restrained) as the headline and stated the LTB failure as conditional, but it answered at design-study length with classification, shear, a full `M_cr` chain and an indicative deflection row on assumed load factors, so it sits behind Sol and `gpt5.4-xhigh` on scope rather than on correctness.
+- Time is the drag: API times of 4 to 6 minutes (wall clock 6 to 11 minutes), the slowest run recorded on the repo review and the notebook, mid-pack on the anchor. The practicality column (3 / 2 / 3, latency only, since the runs were on a subscription plan) is what holds it below the April winners. Had the same runs been API-billed, the $5.42 session total would have been sixteen times Tencent Hy4 and about a hundred times the flash models, which is the case for a separate API-cost view of the results for readers billed that way (for example enterprise accounts).
+
+Cross-family check: because the judge and the model under test are both Claude models, the user re-ran the three packs through a judge from another family (GPT-6 Astra at xhigh, in Codex). It was level or more lenient on the nine responses that are not Fable (+0.22 on average) and lower on all three Fable responses (-0.94 on average), keeping the anchor rankings but moving Fable from first to third on the repo review and from first to second on the notebook. That is consistent with same-family favouritism in the first judge and also with the second judge preferring terse responses; two judges cannot separate the two. The recorded scores are unchanged; the full comparison and the second judge's replies are in section 6 of the record.
+
+Four-model pattern on the anchor: the two models that headlined an unrequested LTB verdict (`deepseek-v4.1-flash`, `tencent-hy4-preview`) sit at the bottom of the anchor table, `glm-5.3-flash`, which kept LTB as a validity condition, sits mid-table, and `claude-fable-5.1-high`, which kept the planted PASS as the headline but surrounded it with a full design check, sits with the April mid-field. The task rewards answering the question asked, at the length asked.
+
+## Addendum 2026-09-19: Gemma 4 26B run locally, all tasks
+
+`gemma4:26b-local` (Ollama `gemma4:26b` on the user's own machine, PowerShell terminal, no harness, tools, skills or web access; free; Intel i7-9700K, 64 GB, RTX 2070 SUPER 8 GB) was run on all eight tasks as a free-tier comparison point and scored the same way. Over its eight packs the anchors failed the calibration gate (MAD 0.59, worst row 1.17), so the September per-task offsets were applied to every task, revising the notebook row first recorded as-is. It is a different model from the April `gemma4:31b-cloud` row. Full record: `benchmarks/addendum_2026-09-19_gemma4-26b-local.md`.
+
+| Task | Blind, six criteria | On April scale | Practicality | Overall | Position on the task |
+|---|---:|---:|---:|---:|---|
+| Task 1 - Multi-file bug hunt | 2.17 | 3.17 | 3 | 3.14 | 9th of 10; winner `gpt5.6-sol-xhigh` (4.71) unchanged |
+| Task 2 - Repo review traps | 4.17 | 4.17 | 3 | 4.00 | 8th equal of 14; winner `gemma4:31b-cloud` (4.71) unchanged |
+| Task 3 - Scoped feature design | 3.17 | 4.17 | 3 | 4.00 | 7th of 10; winner `gpt5.6-sol-xhigh` (4.71) unchanged |
+| Task 4 - Safe refactor | 3.50 | 4.50 | 3 | 4.29 | 9th of 10; winner `kimi-k2-thinking` (5.00) unchanged |
+| Task 5 - Large dataset pipeline | 2.50 | 2.50 | 3 | 2.57 | 10th of 10; winner `gpt5.6-sol-xhigh` (4.57) unchanged |
+| Task 6 - Review plus tests | 3.00 | 3.00 | 3 | 3.00 | 5th of 10; winner `gpt5.6-luna-max` (4.00) unchanged |
+| Anchor - EC3 planted-error trap | 1.50 | 1.50 | 3 | 1.71 | 14th of 14; winner `gpt5.4-xhigh` (4.43) unchanged |
+| v3 Task 1 - Pad footing notebook | 1.83 | 2.83 | 3 | 2.86 | 14th of 14; winner `gpt5.4-xhigh` (4.86) unchanged |
+
+v2 six-task average 3.50, which places it in the lower half of the full table; anchor 1.71, the lowest recorded; v3 2.86, the lowest recorded.
+
+Read:
+
+- Best where the code is in front of it and the ask is a review: Task 2 (all three planted blockers, 4.17 on the technical criteria) and Task 4 (the None-versus-0.0 trap seen, and the right advice to leave the helpers alone). Task 3's plan is safe but undecided on aggregation and zero division.
+- Weak wherever it has to write code that must run or supply numbers from memory: the notebook does not execute (non-breaking space in a literal, widths scaled twice), the Task 1 patch has a `SEIONS` typo that raises on every call, the Task 5 rewrite has a walrus-in-subscript artefact and silently drops rows, the Task 6 fix reintroduces a silent zero, and the anchor cites a Blue Book modulus that does not exist in the table.
+- The pattern the judges kept naming: right diagnosis, unverified deliverable. Every one of its patches and tests would need a human pass before use; two of its own tests contradict its own code.
+- Practicality: free, and it waited for the context every time, but on consumer hardware with an 8 GB card the 26B weights run mostly on CPU at 8 to 12 tokens per second, so each answer took 3.5 to 7.5 minutes after a 30 to 45 s prompt-only reply. Scored 3 on every task on the latency-only reading.
+- Against its cloud sibling: April's `gemma4:31b-cloud` scored 4.10 on the v2 composite and 4.00 on the anchor with runnable code; the 26B local model shows what the smaller weights and the lack of tooling cost on these tasks.

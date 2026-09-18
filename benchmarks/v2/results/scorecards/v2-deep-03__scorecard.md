@@ -19,6 +19,7 @@
 | `deepseek-v3.2` | 4 | 4 | 4 | 4 | 4 | 4 | 3 | Reasonable implementation plan with good compatibility intent, though it introduces extra APIs and acceptance criteria that are broader than necessary. |
 | `gpt5.6-sol-xhigh` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Blind winner in both judging rounds: the most decision-complete additive plan, with an always-DataFrame contract, paired governing-row selection with a tie-break, fail-loud validation and precise tests; the only debatable calls are rejecting negative deflections and omitting an SLS pass/fail field. |
 | `gpt5.6-luna-max` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Same additive architecture as Sol with a good sign-convention caveat, but it leaves the orchestration helper optional, assumes a test layout that was not supplied and under-specifies the columns-present-but-all-null case. |
+| `gemma4:26b-local` | 4 | 4 | 5 | 4 | 4 | 4 | 3 | An additive plan that keeps `report_rows` stable through a `columns` parameter defaulting to `RESULT_COLUMNS`, with sensible risks and mitigations, but it never decides the per-group aggregation rule for the SLS columns, ignores a zero allowable deflection and the NaN left in ULS-only rows after the left merge, invents an unrequested `Status_SLS`, names the new function two different ways and writes the guard as invalid pseudo-code. |
 
 ## Judge Output Summary
 
@@ -31,6 +32,14 @@ Task summary: Plan an optional serviceability summary that preserves existing UL
 - Blind pack judged twice with different label orders: `gpt5.6-sol-xhigh` 4.83 in both rounds, `gpt5.6-luna-max` 4.17 and 4.50, `gpt5.4-xhigh` 3.00 and 3.17, `qwen-3.6plus` 2.83 and 2.67.
 - Both judges rated Sol the most decision-complete additive plan (untouched `RESULT_COLUMNS` and `report_rows()`, per-row ratio then governing-row selection with tie-break, fail-loud validation, golden tests) and Luna the same architecture with a few decisions left open.
 - Both judges independently read the April `gpt5.4-xhigh` plan as hedged and not decision-complete, which is the largest disagreement with the April scorer found in the refresh; see the calibration record.
+
+### Gemma 4 26B local addendum (2026-09-19)
+
+- Blind pack (one judging round, 2026-09-19): `gpt5.6-sol-xhigh` 4.83, `gpt5.4-xhigh` 3.67, `gemma4:26b-local` 3.17, `qwen-3.6plus` 3.00 on the six technical criteria; the judge ranked the local model third.
+- Judge's one-line reading of the local model's response: Sound additive skeleton (default `columns=RESULT_COLUMNS` keeps the legacy slice) but never decides the per-group aggregation rule, ignores divide-by-zero, and is sloppy (`build_slli_summary`, `all(cols in df.columns)`).
+- Judge's deduction: Names the new function `build_slli_summary` in section 1 and `build_sls_summary` everywhere else; guard written as `if all(cols in df.columns)` which is not valid pseudo-Python. Small, but signals carelessness.
+- Judge's deduction: No aggregation rule: `build_uls_summary` groups by `Member`/`Section`, so the SLS builder must too, yet A never says how `Deflection_mm`/`AllowableDeflection_mm` collapse per group or whether the ratio is taken before or after grouping.
+- Judge's deduction: No handling of `AllowableDeflection_mm == 0` or nulls; after the left merge, ULS-only members carry `NaN` in `Status_SLS`, which is not addressed.
 
 ## Manual Override Notes
 
@@ -76,6 +85,12 @@ Provisional `gemma4:31b-cloud` review:
 - Practicality `gpt5.6-sol-xhigh` = 3: same premium Codex route as `gpt5.4-xhigh`, faster on every task with a recorded time, no refusal or truncation, waited for context; scored as the April premium reference.
 - Practicality `gpt5.6-luna-max` = 3: same Codex route on the budget API tier ($0.20 / $1.20 per 1M tokens list price), about 3 to 4 minutes per v2 task, no refusal or truncation, waited for context; low price offset by the slowest latency in the set.
 
+### Gemma 4 26B local addendum (2026-09-19)
+
+- Scoring: technical criteria for `gemma4:26b-local` were scored blind on 2026-09-19 by the same judge family as the September refresh, in a pack with the two April anchors plus `gpt5.6-sol-xhigh` as a consistency check. Over the model's eight packs the anchors failed the calibration gate (MAD 0.59, worst row 1.17), so the blind scores [3, 3, 4, 3, 3, 3] were shifted onto the April scale with the September per-task offset of +1.42, the standing user decision (see `benchmarks/addendum_2026-09-19_gemma4-26b-local.md`). Earlier rows above are unchanged.
+- Manual overrides: none. The judge's claims about the response were checked against the response text; the defects it names are present as described.
+- Practicality `gemma4:26b-local` = 3: free local inference on the user's own hardware, no API cost, no refusal, the two-message protocol followed; on the timed tasks the answer took 3 min 35 s to 7 min 32 s after a 30 to 45 s prompt-only reply (7.7 to 10.8 generated tokens per second, CPU-bound on an 8 GB card), so on the latency-only reading that applies to routes where cost is not counted it is scored as the 3 to 6 minute runs of `gpt5.6-luna-max` and the 2026-09-18 addendum models, not the 4 to 5 April gave the free cloud route for one-to-two-minute answers.
+
 ## Winner
 
 - Winner: `gpt5.6-sol-xhigh`
@@ -83,3 +98,5 @@ Provisional `gemma4:31b-cloud` review:
 - Why it matters in practice: `GPT-5.6 Sol gave the most decision-complete compatibility-preserving plan in either judging round, with Luna close behind on the same additive architecture; both clear the April GPT-5.4 overall mean of 4.57.`
 
 September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.71) beats the April result, so the winner line above was updated. April 2026 result for the seven original models: winner `gpt5.4-xhigh` (overall mean 4.57); Difference size: `Small`; Why it matters in practice: `GPT-5.4 gave the cleanest file-by-file design that preserves current ULS contracts and adds serviceability only through explicit new paths, which is exactly what this task was testing.`
+
+Gemma 4 26B local addendum (2026-09-19): `gemma4:26b-local` (overall mean 4.00) does not beat the April result of `gpt5.6-sol-xhigh` (4.71), so the winner line is unchanged.

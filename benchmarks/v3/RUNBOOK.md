@@ -31,6 +31,10 @@ Use these exact model IDs for the current scored slate:
 - `gpt5.6-sol-xhigh` (September 2026 refresh)
 - `gpt5.6-luna-max` (September 2026 refresh)
 - `deepseek-v4.1-flash` (2026-09-18 addendum)
+- `glm-5.3-flash` (2026-09-18 addendum)
+- `tencent-hy4-preview` (2026-09-18 addendum)
+- `claude-fable-5.1-high` (2026-09-19 addendum)
+- `gemma4:26b-local` (2026-09-19 addendum; local Ollama)
 
 ## 3. Folder Convention While Running
 
