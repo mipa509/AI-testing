@@ -33,6 +33,7 @@ Use these exact model IDs for the current scored slate:
 - `deepseek-v4.1-flash` (2026-09-18 addendum)
 - `glm-5.3-flash` (2026-09-18 addendum)
 - `tencent-hy4-preview` (2026-09-18 addendum)
+- `anon-2026-09-19` (2026-09-19 addendum, placeholder id)
 
 ## 3. Folder Convention While Running
 

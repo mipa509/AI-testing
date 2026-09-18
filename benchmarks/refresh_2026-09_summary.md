@@ -154,3 +154,23 @@ Read:
 - Cost and time: about $0.34 for the three runs, ten times the flash models but still small; 1 min 59 s, 3 min 18 s and 12 min 50 s.
 
 Three-model pattern on the anchor: the two models that headlined an unrequested LTB verdict (`deepseek-v4.1-flash`, `tencent-hy4-preview`) sit at the bottom of the anchor table, while `glm-5.3-flash`, which kept LTB as a validity condition, sits mid-table. The task rewards answering the question asked.
+
+## Addendum 2026-09-19: an undisclosed model on the same three tasks
+
+`anon-2026-09-19` is a placeholder id: the user ran a model whose identity was withheld from the orchestrator and the judges until scoring was complete, on the same three tasks, from an agentic CLI coding session (one fresh session per task, sandbox folder with the task files only), and scored it the same way. The anchors failed the calibration gate in the usual direction, so the September per-task offsets were applied. No list price is recorded; each session's own cost summary gives $1.29, $1.48 and $2.65, so the route is treated as premium. Full record: `benchmarks/addendum_2026-09-19_anon-2026-09-19.md`.
+
+| Task | Blind, six criteria | On April scale | Practicality | Overall | Position on the task |
+|---|---:|---:|---:|---:|---|
+| Task 2 - Repo review traps | 4.67 | 4.67 | 2 | 4.29 | 4th equal of 13 with `gpt5.6-sol-xhigh` and `gpt5.6-luna-max`; the highest technical score of any model on this task since April (ranked first in its pack above `gpt5.4-xhigh` and Sol); winner `gemma4:31b-cloud` (4.71) unchanged |
+| Anchor - EC3 planted-error trap | 4.33 | 4.33 | 2 | 4.00 | 6th equal of 13 with `gemma4:31b-cloud`; the best addendum result on the anchor by a wide margin; winner `gpt5.4-xhigh` (4.43) unchanged |
+| v3 Task 1 - Pad footing notebook | 5.00 | 5.00 | 3 | 4.71 | 2nd equal of 13 with `deepseek-v4.1-flash`, `tencent-hy4-preview` and `glm-5.1:cloud`; a straight 5.00 on the technical criteria, ranked first in its pack above `gpt5.4-xhigh`; winner `gpt5.4-xhigh` (4.86) unchanged |
+
+Read:
+
+- The strongest technical showing of any addendum model, and on two of the three tasks the strongest of any model in the repo: first in its blind pack on the repo review (4.67 against `gpt5.4-xhigh` 4.33) and on the notebook (5.00 against 4.67), where the judge re-computed its worked numbers and found no errors.
+- The repo review found all three planted blockers, tabulated correct-versus-coded values, and was the only response in its pack to argue that the two arithmetic errors pull in opposite directions, so fixing only the loud one would ship a hidden unconservative PASS. It lost a point each on change safety and clarity for length and for two later findings that drift into design recommendations.
+- The notebook is the fullest audit document in the v3 set: Navier derivation with the kern limit, reference eccentricity convention, a hand-check cell, a full pass/fail matrix with failure-type flags, a closed-form minimum-width cross-check and commentary on the thin uplift margin; the six code cells run end to end.
+- The anchor is where it gave ground, and differently from the 2026-09-18 addenda: it kept the planted objective (0.92 PASS if restrained) as the headline and stated the LTB failure as conditional, but it answered at design-study length with classification, shear, a full `M_cr` chain and an indicative deflection row on assumed load factors, so it sits behind Sol and `gpt5.4-xhigh` on scope rather than on correctness.
+- Cost and time are the drag: $5.42 for the three runs, sixteen times Tencent Hy4 and about a hundred times the flash models, and API times of 4 to 6 minutes (wall clock 6 to 11 minutes). The practicality column puts it at the premium floor on the two v2 tasks and at 3 on the notebook, the slowest and most expensive v3 run recorded, and that is what holds it below the April winners.
+
+Four-model pattern on the anchor: the two models that headlined an unrequested LTB verdict (`deepseek-v4.1-flash`, `tencent-hy4-preview`) sit at the bottom of the anchor table, `glm-5.3-flash`, which kept LTB as a validity condition, sits mid-table, and `anon-2026-09-19`, which kept the planted PASS as the headline but surrounded it with a full design check, sits with the April mid-field. The task rewards answering the question asked, at the length asked.

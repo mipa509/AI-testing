@@ -12,10 +12,10 @@ Artifacts include benchmark packs, written reports, per-task result summaries, p
 | Round | Focus | Scope | Current leader | Main files |
 |---|---|---|---|---|
 | `v1` | Short coding and review prompts | `6` tasks, `3` models | `gemma4:31b-cloud` (`3.93`) | `benchmarks/v1/`, `structural_engineering_benchmark_report.md` |
-| `v2` | Larger-context repo reading and change design | `6` primary tasks + `1` historical anchor, `7` models (April 2026) + `2` (September 2026 refresh) + `3` partial (2026-09-18 addenda, Task 2 and anchor only, provisional averages) | `gpt5.6-luna-max` (`4.48`), `gpt5.6-sol-xhigh` (`4.45`); April leader `gpt5.4-xhigh` (`4.14`) | `benchmarks/v2/`, `structural_engineering_benchmark_report_v2.md`, `benchmarks/refresh_2026-09_summary.md` |
-| `v3` | Deterministic notebook-style code generation | `1` notebook task, `7` models (April 2026) + `2` (September 2026 refresh) + `3` (2026-09-18 addenda) | `gpt5.4-xhigh` (`4.86`) | `benchmarks/v3/`, `benchmarks/v3/results/`, `benchmarks/refresh_2026-09_summary.md` |
+| `v2` | Larger-context repo reading and change design | `6` primary tasks + `1` historical anchor, `7` models (April 2026) + `2` (September 2026 refresh) + `3` partial (2026-09-18 addenda) + `1` partial (2026-09-19 addendum, undisclosed model), Task 2 and anchor only, provisional averages | `gpt5.6-luna-max` (`4.48`), `gpt5.6-sol-xhigh` (`4.45`); April leader `gpt5.4-xhigh` (`4.14`) | `benchmarks/v2/`, `structural_engineering_benchmark_report_v2.md`, `benchmarks/refresh_2026-09_summary.md` |
+| `v3` | Deterministic notebook-style code generation | `1` notebook task, `7` models (April 2026) + `2` (September 2026 refresh) + `3` (2026-09-18 addenda) + `1` (2026-09-19 addendum, undisclosed model) | `gpt5.4-xhigh` (`4.86`) | `benchmarks/v3/`, `benchmarks/v3/results/`, `benchmarks/refresh_2026-09_summary.md` |
 
-September 2026 refresh: `gpt5.6-sol-xhigh` (successor to `gpt5.4-xhigh`) and `gpt5.6-luna-max` (budget API tier) were run on the unchanged v2 and v3 tasks and scored blind with calibration against the April results. The then-vs-now comparison is in `benchmarks/refresh_2026-09_summary.md`; the calibration procedure and judge replies are in `benchmarks/refresh_2026-09_calibration.md`. The April full reports are unchanged. Three 2026-09-18 addenda add `deepseek-v4.1-flash`, `glm-5.3-flash` and `tencent-hy4-preview` on three tasks each (v2 Task 2, the anchor and the v3 notebook), scored the same way; see `benchmarks/addendum_2026-09-18_deepseek-v4.1-flash.md`, `benchmarks/addendum_2026-09-18_glm-5.3-flash.md`, `benchmarks/addendum_2026-09-18_tencent-hy4-preview.md` and the addendum sections of the summary. Their v2 averages are provisional (Task 2 and anchor only).
+September 2026 refresh: `gpt5.6-sol-xhigh` (successor to `gpt5.4-xhigh`) and `gpt5.6-luna-max` (budget API tier) were run on the unchanged v2 and v3 tasks and scored blind with calibration against the April results. The then-vs-now comparison is in `benchmarks/refresh_2026-09_summary.md`; the calibration procedure and judge replies are in `benchmarks/refresh_2026-09_calibration.md`. The April full reports are unchanged. Three 2026-09-18 addenda add `deepseek-v4.1-flash`, `glm-5.3-flash` and `tencent-hy4-preview` on three tasks each (v2 Task 2, the anchor and the v3 notebook), scored the same way; see `benchmarks/addendum_2026-09-18_deepseek-v4.1-flash.md`, `benchmarks/addendum_2026-09-18_glm-5.3-flash.md`, `benchmarks/addendum_2026-09-18_tencent-hy4-preview.md` and the addendum sections of the summary. Their v2 averages are provisional (Task 2 and anchor only). A 2026-09-19 addendum adds `anon-2026-09-19`, a placeholder id for a model whose identity was withheld until scoring was complete, on the same three tasks; see `benchmarks/addendum_2026-09-19_anon-2026-09-19.md`.
 
 ## Start Here
 
@@ -83,6 +83,7 @@ Current scored model set:
 - `deepseek-v4.1-flash` (2026-09-18 addendum; Task 2 and anchor only, provisional v2 average)
 - `glm-5.3-flash` (2026-09-18 addendum; Task 2 and anchor only, provisional v2 average)
 - `tencent-hy4-preview` (2026-09-18 addendum; Task 2 and anchor only, provisional v2 average)
+- `anon-2026-09-19` (2026-09-19 addendum, placeholder id for an undisclosed model; Task 2 and anchor only, provisional v2 average)
 
 Scope:
 - `6` new v2 tasks
@@ -97,15 +98,16 @@ Headline v2 ranking (September 2026 refresh rows scored blind with calibration a
 1. `gpt5.6-luna-max` - `4.48`
 2. `gpt5.6-sol-xhigh` - `4.45`
 3. `gpt5.4-xhigh` - `4.14`
-4. `gemma4:31b-cloud` - `4.10`
-5. `glm-5.1:cloud` - `3.88`
-6. `glm-5.3-flash` - `3.79` (provisional: Task 2 and anchor only)
-7. `qwen-3.6plus` - `3.74`
-8. `minimax-m2.7-cloud` - `3.72`
-9. `kimi-k2-thinking` - `3.67`
-10. `deepseek-v4.1-flash` - `3.43` (provisional: Task 2 and anchor only)
-11. `tencent-hy4-preview` - `3.43` (provisional: Task 2 and anchor only)
-12. `deepseek-v3.2` - `2.65`
+4. `anon-2026-09-19` - `4.14` (provisional: Task 2 and anchor only)
+5. `gemma4:31b-cloud` - `4.10`
+6. `glm-5.1:cloud` - `3.88`
+7. `glm-5.3-flash` - `3.79` (provisional: Task 2 and anchor only)
+8. `qwen-3.6plus` - `3.74`
+9. `minimax-m2.7-cloud` - `3.72`
+10. `kimi-k2-thinking` - `3.67`
+11. `deepseek-v4.1-flash` - `3.43` (provisional: Task 2 and anchor only)
+12. `tencent-hy4-preview` - `3.43` (provisional: Task 2 and anchor only)
+13. `deepseek-v3.2` - `2.65`
 
 Current v2 primary task winners:
 
@@ -127,7 +129,7 @@ Latest report-aligned takeaways:
 - Biggest operational weakness observed: severe context-fidelity failures before or without the supplied files on weaker models; slower responses (about 3 to 4 minutes per task) from `gpt5.6-luna-max`
 
 Historical anchor:
-- winner on corrected engineering standard: `gpt5.4-xhigh` (September 2026: `gpt5.6-sol-xhigh` ties it at 4.43 overall with the same corrected answer; `gpt5.6-luna-max` 4.29; `deepseek-v4.1-flash` 3.00 , `glm-5.3-flash` 3.71 and `tencent-hy4-preview` 2.86 on the 2026-09-18 addenda)
+- winner on corrected engineering standard: `gpt5.4-xhigh` (September 2026: `gpt5.6-sol-xhigh` ties it at 4.43 overall with the same corrected answer; `gpt5.6-luna-max` 4.29; `deepseek-v4.1-flash` 3.00 , `glm-5.3-flash` 3.71 and `tencent-hy4-preview` 2.86 on the 2026-09-18 addenda; `anon-2026-09-19` 4.00 on the 2026-09-19 addendum)
 - strongest free/cloud value result on the primary six-task set: `gemma4:31b-cloud`
 
 ### V3 - Notebook-style code-generation benchmark
@@ -145,6 +147,7 @@ Current scored model set:
 - `deepseek-v4.1-flash` (2026-09-18 addendum)
 - `glm-5.3-flash` (2026-09-18 addendum)
 - `tencent-hy4-preview` (2026-09-18 addendum)
+- `anon-2026-09-19` (2026-09-19 addendum, placeholder id for an undisclosed model)
 
 Benchmark shape:
 - `1` deterministic notebook-style task
@@ -156,15 +159,16 @@ Headline v3 ranking (September 2026 refresh rows scored blind with calibration a
 1. `gpt5.4-xhigh` - `4.86`
 2. `deepseek-v4.1-flash` - `4.71` (2026-09-18 addendum)
 3. `tencent-hy4-preview` - `4.71` (2026-09-18 addendum)
-4. `glm-5.1:cloud` - `4.71`
-5. `minimax-m2.7-cloud` - `4.43`
-6. `kimi-k2-thinking` - `4.29`
-7. `gpt5.6-sol-xhigh` - `4.29`
-8. `deepseek-v3.2` - `4.14`
-9. `glm-5.3-flash` - `4.00` (2026-09-18 addendum)
-10. `qwen-3.6plus` - `4.00`
-11. `gemma4:31b-cloud` - `3.71`
-12. `gpt5.6-luna-max` - `3.57`
+4. `anon-2026-09-19` - `4.71` (2026-09-19 addendum)
+5. `glm-5.1:cloud` - `4.71`
+6. `minimax-m2.7-cloud` - `4.43`
+7. `kimi-k2-thinking` - `4.29`
+8. `gpt5.6-sol-xhigh` - `4.29`
+9. `deepseek-v3.2` - `4.14`
+10. `glm-5.3-flash` - `4.00` (2026-09-18 addendum)
+11. `qwen-3.6plus` - `4.00`
+12. `gemma4:31b-cloud` - `3.71`
+13. `gpt5.6-luna-max` - `3.57`
 
 Current v3 task result:
 
@@ -181,6 +185,7 @@ Current v3 takeaways:
 - 2026-09-18 addendum: `deepseek-v4.1-flash` scores 4.71, level with `glm-5.1:cloud`, with a notebook that runs end to end and a kern-rule cross-check; weakest on the EC3 anchor (3.00), where it headlined an unrequested LTB verdict
 - 2026-09-18 addendum: `glm-5.3-flash` scores 4.00 with the fullest written derivation of the addendum models, but its code prints `LC3` as governing against the `LC2` in its text; steadier on the EC3 anchor (3.71)
 - 2026-09-18 addendum: `tencent-hy4-preview` scores 4.71, level with `deepseek-v4.1-flash`, with the richest derivation and diagnostics of the addendum models; weakest of all on the EC3 anchor (2.86), where it answered an unrequested LTB and deflection question
+- 2026-09-19 addendum: `anon-2026-09-19` (undisclosed model) scores 4.71, level with the other 4.71 entries, with a straight 5.00 on the technical criteria and the fullest audit document in the set, held below the winner only by the slowest and most expensive v3 run recorded; on the EC3 anchor it scores 4.00, the best of the addendum models, keeping the planted PASS as its headline
 
 ## Repository Structure
 
