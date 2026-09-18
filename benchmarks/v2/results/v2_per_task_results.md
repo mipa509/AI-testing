@@ -1,11 +1,11 @@
 # V2 Per-Task Results
 
-Current scored slate: `gemma4:31b-cloud`, `glm-5.1:cloud`, `gpt5.4-xhigh`, `qwen-3.6plus`, `minimax-m2.7-cloud`, `kimi-k2-thinking`, `deepseek-v3.2`, and, from the September 2026 refresh, `gpt5.6-sol-xhigh` and `gpt5.6-luna-max`.
+Current scored slate: `gemma4:31b-cloud`, `glm-5.1:cloud`, `gpt5.4-xhigh`, `qwen-3.6plus`, `minimax-m2.7-cloud`, `kimi-k2-thinking`, `deepseek-v3.2`, and, from the September 2026 refresh, `gpt5.6-sol-xhigh` and `gpt5.6-luna-max`. `deepseek-v4.1-flash` (2026-09-18 addendum) was run on Task 2 and the anchor only.
 
 | Task | Winner | Difference size | Notes |
 |---|---|---|---|
 | Task 1 - Multi-file bug hunt | `gpt5.6-sol-xhigh` | Very small | September 2026: `gpt5.6-sol-xhigh` and `gpt5.6-luna-max` tie at 4.71 overall; both found the conversion bug and, unlike the April leaders, the signed-moment envelope trap, with Sol first on the blind judge's tie-break. April winner: `gemma4:31b-cloud` (Small), which found the real conversion bug and paired it with the strongest repo-grounded secondary risk. |
-| Task 2 - Repo review traps | `gemma4:31b-cloud` | Small | `gemma`, `kimi`, and `qwen` all caught the three real blockers. `minimax` found only two of them because it missed the actual resistance unit defect. |
+| Task 2 - Repo review traps | `gemma4:31b-cloud` | Small | `gemma`, `kimi`, and `qwen` all caught the three real blockers. `minimax` found only two of them because it missed the actual resistance unit defect. DeepSeek V4.1 Flash addendum (2026-09-18): `deepseek-v4.1-flash` found all three blockers and scored 3.86 overall, below the April winner. |
 | Task 3 - Scoped feature design | `gpt5.6-sol-xhigh` | Small | September 2026: `gpt5.6-sol-xhigh` gave the most decision-complete compatibility-preserving plan in both blind judging rounds, with Luna close behind on the same additive design. April winner: `gpt5.4-xhigh` (Small), the clearest opt-in SLS design of the April set. |
 | Task 4 - Safe refactor | `kimi-k2-thinking` | Very small | `kimi`, `glm`, `gemma`, `gpt`, `qwen`, and `minimax` were all strong; the gap here is mostly presentation and practicality rather than core technical quality. |
 | Task 5 - Large dataset pipeline | `gpt5.6-sol-xhigh` | Small | September 2026: `gpt5.6-sol-xhigh` delivered the most rigorous safe vectorised rewrite (4.57 overall), with Luna at 4.43. April winner: `kimi-k2-thinking` (Small), which best balanced performance improvement with a stable output contract among the April models. |

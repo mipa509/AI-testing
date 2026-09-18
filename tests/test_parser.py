@@ -122,7 +122,7 @@ def test_discover_rounds():
     assert "v1" not in round_ids
 
     v2 = next(r for r in rounds if r["round_id"] == "v2")
-    assert len(v2["models"]) == 9
+    assert len(v2["models"]) == 10
     assert v2["models"][0]["model_id"] == "gemma4:31b-cloud"
     v2_model_ids = {m["model_id"] for m in v2["models"]}
     assert {"gpt5.6-sol-xhigh", "gpt5.6-luna-max"} <= v2_model_ids
@@ -155,6 +155,11 @@ def test_discover_rounds():
     assert luna_model["blended_price_usd_per_1m"] == 0.45          # 0.75*0.20 + 0.25*1.20
     sol_model = next(m for m in v2["models"] if m["model_id"] == "gpt5.6-sol-xhigh")
     assert sol_model["blended_price_usd_per_1m"] == 11.25          # 0.75*5.00 + 0.25*30.00
+    # deepseek-v4.1-flash (2026-09-18 addendum, three tasks only) is an OpenRouter API model
+    ds_model = next(m for m in v2["models"] if m["model_id"] == "deepseek-v4.1-flash")
+    assert ds_model["cost_tier"] == 2
+    assert ds_model["blended_price_usd_per_1m"] == 0.2625         # 0.75*0.15 + 0.25*0.60
+    assert "deepseek-v4.1-flash" not in v2["ranking"]              # no v2 cross-task average
 
 
 def test_discover_rounds_explicit_cost_tier_overrides_provider_keyword(tmp_path):
@@ -252,5 +257,9 @@ def test_discover_rounds_collects_usage_only_where_tokens_were_recorded():
     assert usage["v2-anchor-07"]["gpt5.6-sol-xhigh"]["tokens_k"] == 85
     assert "gpt5.4-xhigh" not in usage["v2-anchor-07"]          # April records carry no token figure
     assert set(usage["v2-deep-01"]) == {"gpt5.6-sol-xhigh", "gpt5.6-luna-max"}
+    # 2026-09-18 addendum records carry token figures too
+    assert usage["v2-deep-02"]["deepseek-v4.1-flash"]["tokens_k"] == 35
+    assert usage["v2-anchor-07"]["deepseek-v4.1-flash"]["tokens_k"] == 55
     v3 = next(r for r in rounds if r["round_id"] == "v3")
     assert v3["usage"]["v3-notebook-01"]["gpt5.6-sol-xhigh"]["tokens_k"] == 23
+    assert v3["usage"]["v3-notebook-01"]["deepseek-v4.1-flash"]["tokens_k"] == 59
