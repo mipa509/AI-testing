@@ -187,6 +187,11 @@ const DATA = {{ data_json }};
         <button type="button" class="seg-btn active" data-measure="tokens" onclick="setUsageMeasure('tokens', this)">Tokens</button>
         <button type="button" class="seg-btn" data-measure="cost" onclick="setUsageMeasure('cost', this)">Est. cost</button>
       </span></div>
+    <div><label id="price-scale-label">Price axis:</label>
+      <span class="seg" role="group" aria-labelledby="price-scale-label">
+        <button type="button" class="seg-btn active" data-scale="linear" onclick="setPriceScale('linear', this)">Linear</button>
+        <button type="button" class="seg-btn" data-scale="log" onclick="setPriceScale('log', this)">Log</button>
+      </span></div>
   </div>
 
   <div class="chart-wrap">
@@ -499,6 +504,7 @@ const CHART_FONT = { family: 'system-ui, -apple-system, "Segoe UI", sans-serif',
 let priceChart = null;
 let usageChart = null;
 let usageMeasure = 'tokens';
+let priceScale = 'linear';   // linear by default: a log axis understates how much cheaper the cheap models are
 
 function populateCostSelect() {
   const sel = document.getElementById('cost-round');
@@ -513,6 +519,14 @@ function fmtUsd(v, digits) {
   if (v >= 10)  return '$' + v.toFixed(0);
   if (v >= 1)   return '$' + v.toFixed(2);
   return '$' + v.toFixed(v >= 0.1 ? 2 : 3);
+}
+
+function niceCeil(v) {
+  // Round an axis maximum up to 1, 2, 2.5 or 5 times a power of ten.
+  if (!(v > 0)) return 1;
+  const p = Math.pow(10, Math.floor(Math.log10(v)));
+  for (const k of [1, 2, 2.5, 5, 10]) if (k * p >= v) return k * p;
+  return 10 * p;
 }
 
 function logTickLabel(v) {
@@ -592,13 +606,46 @@ const pointLabelPlugin = {
         { x: it.x - 12, y: it.y - 14, align: 'right' },
         { x: it.x + 12, y: it.y + 14, align: 'left' },
         { x: it.x - 12, y: it.y + 14, align: 'right' },
+        { x: it.x + 12, y: it.y - 28, align: 'left' },
+        { x: it.x + 12, y: it.y + 28, align: 'left' },
+        { x: it.x - 12, y: it.y - 28, align: 'right' },
+        { x: it.x - 12, y: it.y + 28, align: 'right' },
       ];
-      let pick = candidates[0];
+      let pick = null;
       for (const c of candidates) {
         const x1 = c.align === 'left' ? c.x : c.x - w;
         const box = { x1, x2: x1 + w, y1: c.y - h / 2, y2: c.y + h / 2 };
         if (box.x1 < area.left || box.x2 > area.right) continue;
         if (!overlaps(box)) { pick = c; placed.push(box); break; }
+      }
+      // Crowded cluster (linear price axis): walk outward in 14 px rows on either side
+      // until a free slot appears, and join it to the point with a thin leader line.
+      let leader = false;
+      if (!pick) {
+        outer: for (let dy = 42; dy <= 140; dy += 14) {
+          for (const sy of [-1, 1]) {
+            for (const align of ['left', 'right']) {
+              const x = align === 'left' ? it.x + 26 : it.x - 26;
+              const y = it.y + sy * dy;
+              const x1 = align === 'left' ? x : x - w;
+              const box = { x1, x2: x1 + w, y1: y - h / 2, y2: y + h / 2 };
+              if (box.x1 < area.left || box.x2 > area.right || box.y1 < area.top || box.y2 > area.bottom) continue;
+              if (!overlaps(box)) { pick = { x, y, align }; placed.push(box); leader = true; break outer; }
+            }
+          }
+        }
+      }
+      if (!pick) pick = candidates[0];
+      if (leader) {
+        ctx.save();
+        ctx.strokeStyle = INK.muted;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([2, 3]);
+        ctx.beginPath();
+        ctx.moveTo(it.x + (pick.align === 'left' ? 8 : -8), it.y);
+        ctx.lineTo(pick.align === 'left' ? pick.x - 3 : pick.x + 3, pick.y);
+        ctx.stroke();
+        ctx.restore();
       }
       ctx.textAlign = pick.align;
       haloText(ctx, it.text, pick.x, pick.y);
@@ -650,9 +697,10 @@ function renderPriceChart(round) {
       y: scores['Overall average'] ?? null,
       meta: { label: model.display_name, model },
     };
-  }).filter(p => p.x !== null && p.x !== undefined && p.x > 0 && p.y !== null);
+  }).filter(p => p.x !== null && p.x !== undefined && p.y !== null && (priceScale === 'linear' ? p.x >= 0 : p.x > 0));
 
-  const unpriced = round.models.filter(m => m.blended_price_usd_per_1m === null || m.blended_price_usd_per_1m === undefined || m.blended_price_usd_per_1m <= 0);
+  const isLog = priceScale === 'log';
+  const unpriced = round.models.filter(m => m.blended_price_usd_per_1m === null || m.blended_price_usd_per_1m === undefined || (isLog && m.blended_price_usd_per_1m <= 0));
   const asOf = (round.models.find(m => m.pricing && m.pricing.as_of) || {}).pricing?.as_of || 'n/a';
 
   const tiers = [
@@ -680,8 +728,9 @@ function renderPriceChart(round) {
   const labelDatasets = datasets.map((_, i) => i);
 
   const xs = points.map(p => p.x);
-  const xMin = Math.pow(10, Math.floor(Math.log10(Math.min(...xs))));
-  const xMax = Math.pow(10, Math.ceil(Math.log10(Math.max(...xs))));
+  const positive = xs.filter(v => v > 0);
+  const xMin = isLog ? Math.pow(10, Math.floor(Math.log10(Math.min(...positive)))) : 0;
+  const xMax = isLog ? Math.pow(10, Math.ceil(Math.log10(Math.max(...positive)))) : niceCeil(Math.max(...xs) * 1.08);
 
   // Frontier as a staircase boundary: each step holds the best score reachable at that
   // price until the next frontier model, and the last step runs to the right edge.
@@ -705,12 +754,13 @@ function renderPriceChart(round) {
   }
 
   document.getElementById('price-chart-sub').textContent =
-    'Overall average score (all criteria) against blended list price per 1M tokens, 3 parts input to 1 part output, log scale. '
+    'Overall average score (all criteria) against blended list price per 1M tokens, 3 parts input to 1 part output, ' + (isLog ? 'log scale. ' : 'linear scale, so the gap between cheap and premium models is shown at its true size. ')
     + 'Hollow markers: run at no cost via the Ollama cloud route; the price shown is the API list price. '
     + 'The frontier joins models that no cheaper model beats.';
   document.getElementById('price-chart-note').textContent =
     `List prices as of ${asOf}, from the sources recorded in models/fixed_model_slate.json. They are estimates, not billed amounts.`
-    + (unpriced.length ? ` Not plotted (no list price, or free local inference): ${unpriced.map(m => m.display_name).join(', ')}.` : '');
+    + (isLog ? '' : ' Free local models are plotted at zero.')
+    + (unpriced.length ? ` Not plotted (${isLog ? 'no list price, or free local inference' : 'no list price'}): ${unpriced.map(m => m.display_name).join(', ')}.` : '');
 
   if (priceChart) priceChart.destroy();
   priceChart = new Chart(document.getElementById('priceChart'), {
@@ -723,12 +773,14 @@ function renderPriceChart(round) {
       layout: { padding: { right: 24, top: 8 } },
       scales: {
         x: {
-          type: 'logarithmic',
+          type: isLog ? 'logarithmic' : 'linear',
           min: xMin, max: xMax,
-          ticks: { color: INK.muted, font: CHART_FONT, callback: logTickLabel, maxRotation: 0, autoSkip: false },
+          ticks: isLog
+            ? { color: INK.muted, font: CHART_FONT, callback: logTickLabel, maxRotation: 0, autoSkip: false }
+            : { color: INK.muted, font: CHART_FONT, callback: v => (v === 0 ? '$0' : fmtUsd(v)), maxRotation: 0 },
           grid: { color: INK.grid, lineWidth: 1 },
           border: { color: INK.grid },
-          title: { display: true, text: 'Blended list price, USD per 1M tokens (log scale)', color: INK.muted, font: CHART_FONT },
+          title: { display: true, text: `Blended list price, USD per 1M tokens (${isLog ? 'log' : 'linear'} scale)`, color: INK.muted, font: CHART_FONT },
         },
         y: {
           min: 1, max: 5,
@@ -806,9 +858,16 @@ function renderPriceChart(round) {
 
 function setUsageMeasure(measure, btn) {
   usageMeasure = measure;
-  document.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b === btn));
+  btn.parentElement.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b === btn));
   const round = getRound(document.getElementById('cost-round').value);
   if (round) renderUsageChart(round);
+}
+
+function setPriceScale(scale, btn) {
+  priceScale = scale;
+  btn.parentElement.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b === btn));
+  const round = getRound(document.getElementById('cost-round').value);
+  if (round) renderPriceChart(round);
 }
 
 function renderUsageChart(round) {
