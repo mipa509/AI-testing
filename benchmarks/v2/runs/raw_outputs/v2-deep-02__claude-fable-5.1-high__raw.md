@@ -1,12 +1,12 @@
 # Raw Output
 
 - task_id: `v2-deep-02`
-- model_id_used: `anon-2026-09-19`
-- api_model: `undisclosed at scoring time (placeholder id; to be replaced when the user names the model)`
-- reasoning_effort: `not recorded`
-- run_route: `agentic CLI coding session (vendor undisclosed at scoring time), fresh session per task, sandbox workspace on a separate drive holding the task folder (prompt and context files only; no evaluator or reference files)`
+- model_id_used: `claude-fable-5.1-high`
+- api_model: `claude-fable-5-1 (Anthropic), reasoning effort high, via Claude Code CLI`
+- reasoning_effort: `high`
+- run_route: `Claude Code CLI in the VS Code terminal on a subscription plan (Anthropic claude-fable-5-1, reasoning effort high), fresh session per task, sandbox workspace on a separate drive holding the task folder (prompt and context files only; no evaluator or reference files)`
 - run_date: `2026-09-19`
-- thinking_mode_used: `not recorded`
+- thinking_mode_used: `yes (reasoning effort high)`
 
 ## Prompt Used
 

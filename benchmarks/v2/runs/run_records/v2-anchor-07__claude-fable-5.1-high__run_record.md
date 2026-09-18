@@ -2,17 +2,17 @@
 
 - `task_id`: `v2-anchor-07`
 - `task_title`: `Unchanged v1 EC3 planted-error trap test`
-- `model_id_used`: `anon-2026-09-19`
+- `model_id_used`: `claude-fable-5.1-high`
 - `run_date`: `2026-09-19`
-- `thinking_mode_used`: `not recorded`
+- `thinking_mode_used`: `yes (reasoning effort high)`
 - `prompt_version`: `tasks/anchor_07_v1_task6_ec3/prompt.md`
 - `context_files_shared`: `none`
-- `raw_output_path`: `runs/raw_outputs/v2-anchor-07__anon-2026-09-19__raw.md`
-- `run_route`: `agentic CLI coding session (vendor undisclosed at scoring time), fresh session per task, sandbox workspace on a separate drive holding the task folder`
+- `raw_output_path`: `runs/raw_outputs/v2-anchor-07__claude-fable-5.1-high__raw.md`
+- `run_route`: `Claude Code CLI in the VS Code terminal on a subscription plan (Anthropic claude-fable-5-1, reasoning effort high), fresh session per task, sandbox workspace on a separate drive holding the task folder`
 - `rate_limit_or_refusal_notes`: none reported; no refusal or truncation in the output
 - `latency_notes`: `6 min 17 s` API time, `9 min 32 s` wall clock for the whole session (`gpt5.6-sol-xhigh`: 3 min 30 s; `glm-5.3-flash`: 10 min 34 s; `tencent-hy4-preview`: 12 min 50 s; `deepseek-v4.1-flash`: about 15 min)
 - `token_usage_or_cost`: token counts not reported by the session summary; session cost `$1.48` (11 requests, 95 percent of input from prompt cache, no misses)
-- `manual_observations`: The response was written to `answer.md` in the task folder (216 lines added). It quotes the full SCI P363 property set for the section and cites C1 from SCI P362 / NCCI SN003; whether web lookup was used was not reported by the session. Model identity withheld by the user until scoring was complete.
+- `manual_observations`: The response was written to `answer.md` in the task folder (216 lines added). It quotes the full SCI P363 property set for the section and cites C1 from SCI P362 / NCCI SN003; whether web lookup was used was not reported by the session. Model identity withheld by the user until scoring was complete and disclosed afterwards as Claude Fable 5.1 (effort high).
 
 ## First-Pass Output Summary
 

@@ -2,17 +2,17 @@
 
 - `task_id`: `v3-notebook-01`
 - `task_title`: `Square pad footing sizing notebook draft`
-- `model_id_used`: `anon-2026-09-19`
+- `model_id_used`: `claude-fable-5.1-high`
 - `run_date`: `2026-09-19`
-- `thinking_mode_used`: `not recorded`
+- `thinking_mode_used`: `yes (reasoning effort high)`
 - `prompt_version`: `v1`
 - `context_files_shared`: `none`
-- `raw_output_path`: `benchmarks/v3/runs/raw_outputs/v3-notebook-01__anon-2026-09-19__raw.md`
-- `run_route`: `agentic CLI coding session (vendor undisclosed at scoring time), fresh session per task, sandbox workspace on a separate drive holding the task folder`
+- `raw_output_path`: `benchmarks/v3/runs/raw_outputs/v3-notebook-01__claude-fable-5.1-high__raw.md`
+- `run_route`: `Claude Code CLI in the VS Code terminal on a subscription plan (Anthropic claude-fable-5-1, reasoning effort high), fresh session per task, sandbox workspace on a separate drive holding the task folder`
 - `rate_limit_or_refusal_notes`: none reported; no refusal or truncation in the output
 - `latency_notes`: `6 min 20 s` API time, `11 min 16 s` wall clock for the whole session (`tencent-hy4-preview`: 3 min 18 s; `deepseek-v4.1-flash`: 4 min 15 s; `glm-5.3-flash`: 5 min 56 s)
 - `token_usage_or_cost`: token counts not reported by the session summary; session cost `$2.65` (12 requests, 93 percent of input from prompt cache, no misses), the most expensive single run in the benchmark
-- `manual_observations`: Deliverable written as `response.md` in the task folder (486 lines added, 1 removed). Execution check (2026-09-19, Python 3.13.2 standard library, the six fenced code cells in order): runs end to end, selects `3.0 m`, prints `LC3` as governing for bearing and `LC2` for uplift, and the printed output matches the expected-output blocks in the draft. Model identity withheld by the user until scoring was complete.
+- `manual_observations`: Deliverable written as `response.md` in the task folder (486 lines added, 1 removed). Execution check (2026-09-19, Python 3.13.2 standard library, the six fenced code cells in order): runs end to end, selects `3.0 m`, prints `LC3` as governing for bearing and `LC2` for uplift, and the printed output matches the expected-output blocks in the draft. Model identity withheld by the user until scoring was complete and disclosed afterwards as Claude Fable 5.1 (effort high).
 
 ## First-Pass Output Summary
 

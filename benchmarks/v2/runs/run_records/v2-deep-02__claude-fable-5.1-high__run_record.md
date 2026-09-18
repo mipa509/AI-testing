@@ -2,17 +2,17 @@
 
 - `task_id`: `v2-deep-02`
 - `task_title`: `Repo review with unit, combination, and reporting traps`
-- `model_id_used`: `anon-2026-09-19`
+- `model_id_used`: `claude-fable-5.1-high`
 - `run_date`: `2026-09-19`
-- `thinking_mode_used`: `not recorded`
+- `thinking_mode_used`: `yes (reasoning effort high)`
 - `prompt_version`: `tasks/deep_02_repo_review_traps/prompt.md`
 - `context_files_shared`: `context/load_factors.py`, `context/beam_capacity.py`, `context/reporting.py` (read from the task folder by the agent)
-- `raw_output_path`: `runs/raw_outputs/v2-deep-02__anon-2026-09-19__raw.md`
-- `run_route`: `agentic CLI coding session (vendor undisclosed at scoring time), fresh session per task, sandbox workspace on a separate drive holding the task folder`
+- `raw_output_path`: `runs/raw_outputs/v2-deep-02__claude-fable-5.1-high__raw.md`
+- `run_route`: `Claude Code CLI in the VS Code terminal on a subscription plan (Anthropic claude-fable-5-1, reasoning effort high), fresh session per task, sandbox workspace on a separate drive holding the task folder`
 - `rate_limit_or_refusal_notes`: none reported; no refusal or truncation in the output
 - `latency_notes`: `4 min 14 s` API time, `6 min 11 s` wall clock for the whole session (`gpt5.6-sol-xhigh`: under 1 min; `tencent-hy4-preview`: 1 min 59 s; `deepseek-v4.1-flash`: 2 min 45 s; `glm-5.3-flash`: 4 min 30 s)
 - `token_usage_or_cost`: token counts not reported by the session summary; session cost `$1.29` (7 requests, 92 percent of input from prompt cache, no misses), the most expensive run recorded on this task
-- `manual_observations`: The agent read the prompt and the three context files from the task folder and wrote its review to `review_response.md` (104 lines added); the two-message wait-for-context protocol did not apply. The workspace contained no evaluator or reference files. Model identity withheld by the user until scoring was complete.
+- `manual_observations`: The agent read the prompt and the three context files from the task folder and wrote its review to `review_response.md` (104 lines added); the two-message wait-for-context protocol did not apply. The workspace contained no evaluator or reference files. Model identity withheld by the user until scoring was complete and disclosed afterwards as Claude Fable 5.1 (effort high).
 
 ## First-Pass Output Summary
 

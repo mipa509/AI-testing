@@ -12,4 +12,4 @@ GLM 5.3 Flash addendum (2026-09-18): the winner is unchanged. `glm-5.3-flash` sc
 
 Tencent Hy4 Preview addendum (2026-09-18): the winner is unchanged. `tencent-hy4-preview` scored 4.71 overall (correct `3.0 m` and `LC2`, runs end to end, explicit `M*c/I` derivation, corner pressures and closed-form bounds; eccentricity naming reversed relative to the reference and stated as such).
 
-Anonymous model addendum (2026-09-19): the winner is unchanged. `anon-2026-09-19` scored 4.71 overall (correct `3.0 m` and `LC2`, runs end to end, Navier derivation with the kern limit, full pass/fail matrix and a closed-form width cross-check; 5.00 on the technical criteria, 3 on practicality for the slowest and most expensive v3 run recorded).
+Claude Fable 5.1 addendum (2026-09-19): the winner is unchanged. `claude-fable-5.1-high` scored 4.71 overall (correct `3.0 m` and `LC2`, runs end to end, Navier derivation with the kern limit, full pass/fail matrix and a closed-form width cross-check; 5.00 on the technical criteria, 3 on practicality for the slowest and most expensive v3 run recorded).

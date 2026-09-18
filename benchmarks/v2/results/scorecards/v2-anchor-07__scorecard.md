@@ -22,7 +22,7 @@
 | `deepseek-v4.1-flash` | 3 | 2 | 4 | 3 | 4 | 3 | 2 | Reaches the correct corrected numbers (Wpl,y = 353 cm3, Mc,Rd = 97.08 kNm, utilisation 0.916) with a well-commented fix, but its headline verdict is not adequate on an LTB check the task did not pose, its narrative misdescribes the as-written code, and it asserts the planted 49.0 cm3 is the tabulated minor-axis value. |
 | `glm-5.3-flash` | 4 | 4 | 4 | 4 | 4 | 4 | 2 | Finds both planted faults and reaches the correct cross-section PASS at utilisation 0.920 with restraint, shear and deflection stated as validity conditions, but uses Wpl,y = 351.5 cm3 instead of the tabulated 353, quotes a wrong minor-axis modulus of about 25.1 cm3, and repeats the prompt file's anchor header lines; no web lookup. |
 | `tencent-hy4-preview` | 4 | 4 | 2 | 2 | 3 | 3 | 2 | Finds and explains both planted faults, uses the tabulated Wpl,y = 353 cm3 with a geometric cross-check and reaches the cross-section PASS, but headlines the verdict as not adequate on LTB and deflection checks the task did not pose, silently adds factored self-weight to the input load, and replaces the snippet with a full design script; web lookup appears to have been used. |
-| `anon-2026-09-19` | 5 | 5 | 4 | 4 | 4 | 4 | 2 | Finds both planted faults, uses the tabulated Wpl,y = 353 cm3 with the full Blue Book property set, reaches the cross-section PASS at 0.92 and keeps the headline conditional on restraint (fails LTB at 2.83 if unrestrained over 6.2 m, with the working shown), but expands a snippet review into classification, shear, M_cr and an indicative deflection check built on assumed load factors that appears as Likely FAIL in the adequacy table, and the corrected script grows into a bending-plus-shear script. |
+| `claude-fable-5.1-high` | 5 | 5 | 4 | 4 | 4 | 4 | 2 | Finds both planted faults, uses the tabulated Wpl,y = 353 cm3 with the full Blue Book property set, reaches the cross-section PASS at 0.92 and keeps the headline conditional on restraint (fails LTB at 2.83 if unrestrained over 6.2 m, with the working shown), but expands a snippet review into classification, shear, M_cr and an indicative deflection check built on assumed load factors that appears as Likely FAIL in the adequacy table, and the corrected script grows into a bending-plus-shear script. |
 
 ## Judge Output Summary
 
@@ -54,10 +54,10 @@ Task summary: Re-run the old EC3 beam-check trap unchanged and compare whether m
 - Tencent Hy4 Preview found and explained both planted faults, including why they cancel, used the tabulated `Wpl,y = 353 cm3` with a geometric cross-check and reached the cross-section `PASS` at 0.933 after adding self-weight.
 - Deductions: the headline verdict is NOT adequate on LTB and deflection checks the task did not pose, the input load is silently altered by adding factored self-weight (`M_Ed` 90.69 instead of 88.89 kNm) while treating 18.5 kN/m as a full ULS load, and the corrected code is a wholesale rewrite with a no-op shear-interaction line; the judge treated this as replacing the planted objective with a design study.
 
-### Anonymous model addendum (2026-09-19)
+### Claude Fable 5.1 addendum (2026-09-19)
 
-- Blind pack (one judging round, 2026-09-19): `gpt5.6-sol-xhigh` 4.83, `gpt5.4-xhigh` 4.67, `anon-2026-09-19` 4.33, `minimax-m2.7-cloud` 1.83.
-- The anonymous model found and corrected both planted faults with the tabulated `Wpl,y = 353 cm3` and the full Blue Book property set, reached the cross-section PASS at 0.92, and kept the headline conditional: adequate if the compression flange is fully restrained, failing LTB at 2.83 if unrestrained over 6.2 m, with `M_cr`, `chi_LT` and `M_b,Rd` worked and cross-checked against tabulated values.
+- Blind pack (one judging round, 2026-09-19): `gpt5.6-sol-xhigh` 4.83, `gpt5.4-xhigh` 4.67, `claude-fable-5.1-high` 4.33, `minimax-m2.7-cloud` 1.83.
+- Claude Fable 5.1 found and corrected both planted faults with the tabulated `Wpl,y = 353 cm3` and the full Blue Book property set, reached the cross-section PASS at 0.92, and kept the headline conditional: adequate if the compression flange is fully restrained, failing LTB at 2.83 if unrestrained over 6.2 m, with `M_cr`, `chi_LT` and `M_b,Rd` worked and cross-checked against tabulated values.
 - Deductions: the snippet review expands into classification, shear, a full LTB calculation and an indicative deflection check built on assumed load factors that appears as Likely FAIL in the adequacy table, the answer runs to three pages before the two-line fix, and the corrected script grows into a bending-plus-shear script with extra hard-coded geometry.
 
 ## Manual Override Notes
@@ -122,11 +122,11 @@ Provisional `deepseek-v3.2` review:
 - Manual overrides: none. Checked against the evaluator notes: both planted faults are corrected and the cross-section numbers are right; the verdict drift and the altered input load are as the judge describes and are exactly what the notes penalise. No score was changed.
 - Practicality `tencent-hy4-preview` = 2: 12 min 50 s and about 65k tokens (about $0.115 billed), with web lookup; the September floor for slow but usable runs.
 
-### Anonymous model addendum (2026-09-19)
+### Claude Fable 5.1 addendum (2026-09-19)
 
-- Scoring: technical criteria for `anon-2026-09-19` (a placeholder id; the model's identity was withheld from the orchestrator and the judge until scoring was complete) were scored blind on 2026-09-19 by the same judge family as the September refresh, in a pack with the same two April anchors plus `gpt5.6-sol-xhigh` as a consistency check, then shifted onto the April scale with the September per-task offset of +0.08 (the standing user decision for packs that fail the calibration gate, as for `deepseek-v4.1-flash` and `tencent-hy4-preview`; see `benchmarks/addendum_2026-09-19_anon-2026-09-19.md`). Earlier rows above are unchanged.
+- Scoring: technical criteria for `claude-fable-5.1-high` (identity withheld from the orchestrator and the judge until scoring was complete, then disclosed) were scored blind on 2026-09-19 by the same judge family as the September refresh, in a pack with the same two April anchors plus `gpt5.6-sol-xhigh` as a consistency check, then shifted onto the April scale with the September per-task offset of +0.08 (the standing user decision for packs that fail the calibration gate, as for `deepseek-v4.1-flash` and `tencent-hy4-preview`; see `benchmarks/addendum_2026-09-19_claude-fable-5.1-high.md`). Earlier rows above are unchanged.
 - Manual overrides: none. Checked against the evaluator notes: both planted faults are corrected, the cross-section and shear numbers and the `M_cr` chain were re-checked by hand, and the headline keeps the planted objective with the LTB failure stated as conditional on restraint; the deductions are for the assumed-load deflection row and the answer's scope, as the notes penalise. No score was changed.
-- Practicality `anon-2026-09-19` = 2: 6 min 17 s API time, 9 min 32 s wall clock; the September floor for slow but usable runs on the anchor, as for every other premium and addendum model. Subscription run, so the $1.48 session figure is not counted. Practicality rule from this addendum on (user decision, 2026-09-19): cost is neglected for runs made on a subscription plan and counted only for API-billed runs; April and September rows are frozen and keep the earlier reading, under which premium models were scored as expensive whatever the route.
+- Practicality `claude-fable-5.1-high` = 2: 6 min 17 s API time, 9 min 32 s wall clock; the September floor for slow but usable runs on the anchor, as for every other premium and addendum model. Subscription run, so the $1.48 session figure is not counted. Practicality rule from this addendum on (user decision, 2026-09-19): cost is neglected for runs made on a subscription plan and counted only for API-billed runs; April and September rows are frozen and keep the earlier reading, under which premium models were scored as expensive whatever the route.
 
 ## Winner
 
@@ -142,4 +142,4 @@ GLM 5.3 Flash addendum (2026-09-18): `glm-5.3-flash` (overall mean 3.71) does no
 
 Tencent Hy4 Preview addendum (2026-09-18): `tencent-hy4-preview` (overall mean 2.86) does not beat the April result of `gpt5.4-xhigh` (4.43), so the winner line is unchanged.
 
-Anonymous model addendum (2026-09-19): `anon-2026-09-19` (overall mean 4.00) does not beat the April result of `gpt5.4-xhigh` (4.43), so the winner line is unchanged.
+Claude Fable 5.1 addendum (2026-09-19): `claude-fable-5.1-high` (overall mean 4.00) does not beat the April result of `gpt5.4-xhigh` (4.43), so the winner line is unchanged.

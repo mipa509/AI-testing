@@ -1,10 +1,10 @@
-# Anonymous model addendum (2026-09-19): blind scoring record
+# Claude Fable 5.1 addendum (2026-09-19): blind scoring record
 
-Scope: `anon-2026-09-19` (a placeholder id; the user withheld the model's identity until scoring was complete and will disclose it afterwards) on three tasks: `v2-deep-02`, `v2-anchor-07` and `v3-notebook-01`. The method is the September 2026 refresh procedure (`refresh_2026-09_calibration.md`) as applied to `deepseek-v4.1-flash`, `glm-5.3-flash` and `tencent-hy4-preview` on 2026-09-18. No April or September score, note or winner was changed.
+Scope: `claude-fable-5.1-high` (Anthropic `claude-fable-5-1`, reasoning effort high, run in Claude Code from the VS Code terminal on a subscription plan; the user withheld the model's identity until scoring was complete and disclosed it afterwards) on three tasks: `v2-deep-02`, `v2-anchor-07` and `v3-notebook-01`. The method is the September 2026 refresh procedure (`refresh_2026-09_calibration.md`) as applied to `deepseek-v4.1-flash`, `glm-5.3-flash` and `tencent-hy4-preview` on 2026-09-18. No April or September score, note or winner was changed.
 
 ## 1. Runs
 
-All three runs were made by the user on 2026-09-19 from an agentic CLI coding session, one fresh session per task, in a sandbox folder holding the task folder (prompt and context files only). The responses were written as files in the task folder. Figures are from each session's own cost summary, which reports cost, API and wall-clock duration, lines changed and prompt-cache statistics but not token counts; the run records hold the detail.
+All three runs were made by the user on 2026-09-19 from Claude Code (CLI in the VS Code terminal, subscription plan), one fresh session per task, in a sandbox folder holding the task folder (prompt and context files only). The responses were written as files in the task folder. Figures are from each session's own cost summary, which reports cost, API and wall-clock duration, lines changed and prompt-cache statistics but not token counts; the run records hold the detail.
 
 | Task | API time | Wall clock | Session cost | Requests / cache | Protocol notes |
 |---|---|---|---:|---|---|
@@ -18,9 +18,9 @@ One pack per task, four responses each: the new model, the April high anchor `gp
 
 | Task | Seed | A | B | C | D |
 |---|---:|---|---|---|---|
-| `v2-deep-02` | 20261303 | `gpt5.6-sol-xhigh` | `gpt5.4-xhigh` | `minimax-m2.7-cloud` | `anon-2026-09-19` |
-| `v2-anchor-07` | 20261308 | `anon-2026-09-19` | `gpt5.6-sol-xhigh` | `minimax-m2.7-cloud` | `gpt5.4-xhigh` |
-| `v3-notebook-01` | 20261309 | `gemma4:31b-cloud` | `gpt5.4-xhigh` | `anon-2026-09-19` | `gpt5.6-sol-xhigh` |
+| `v2-deep-02` | 20261303 | `gpt5.6-sol-xhigh` | `gpt5.4-xhigh` | `minimax-m2.7-cloud` | `claude-fable-5.1-high` |
+| `v2-anchor-07` | 20261308 | `claude-fable-5.1-high` | `gpt5.6-sol-xhigh` | `minimax-m2.7-cloud` | `gpt5.4-xhigh` |
+| `v3-notebook-01` | 20261309 | `gemma4:31b-cloud` | `gpt5.4-xhigh` | `claude-fable-5.1-high` | `gpt5.6-sol-xhigh` |
 
 ## 3. Calibration
 
@@ -61,7 +61,7 @@ Each reply is verbatim; the label key precedes it.
 
 ### `v2-deep-02` - Repo review with unit, combination, and reporting traps
 
-Label key: A = `gpt5.6-sol-xhigh`, B = `gpt5.4-xhigh`, C = `minimax-m2.7-cloud`, D = `anon-2026-09-19`
+Label key: A = `gpt5.6-sol-xhigh`, B = `gpt5.4-xhigh`, C = `minimax-m2.7-cloud`, D = `claude-fable-5.1-high`
 
 ### Blind judgement: v2-deep-02
 
@@ -117,7 +117,7 @@ Manual-review watch-outs: verify D's numeric table independently if it is being 
 
 ### `v2-anchor-07` - EC3 planted-error trap (historical anchor)
 
-Label key: A = `anon-2026-09-19`, B = `gpt5.6-sol-xhigh`, C = `minimax-m2.7-cloud`, D = `gpt5.4-xhigh`
+Label key: A = `claude-fable-5.1-high`, B = `gpt5.6-sol-xhigh`, C = `minimax-m2.7-cloud`, D = `gpt5.4-xhigh`
 
 ## Blind judgement: v2-anchor-07
 
@@ -178,7 +178,7 @@ The gap between B, D and A is small in practice: all three find both planted fau
 
 ### `v3-notebook-01` - Square pad footing sizing notebook draft
 
-Label key: A = `gemma4:31b-cloud`, B = `gpt5.4-xhigh`, C = `anon-2026-09-19`, D = `gpt5.6-sol-xhigh`
+Label key: A = `gemma4:31b-cloud`, B = `gpt5.4-xhigh`, C = `claude-fable-5.1-high`, D = `gpt5.6-sol-xhigh`
 
 ## Blind judgement: v3-notebook-01
 

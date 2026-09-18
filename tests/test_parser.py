@@ -146,17 +146,11 @@ def test_discover_rounds():
     assert luna_model["cost_tier"] == 2
     assert luna_model["cost_label"] == "Paid API"
 
-    # every model in both slates carries sourced list pricing for the cost chart,
-    # except the undisclosed 2026-09-19 model, which has no list price until it is named
-    # (the template lists unpriced models under the chart instead of plotting them)
-    UNPRICED = {"anon-2026-09-19"}
+    # every model in both slates carries sourced list pricing for the cost chart
     for r in rounds:
-        unpriced = {m["model_id"] for m in r["models"] if m["blended_price_usd_per_1m"] is None}
-        assert unpriced == UNPRICED, unpriced
         for model in r["models"]:
-            if model["model_id"] in UNPRICED:
-                continue
-            assert model["pricing"]["as_of"] == "2026-09-17"
+            assert model["blended_price_usd_per_1m"] is not None, model["model_id"]
+            assert model["pricing"]["as_of"] in {"2026-09-17", "2026-09-19"}
             assert model["pricing"]["source"].startswith("https://")
     assert luna_model["blended_price_usd_per_1m"] == 0.45          # 0.75*0.20 + 0.25*1.20
     sol_model = next(m for m in v2["models"] if m["model_id"] == "gpt5.6-sol-xhigh")
@@ -175,10 +169,10 @@ def test_discover_rounds():
     assert hy4_model["cost_tier"] == 2
     assert hy4_model["blended_price_usd_per_1m"] == 1.25075       # 0.75*0.834 + 0.25*2.501
     assert v2["ranking"]["tencent-hy4-preview"]["Overall average"] == 3.43
-    anon_model = next(m for m in v2["models"] if m["model_id"] == "anon-2026-09-19")
-    assert anon_model["cost_tier"] == 3                            # explicit; no list price recorded
-    assert anon_model["blended_price_usd_per_1m"] is None
-    assert v2["ranking"]["anon-2026-09-19"]["Overall average"] == 4.21
+    fable_model = next(m for m in v2["models"] if m["model_id"] == "claude-fable-5.1-high")
+    assert fable_model["cost_tier"] == 3                            # explicit: subscription capture, premium tier
+    assert fable_model["blended_price_usd_per_1m"] == 20.0          # 0.75*10 + 0.25*50
+    assert v2["ranking"]["claude-fable-5.1-high"]["Overall average"] == 4.21
 
 
 def test_discover_rounds_explicit_cost_tier_overrides_provider_keyword(tmp_path):

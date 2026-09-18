@@ -200,13 +200,22 @@
     }
   },
   {
-    "model_id": "anon-2026-09-19",
-    "display_name": "Anonymous model (2026-09-19)",
-    "role": "undisclosed premium candidate (three-task subset)",
-    "provider": "Undisclosed (agentic CLI session)",
+    "model_id": "claude-fable-5.1-high",
+    "display_name": "Claude Fable 5.1 High",
+    "role": "premium candidate (three-task subset)",
+    "provider": "Anthropic / Claude Code subscription",
     "cost_tier": 3,
     "cost_label": "Premium",
-    "notes": "September 2026 addition, placeholder id. Run by the user on 2026-09-19 from an agentic CLI coding session with the vendor withheld until scoring was complete; to be renamed when disclosed. Run on three tasks only (v2-deep-02, v2-anchor-07, v3-notebook-01); its v2 average is provisional over the tasks run. Subscription plan; session cost $1.29 (deep-02), $1.48 (anchor) and $2.65 (v3) recorded but not scored (practicality counts cost only for API-billed runs from this addendum on); no list price recorded.",
-    "cost_route": "subscription"
+    "notes": "September 2026 addition. Anthropic claude-fable-5-1 at reasoning effort high, run by the user on 2026-09-19 in Claude Code from the VS Code terminal on a subscription plan; the model's identity was withheld from the orchestrator and the judges until scoring was complete. Run on three tasks only (v2-deep-02, v2-anchor-07, v3-notebook-01); its v2 average is provisional over the tasks run. Subscription plan, so the session cost figures ($1.29 deep-02, $1.48 anchor, $2.65 v3) are recorded but not scored (practicality counts cost only for API-billed runs from this addendum on).",
+    "cost_route": "subscription",
+    "pricing": {
+      "input_usd_per_1m": 10.0,
+      "output_usd_per_1m": 50.0,
+      "unit": "USD per 1M tokens, list price",
+      "as_of": "2026-09-19",
+      "source": "https://docs.claude.com/en/docs/about-claude/pricing",
+      "source_model_id": "claude-fable-5-1",
+      "note": "Anthropic first-party API rate (cache reads $0.25 per 1M). Benchmark runs used Claude Code on a subscription plan; the session cost summaries ($1.29, $1.48, $2.65) are recorded in the run records and not scored."
+    }
   }
 ]

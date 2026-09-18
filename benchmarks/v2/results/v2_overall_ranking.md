@@ -4,7 +4,7 @@ This ranking covers the six new v2 tasks for `gemma4:31b-cloud`, `glm-5.1:cloud`
 
 ## Cross-Task Average Scores
 
-| Criterion | gemma4:31b-cloud | glm-5.1:cloud | gpt5.4-xhigh | qwen-3.6plus | minimax-m2.7-cloud | kimi-k2-thinking | deepseek-v3.2 | gpt5.6-sol-xhigh | gpt5.6-luna-max | deepseek-v4.1-flash | glm-5.3-flash | tencent-hy4-preview | anon-2026-09-19 |
+| Criterion | gemma4:31b-cloud | glm-5.1:cloud | gpt5.4-xhigh | qwen-3.6plus | minimax-m2.7-cloud | kimi-k2-thinking | deepseek-v3.2 | gpt5.6-sol-xhigh | gpt5.6-luna-max | deepseek-v4.1-flash | glm-5.3-flash | tencent-hy4-preview | claude-fable-5.1-high |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---: |---: |---: |---: |---:|
 | Correctness | 4.00 | 3.83 | 4.33 | 4.00 | 3.67 | 3.50 | 2.67 | 4.83 | 4.83 | 3.50 | 4.00 | 4.50 | 5.00 |
 | Repo comprehension | 4.00 | 3.83 | 4.50 | 4.17 | 4.00 | 3.50 | 2.83 | 4.67 | 5.00 | 3.50 | 4.00 | 4.50 | 5.00 |
@@ -15,13 +15,13 @@ This ranking covers the six new v2 tasks for `gemma4:31b-cloud`, `glm-5.1:cloud`
 | Economics/practicality | 4.67 | 3.83 | 2.83 | 3.00 | 3.00 | 4.33 | 2.17 | 3.00 | 3.00 | 2.50 | 2.50 | 2.50 | 2.50 |
 | Overall average | 4.10 | 3.88 | 4.14 | 3.74 | 3.72 | 3.67 | 2.65 | 4.45 | 4.48 | 3.43 | 3.79 | 3.43 | 4.21 |
 
-Provisional columns: `deepseek-v4.1-flash`, `glm-5.3-flash`, `tencent-hy4-preview`, `anon-2026-09-19` were run on Task 2 and the anchor only (2026-09-18 and 2026-09-19 addenda), so their averages cover those two tasks, include the anchor, and are provisional until the remaining primary tasks are run; they are not comparable with the six-task composite of the other columns.
+Provisional columns: `deepseek-v4.1-flash`, `glm-5.3-flash`, `tencent-hy4-preview`, `claude-fable-5.1-high` were run on Task 2 and the anchor only (2026-09-18 and 2026-09-19 addenda), so their averages cover those two tasks, include the anchor, and are provisional until the remaining primary tasks are run; they are not comparable with the six-task composite of the other columns.
 
 ## Overall Ranking
 
 1. `gpt5.6-luna-max` - `4.48`
 2. `gpt5.6-sol-xhigh` - `4.45`
-3. `anon-2026-09-19` - `4.21` (provisional: Task 2 and anchor only)
+3. `claude-fable-5.1-high` - `4.21` (provisional: Task 2 and anchor only)
 4. `gpt5.4-xhigh` - `4.14`
 5. `gemma4:31b-cloud` - `4.10`
 6. `glm-5.1:cloud` - `3.88`
