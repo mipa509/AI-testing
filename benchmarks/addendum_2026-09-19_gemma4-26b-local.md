@@ -1,6 +1,6 @@
 # Gemma 4 26B (local) addendum (2026-09-19): blind scoring record
 
-Scope: `gemma4:26b-local` (Ollama `gemma4:26b`, run locally on the user's machine from a plain terminal, no harness, tools or skills) on two tasks, `v3-notebook-01` first and `v2-deep-02` later the same day (section 6), as a free-tier comparison point. The method is the September 2026 refresh procedure (`refresh_2026-09_calibration.md`) as applied to the 2026-09-18 and 2026-09-19 addenda. No earlier score, note or winner was changed. This is a different model from the April `gemma4:31b-cloud` row (Ollama cloud, 31B), which is the low anchor in this pack.
+Scope: `gemma4:26b-local` (Ollama `gemma4:26b`, run locally on the user's machine from a plain terminal, no harness, tools or skills) on the same three tasks as the other addenda, run in the order `v3-notebook-01`, `v2-deep-02` (section 6) and `v2-anchor-07` (section 7), as a free-tier comparison point. The method is the September 2026 refresh procedure (`refresh_2026-09_calibration.md`) as applied to the 2026-09-18 and 2026-09-19 addenda. No earlier score, note or winner was changed. This is a different model from the April `gemma4:31b-cloud` row (Ollama cloud, 31B), which is the low anchor in this pack.
 
 ## 1. Run
 
@@ -179,3 +179,91 @@ A, C and B would each let a maintainer fix the three real defects correctly; the
 - Decide the acceptance rule (`<= 1.0` vs `< 1.0`) and whether status is computed on raw or rounded utilisation before adopting any of the rounding fixes.
 - Decide whether `build_review_table` should return the full table (A/B/C/D) or a governing row per member; A and D both note a per-member `max`/`groupby` would be needed if the latter.
 - A's finding 5 (combination string unused by the calculation) is a genuine reporting-integrity gap not listed in the evaluator notes; worth carrying into the fix scope.
+
+## 7. Anchor (`v2-anchor-07`), run last
+
+Same route (`ollama run gemma4:26b`, PowerShell terminal, prompt pasted; no web access, so section properties come from the model's weights), response copied from the terminal with its line wrapping. The user's note: it started answering at once and did not loop. Latency, tokens and cost not captured.
+
+| Task | Seed | A | B | C | D |
+|---|---:|---|---|---|---|
+| `v2-anchor-07` | 20261408 | `gpt5.4-xhigh` | `gpt5.6-sol-xhigh` | `gemma4:26b-local` | `minimax-m2.7-cloud` |
+
+| Task | Low anchor | High anchor MAD / signed | Low anchor MAD / signed | Anchor order preserved? | Sol vs Sept blind MAD / signed |
+|---|---|---:|---:|---|---:|
+| `v2-anchor-07` | `minimax-m2.7-cloud` | 0.50 / -0.17 | 1.00 / +0.00 | yes (April 4.83 vs 2.50; blind 4.67 vs 2.50) | 0.33 / +0.00 |
+
+Across the three gemma packs the anchor MAD is 0.444 (signed -0.167, worst row 1.00); the gate passes and the blind scores stand without an offset.
+
+- Manual review: the planted wrong-axis fault is not identified (the corrected code keeps `Wpl_z`, and the text calls the y/z notation interchangeable); the replacement property of about 440 cm3 is not the tabulated 353 cm3 and is cited to the SCI Blue Book, which the model could not consult; the response says the original code prints FAIL at 13.5 kN.m and that it worked because the errors cancelled, neither of which is what the snippet does (it prints PASS at a utilisation of about 6.6e-6 because N.mm is compared with kN.m); `M_Ed` is given as 88.76 and then 89.31 for 18.5 x 6.2^2 / 8 = 88.89. The PASS headline is right by coincidence with a capacity overstated by a quarter, which the judge called the more dangerous failure mode. No override.
+- Practicality = 4: free local route, prompt answer, no refusal; the fabricated property is a technical failure and is scored under correctness, so the free route keeps the April practicality given to `gemma4:31b-cloud` on this task. Latency not captured.
+
+| Task | Technical (April scale) | Practicality | Overall mean | April winner (overall) | Winner changed? |
+|---|---|---:|---:|---|---|
+| `v2-anchor-07` | [1, 1, 2, 1, 2, 2] (1.50) | 4 | 1.86 | `gpt5.4-xhigh` (4.43) | no |
+
+Context: 1.86 is the lowest anchor score in the table, below `minimax-m2.7-cloud` (2.43). The April `gemma4:31b-cloud` row reached 4.00 on the same task with the correct axis and a usable modulus. With Task 2 at 4.14 and the anchor at 1.86, the provisional v2 average over the two tasks is 3.00.
+
+### De-anonymised judge reply
+
+Label key: A = `gpt5.4-xhigh`, B = `gpt5.6-sol-xhigh`, C = `gemma4:26b-local`, D = `minimax-m2.7-cloud`
+
+#### Judgement: v2-anchor-07
+
+##### 1. Task summary
+Responders were asked to review a short Python EC3 bending check for a 254x102x28 UB (simply supported, 6.2 m, 18.5 kN/m UDL), find errors in engineering logic, units or section properties, correct them, show working and state adequacy. The planted faults (evaluator notes) are (1) the minor-axis plastic modulus `Wpl_z` used instead of the major-axis `Wpl_y`, and (2) `M_Rd` computed in N·mm but labelled/compared as kN·m (missing /1e6). Reference values against which I checked every response: Wpl,y = 353 cm³, Wpl,z = 54.8 cm³, M_Ed = 18.5 × 6.2² / 8 = 88.89 kN·m, M_c,y,Rd = 353e3 × 275 / 1e6 = 97.075 kN·m, utilisation 0.916, PASS for the cross-section check. The original code as written computes `M_Rd = 13,475,000` (N·mm, printed as kN·m) and therefore prints PASS with a utilisation of ~6.6e-6; it does not print FAIL.
+
+##### 2. Score table
+
+| Response | Correctness | Repo comprehension | Change safety | Engineering judgement | Maintainability | Clarity | Note |
+|---|---|---|---|---|---|---|---|
+| A | 5 | 5 | 5 | 4 | 4 | 5 | Finds both planted faults, correct properties and arithmetic, correct conditional adequacy statement, minimal safe diff. |
+| B | 5 | 5 | 5 | 5 | 5 | 4 | Same correct core as A plus a tabulated cross-check, a low-shear check and a worked LTB interpolation; opening sentence is slightly muddled. |
+| C | 1 | 1 | 2 | 1 | 2 | 2 | Misses the axis fault, invents Wpl = 440 cm³ (non-conservative), misdescribes what the original code prints, and its own M_Ed arithmetic contradicts itself. |
+| D | 2 | 3 | 2 | 2 | 3 | 3 | Names both planted faults but uses Wpl,y = 106 cm³ (wrong by ~3.3x), bolts on unrequested load factors and reaches the wrong conclusion (FAIL). |
+
+##### 3. Top weaknesses per response
+
+**A**
+- Quotes Mb,Rd "about 31 to 32 kN·m" and C1 = 1.13 without showing the table values or the interpolation; the LTB conclusion is an assertion rather than working (though consistent with B's numbers).
+- Says LTB "governs" for an unrestrained beam without stating that restraint is unknown from the prompt beyond the assumption list; minor.
+- Corrected code carries no in-code source comment for the 353e3 value (source is only in the prose).
+- Every quoted property and arithmetic step checked: 353 cm³, 54.8-55 cm³, 88.89, 97,075,000 N·mm, 97.1, 0.916 all match.
+
+**B**
+- Opening line "The code's unconditional PASS is incorrect ... the section passes" reads as self-contradictory on first pass; it is defensible (the original PASS is an artefact of the 10^6 error) but could be worded better.
+- PDF page references (p.72, p.205, p.231, pp.35-36) and the tabulated Mb,Rd values (32.3 at 6 m, 28.1 at 7 m) cannot be verified from the pack; the interpolation arithmetic itself (31.46) and the ratio (2.83) are correct.
+- Printed output line "M_c,y,Rd = 97.08" vs exact 97.075: a 2-dp rounding of a binary float may show 97.07 or 97.08; immaterial.
+- Everything else checked: 353e3, 54.8e3, 88.8925, 97,075,000 N·mm, 0.9157, V_Ed = 57.35 kN, V_c,Rd = 283 kN (consistent with Av ≈ 1780 mm² × 275/√3), ratio 0.203; all match.
+
+**C**
+- Does not identify planted fault 1 at all: keeps `Wpl_z` in the corrected code and treats the y/z notation as interchangeable ("W_pl,y or W_pl,z depending on notation").
+- Wrong section property: claims Wpl = 440 × 10³ mm³ "from the SCI Blue Book"; the tabulated Wpl,y is 353 cm³. This overstates capacity by 25% and gives a false utilisation of 0.738 instead of 0.916 - a non-conservative planted error attributed to a source.
+- Misstates the original code's behaviour twice: says it "would calculate a resistance of ≈13.5 kN.m and report a FAIL" (it computes 13,475,000 and reports PASS), and says "your original code worked because the error cancelled out" (nothing cancels; the missing /1e6 is a 10^6 error).
+- Arithmetic is internally inconsistent: 18.5 × 38.44 / 8 is quoted as 88.7625 and then as 89.3125 "using the exact values"; the correct product is 88.8925. Neither figure is right.
+- Frames the unit conversion (planted fault 2) as merely "safer practice" rather than a substantive error.
+- Typo "2rub 254x102x28 UB"; contradictory numbers reduce clarity.
+
+**D**
+- Wrong section properties throughout: Wpl,y ≈ 106 × 10³ mm³ (actual 353 × 10³), Wel,y ≈ 69 × 10³ (actual ~308 × 10³), Wpl,z ≈ 23 × 10³ (actual 54.8 × 10³). Also asserts the snippet's 49.0e3 is "the minor-axis value" - it matches neither tabulated axis.
+- Wrong adequacy conclusion (FAIL, utilisation 3.05 to 4.12) and recommends larger sections, purely as a consequence of the wrong Wpl,y. The internal arithmetic (29.15 kN·m, 24.98 kN/m, 120.0 kN·m, 4.12) is consistent with its wrong inputs.
+- Drifts from the planted objective: introduces the unrequested assumption that 18.5 kN/m is characteristic and applies γG = 1.35 in the primary code path (exactly the "replace the objective with a different design problem" behaviour the notes penalise); leaves an unused `gamma_Q`.
+- Class 1 verification quotes flange c/t ≈ 6 and web d/t ≈ 39; actual values are about 4.0 and 35.7. Conclusion (Class 1) is right, the numbers are not.
+- "γ_M0 = 1.0 – EC3-1-1 Table 5" is not where γ_M0 is given (Cl. 6.1(1)); minor.
+- Uses "the beam fails anyway" to dismiss LTB - circular reasoning from wrong data.
+- Correctly describes the original code's unit fault ("10⁶ times too large when printed"), which is why repo comprehension is scored above C.
+
+##### 4. Ranking (best to worst)
+1. **B** - both planted faults identified and correctly fixed, every property and arithmetic step checks out, plus a tabulated cross-check, shear-interaction check and worked LTB estimate that do not displace the core objective.
+2. **A** - the same correct core answer with a tighter, minimal diff; marginally less supporting working than B.
+3. **D** - names both planted faults and reads the original code's behaviour correctly, but wrong section properties, an invented load-factor step and a wrong FAIL conclusion make the corrected result unusable.
+4. **C** - misses the axis fault entirely, plants a wrong non-conservative property, misdescribes what the original code does, and its working contradicts itself; the PASS conclusion is right only by coincidence.
+
+##### 5. Practical significance
+A and B are both reviews a checking engineer could accept as-is; the gap between them is small (B's extra checks vs A's brevity) and would not change any decision. The gap between A/B and C/D is large and decision-changing: D would reject an adequate beam and specify a heavier section on the strength of a property wrong by a factor of 3.3, while C would sign off the beam with a 25% overstated capacity and no awareness of the axis error - the more dangerous failure mode even though its headline answer happens to be PASS. D edges C because it at least identified the two planted faults and described the original code accurately.
+
+##### 6. Manual-review watch-outs
+- Confirm Blue Book values used as reference here: Wpl,y = 353 cm³, Wpl,z = 54.8 cm³, Mc,y,Rd (S275) = 97.1 kN·m, Vc,Rd = 283 kN, C1 = 1.13 for UDL, and B's Mb,Rd table values (32.3 at 6 m, 28.1 at 7 m). None could be verified from the pack; A and B agree with each other and with my recollection.
+- B's PDF page anchors are unverified and should not be treated as evidence of correctness.
+- C's "440 × 10³ mm³ from the SCI Blue Book" and D's "106 × 10³ mm³ from the Blue Book" are both attributed to a real source but do not match it; treat as fabricated citations.
+- Response C's line wrapping note is a formatting caveat only; the substantive errors are independent of formatting.
+- D's wide markdown table wraps badly but its content was assessed in full.

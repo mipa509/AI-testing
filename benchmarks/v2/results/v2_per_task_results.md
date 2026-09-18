@@ -1,6 +1,6 @@
 # V2 Per-Task Results
 
-Current scored slate: `gemma4:31b-cloud`, `glm-5.1:cloud`, `gpt5.4-xhigh`, `qwen-3.6plus`, `minimax-m2.7-cloud`, `kimi-k2-thinking`, `deepseek-v3.2`, and, from the September 2026 refresh, `gpt5.6-sol-xhigh` and `gpt5.6-luna-max`. `deepseek-v4.1-flash`, `glm-5.3-flash` and `tencent-hy4-preview` (2026-09-18 addenda) and `claude-fable-5.1-high` (2026-09-19 addendum) were run on Task 2 and the anchor only; `gemma4:26b-local` (2026-09-19 addendum, free local) was run on Task 2 only.
+Current scored slate: `gemma4:31b-cloud`, `glm-5.1:cloud`, `gpt5.4-xhigh`, `qwen-3.6plus`, `minimax-m2.7-cloud`, `kimi-k2-thinking`, `deepseek-v3.2`, and, from the September 2026 refresh, `gpt5.6-sol-xhigh` and `gpt5.6-luna-max`. `deepseek-v4.1-flash`, `glm-5.3-flash` and `tencent-hy4-preview` (2026-09-18 addenda) and `claude-fable-5.1-high` (2026-09-19 addendum) were run on Task 2 and the anchor only; `gemma4:26b-local` (2026-09-19 addendum, free local) was run on Task 2 and the anchor only.
 
 | Task | Winner | Difference size | Notes |
 |---|---|---|---|

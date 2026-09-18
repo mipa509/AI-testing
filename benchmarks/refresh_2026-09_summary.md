@@ -179,11 +179,12 @@ Four-model pattern on the anchor: the two models that headlined an unrequested L
 
 ## Addendum 2026-09-19: Gemma 4 26B run locally, notebook task only
 
-`gemma4:26b-local` (Ollama `gemma4:26b` on the user's own machine, plain terminal, no harness, tools or skills; free) was run on the v3 notebook task and, later the same day, on v2 Task 2, as a free-tier comparison point, and scored the same way. Its anchors met the calibration gate (MAD 0.17), so the blind scores stand without an offset. It is a different model from the April `gemma4:31b-cloud` row. Full record: `benchmarks/addendum_2026-09-19_gemma4-26b-local.md`.
+`gemma4:26b-local` (Ollama `gemma4:26b` on the user's own machine, plain terminal, no harness, tools or skills; free) was run on the same three tasks as the other addenda (notebook first, then Task 2, then the anchor) as a free-tier comparison point, and scored the same way. Its anchors met the calibration gate (MAD 0.17), so the blind scores stand without an offset. It is a different model from the April `gemma4:31b-cloud` row. Full record: `benchmarks/addendum_2026-09-19_gemma4-26b-local.md`.
 
 | Task | Blind, six criteria | On April scale | Practicality | Overall | Position on the task |
 |---|---:|---:|---:|---:|---|
 | Task 2 - Repo review traps | 4.17 | 4.17 | 4 | 4.14 | 8th equal of 14 with `qwen-3.6plus`, above the three 2026-09-18 addendum models; winner `gemma4:31b-cloud` (4.71) unchanged |
+| Anchor - EC3 planted-error trap | 1.50 | 1.50 | 4 | 1.86 | 14th of 14, below `minimax-m2.7-cloud` (2.43); winner `gpt5.4-xhigh` (4.43) unchanged |
 | v3 Task 1 - Pad footing notebook | 1.83 | 1.83 | 3 | 2.00 | 14th of 14, below `gpt5.6-luna-max` (3.57); winner `gpt5.4-xhigh` (4.86) unchanged |
 
 Read:
@@ -192,4 +193,5 @@ Read:
 - The deliverable is not: cell 1 has a non-breaking space inside the LC1 load literal (a SyntaxError), the candidate widths are scaled twice to 0.24 to 0.32 m so a repaired notebook still selects nothing, the governing case is tracked by the largest `q_max`, and the conclusion states 2.9 m with LC1 governing, hedged as depending on execution. 2.9 m is the value the task plants as the trap. Two of the six required sections are missing.
 - Against its cloud sibling: April's `gemma4:31b-cloud` reached 3.0 m with runnable code and scored 3.71 overall with the same LC3-by-`q_max` slip; the 26B local model at 2.00 shows what the smaller weights lose on this task.
 - The repo review is a different story: all three planted blockers found with the right fixes and a correct dimensional argument, in a short review that follows the brief. It lost points only for depth (no line references, worked numbers or tests, combination column unexamined). Free, local, and level with a paid API model from April.
+- The anchor is the worst of the three and the most instructive: with no web access the model produced a Blue Book citation for a plastic modulus of about 440 cm3 that does not exist in the table (353), never saw that the snippet uses the minor-axis property, and described the original code as printing FAIL when it prints PASS. The PASS verdict is right by coincidence with capacity overstated by a quarter. A fabricated citation is the failure mode a checking engineer cannot catch from the answer alone.
 - Cost: none. Latency was not captured; `ollama run <model> --verbose` would record it next time.

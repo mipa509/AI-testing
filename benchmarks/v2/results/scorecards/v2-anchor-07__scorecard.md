@@ -23,6 +23,7 @@
 | `glm-5.3-flash` | 4 | 4 | 4 | 4 | 4 | 4 | 2 | Finds both planted faults and reaches the correct cross-section PASS at utilisation 0.920 with restraint, shear and deflection stated as validity conditions, but uses Wpl,y = 351.5 cm3 instead of the tabulated 353, quotes a wrong minor-axis modulus of about 25.1 cm3, and repeats the prompt file's anchor header lines; no web lookup. |
 | `tencent-hy4-preview` | 4 | 4 | 2 | 2 | 3 | 3 | 2 | Finds and explains both planted faults, uses the tabulated Wpl,y = 353 cm3 with a geometric cross-check and reaches the cross-section PASS, but headlines the verdict as not adequate on LTB and deflection checks the task did not pose, silently adds factored self-weight to the input load, and replaces the snippet with a full design script; web lookup appears to have been used. |
 | `claude-fable-5.1-high` | 5 | 5 | 4 | 4 | 4 | 4 | 2 | Finds both planted faults, uses the tabulated Wpl,y = 353 cm3 with the full Blue Book property set, reaches the cross-section PASS at 0.92 and keeps the headline conditional on restraint (fails LTB at 2.83 if unrestrained over 6.2 m, with the working shown), but expands a snippet review into classification, shear, M_cr and an indicative deflection check built on assumed load factors that appears as Likely FAIL in the adequacy table, and the corrected script grows into a bending-plus-shear script. |
+| `gemma4:26b-local` | 1 | 1 | 2 | 1 | 2 | 2 | 4 | Reaches PASS but by a wrong route: it never identifies the wrong-axis fault (keeps `Wpl_z` and calls the y/z notation interchangeable), replaces the planted value with a fabricated Wpl of about 440 cm3 attributed to the Blue Book (tabulated 353), so its 0.738 utilisation overstates capacity by a quarter; it misdescribes the original code as printing FAIL and as working because errors cancelled, treats the missing N.mm conversion as safer practice rather than a fault, and gives two different wrong values for M_Ed. |
 
 ## Judge Output Summary
 
@@ -59,6 +60,12 @@ Task summary: Re-run the old EC3 beam-check trap unchanged and compare whether m
 - Blind pack (one judging round, 2026-09-19): `gpt5.6-sol-xhigh` 4.83, `gpt5.4-xhigh` 4.67, `claude-fable-5.1-high` 4.33, `minimax-m2.7-cloud` 1.83.
 - Claude Fable 5.1 found and corrected both planted faults with the tabulated `Wpl,y = 353 cm3` and the full Blue Book property set, reached the cross-section PASS at 0.92, and kept the headline conditional: adequate if the compression flange is fully restrained, failing LTB at 2.83 if unrestrained over 6.2 m, with `M_cr`, `chi_LT` and `M_b,Rd` worked and cross-checked against tabulated values.
 - Deductions: the snippet review expands into classification, shear, a full LTB calculation and an indicative deflection check built on assumed load factors that appears as Likely FAIL in the adequacy table, the answer runs to three pages before the two-line fix, and the corrected script grows into a bending-plus-shear script with extra hard-coded geometry.
+
+### Gemma 4 26B local addendum (2026-09-19)
+
+- Blind pack (one judging round, 2026-09-19): `gpt5.6-sol-xhigh` 4.83, `gpt5.4-xhigh` 4.67, `minimax-m2.7-cloud` 2.50, `gemma4:26b-local` 1.50 on the six technical criteria; the judge ranked the local model last, below minimax, because minimax at least named both planted faults and described the original code correctly.
+- Gemma 4 26B (local) saw that 49.0 cm3 is far too small for a 254x102x28 UB, added an explicit N.mm to kN.m conversion, and concluded PASS.
+- Deductions: the wrong-axis fault is never identified (the corrected code keeps `Wpl_z`), the replacement Wpl of about 440 cm3 is not the tabulated 353 and is attributed to the SCI Blue Book without web access, so the 0.738 utilisation overstates capacity by 25 percent; the response says the original code prints FAIL at 13.5 kN.m (it prints PASS at 6.6e-6) and that it worked because the errors cancelled (nothing cancels); M_Ed is given as 88.76 and then 89.31 (it is 88.89); the unit fault is framed as safer practice.
 
 ## Manual Override Notes
 
@@ -128,6 +135,12 @@ Provisional `deepseek-v3.2` review:
 - Manual overrides: none. Checked against the evaluator notes: both planted faults are corrected, the cross-section and shear numbers and the `M_cr` chain were re-checked by hand, and the headline keeps the planted objective with the LTB failure stated as conditional on restraint; the deductions are for the assumed-load deflection row and the answer's scope, as the notes penalise. No score was changed.
 - Practicality `claude-fable-5.1-high` = 2: 6 min 17 s API time, 9 min 32 s wall clock; the September floor for slow but usable runs on the anchor, as for every other premium and addendum model. Subscription run, so the $1.48 session figure is not counted. Practicality rule from this addendum on (user decision, 2026-09-19): cost is neglected for runs made on a subscription plan and counted only for API-billed runs; April and September rows are frozen and keep the earlier reading, under which premium models were scored as expensive whatever the route.
 
+### Gemma 4 26B local addendum (2026-09-19)
+
+- Scoring: technical criteria for `gemma4:26b-local` were scored blind on 2026-09-19 by the same judge family as the September refresh, in a pack with the two April anchors plus `gpt5.6-sol-xhigh` as a consistency check. The anchors met the calibration gate across the three gemma packs (MAD 0.44, worst row 1.00, this pack's low anchor; high anchor MAD 0.50 here), so the blind scores are used as-is, as for `glm-5.3-flash` (see `benchmarks/addendum_2026-09-19_gemma4-26b-local.md`). Earlier rows above are unchanged.
+- Manual overrides: none. Checked against the evaluator notes and the snippet: the 440 cm3 value is not tabulated (353 cm3), the axis fault is unaddressed, and the claims about the original code's output are wrong; the judge's arithmetic checks were confirmed (18.5 x 6.2^2 / 8 = 88.89).
+- Practicality `gemma4:26b-local` = 4: free local inference, no API cost, PowerShell terminal with no tools or web access; the user reports it answered promptly without looping. Latency and tokens not captured. The wrong property is a technical failure, not an operational one, so the free route keeps the April score given to `gemma4:31b-cloud` on this task. Cost is not a factor on this route under the rule adopted with the Claude Fable 5.1 addendum.
+
 ## Winner
 
 - Winner: `gpt5.4-xhigh`
@@ -143,3 +156,5 @@ GLM 5.3 Flash addendum (2026-09-18): `glm-5.3-flash` (overall mean 3.71) does no
 Tencent Hy4 Preview addendum (2026-09-18): `tencent-hy4-preview` (overall mean 2.86) does not beat the April result of `gpt5.4-xhigh` (4.43), so the winner line is unchanged.
 
 Claude Fable 5.1 addendum (2026-09-19): `claude-fable-5.1-high` (overall mean 4.00) does not beat the April result of `gpt5.4-xhigh` (4.43), so the winner line is unchanged.
+
+Gemma 4 26B local addendum (2026-09-19): `gemma4:26b-local` (overall mean 1.86) does not beat the April result of `gpt5.4-xhigh` (4.43), so the winner line is unchanged.
