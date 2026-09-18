@@ -162,6 +162,62 @@ def parse_scorecard(md_path: Path):
     }
 
 
+def blended_price_usd_per_1m(pricing):
+    """
+    Blended list price per 1M tokens from a slate 'pricing' block, weighting
+    input:output at 3:1 (the convention used by the common intelligence-vs-price
+    charts). Returns None when the block or either price is missing.
+    """
+    if not pricing:
+        return None
+    inp = pricing.get("input_usd_per_1m")
+    out = pricing.get("output_usd_per_1m")
+    if inp is None or out is None:
+        return None
+    return round(0.75 * float(inp) + 0.25 * float(out), 6)
+
+
+def parse_run_record_usage(md_path: Path):
+    """
+    Parse the measured usage lines of a run record.
+
+    Returns a dict with task_id, model_id, tokens_k (int or None: the first
+    'NNk' figure on the token_usage_or_cost line), latency (str or None) and
+    route (str or None). April 2026 records left these fields empty, so they
+    parse to None.
+    """
+    text = Path(md_path).read_text(encoding="utf-8")
+
+    def field(name):
+        # [ \t]* rather than \s*: an empty field must not swallow the next line
+        m = re.search(r"^- `?" + re.escape(name) + r"`?:[ \t]*(.*)$", text, re.M)
+        if not m:
+            return None
+        value = m.group(1).strip()
+        return value or None
+
+    task_id = field("task_id") or ""
+    model_id = field("model_id_used") or field("model_id") or ""
+    task_id, model_id = task_id.strip("`"), model_id.strip("`")
+
+    tokens_line = field("token_usage_or_cost")
+    tokens_k = None
+    if tokens_line:
+        m = re.search(r"`?(\d+)k`?\s*tokens", tokens_line)
+        if m:
+            tokens_k = int(m.group(1))
+
+    latency = field("latency_notes")
+    if latency:
+        latency = latency.replace("`", "")
+    route = field("run_route")
+    if route:
+        route = route.replace("`", "")
+
+    return {"task_id": task_id, "model_id": model_id, "tokens_k": tokens_k,
+            "latency": latency, "route": route}
+
+
 def discover_rounds(repo_root: Path):
     """
     Walk benchmarks/ for structured rounds (those with models/fixed_model_slate.json).
@@ -211,6 +267,9 @@ def discover_rounds(repo_root: Path):
                 model["cost_tier"] = default_tier
             if not model.get("cost_label"):
                 model["cost_label"] = default_label
+            # Blended list price for the cost-vs-performance chart (None if unpriced)
+            model["blended_price_usd_per_1m"] = blended_price_usd_per_1m(model.get("pricing"))
+        price_by_model = {m["model_id"]: m.get("pricing") or {} for m in models}
 
         # Task manifest (optional)
         manifest_path = item / "tasks" / "task_manifest.json"
@@ -244,6 +303,26 @@ def discover_rounds(repo_root: Path):
                     task_data.setdefault("depth", "")
                 tasks.append(task_data)
 
+        # Measured usage from run records: only records that carry a token figure.
+        # usage[task_id][model_id] = {tokens_k, latency, route, est_cost_usd}
+        # est_cost_usd prices every token at the output rate (Codex reports a single
+        # total), so it is an upper-bound list-price estimate.
+        usage = {}
+        records_dir = item / "runs" / "run_records"
+        if records_dir.exists():
+            for rec_file in sorted(records_dir.glob("*__run_record.md")):
+                u = parse_run_record_usage(rec_file)
+                if u["tokens_k"] is None or not u["task_id"] or not u["model_id"]:
+                    continue
+                out_price = price_by_model.get(u["model_id"], {}).get("output_usd_per_1m")
+                est = round(u["tokens_k"] * 1000 * float(out_price) / 1e6, 4) if out_price is not None else None
+                usage.setdefault(u["task_id"], {})[u["model_id"]] = {
+                    "tokens_k": u["tokens_k"],
+                    "latency": u["latency"],
+                    "route": u["route"],
+                    "est_cost_usd": est,
+                }
+
         rounds.append({
             "round_id": item.name,
             "label": item.name.upper(),
@@ -252,6 +331,7 @@ def discover_rounds(repo_root: Path):
             "criteria": criteria,
             "ranking": ranking,
             "tasks": tasks,
+            "usage": usage,
         })
 
     return rounds
