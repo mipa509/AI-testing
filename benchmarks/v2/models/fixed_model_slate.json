@@ -198,5 +198,14 @@
       "source_model_id": "tencent/hy4-preview",
       "note": "OpenRouter listing (unchanged on 2026-09-18). Benchmark runs were billed through OpenRouter: about $0.094 (deep-02), $0.128 (v3) and $0.115 (anchor)."
     }
+  },
+  {
+    "model_id": "anon-2026-09-19",
+    "display_name": "Anonymous model (2026-09-19)",
+    "role": "undisclosed premium candidate (three-task subset)",
+    "provider": "Undisclosed (agentic CLI session)",
+    "cost_tier": 3,
+    "cost_label": "Premium",
+    "notes": "September 2026 addition, placeholder id. Run by the user on 2026-09-19 from an agentic CLI coding session with the vendor withheld until scoring was complete; to be renamed when disclosed. Run on three tasks only (v2-deep-02, v2-anchor-07, v3-notebook-01); its v2 average is provisional over the tasks run. Session cost $1.29 (deep-02), $1.48 (anchor) and $2.65 (v3); no list price recorded."
   }
 ]

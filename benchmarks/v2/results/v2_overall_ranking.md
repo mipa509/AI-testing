@@ -4,33 +4,34 @@ This ranking covers the six new v2 tasks for `gemma4:31b-cloud`, `glm-5.1:cloud`
 
 ## Cross-Task Average Scores
 
-| Criterion | gemma4:31b-cloud | glm-5.1:cloud | gpt5.4-xhigh | qwen-3.6plus | minimax-m2.7-cloud | kimi-k2-thinking | deepseek-v3.2 | gpt5.6-sol-xhigh | gpt5.6-luna-max | deepseek-v4.1-flash | glm-5.3-flash | tencent-hy4-preview |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---: |---: |---: |---:|
-| Correctness | 4.00 | 3.83 | 4.33 | 4.00 | 3.67 | 3.50 | 2.67 | 4.83 | 4.83 | 3.50 | 4.00 | 4.50 |
-| Repo comprehension | 4.00 | 3.83 | 4.50 | 4.17 | 4.00 | 3.50 | 2.83 | 4.67 | 5.00 | 3.50 | 4.00 | 4.50 |
-| Change safety | 3.83 | 3.50 | 4.00 | 3.33 | 3.50 | 3.33 | 2.33 | 4.50 | 4.67 | 4.00 | 4.00 | 2.50 |
-| Engineering judgement | 4.00 | 3.67 | 4.33 | 3.67 | 3.50 | 3.33 | 2.50 | 4.67 | 4.67 | 3.00 | 4.00 | 3.00 |
-| Maintainability | 4.00 | 4.00 | 4.17 | 4.00 | 4.17 | 3.50 | 2.86 | 4.67 | 4.50 | 4.00 | 4.00 | 3.50 |
-| Clarity | 4.17 | 4.50 | 4.83 | 4.00 | 4.17 | 4.17 | 3.17 | 4.83 | 4.67 | 3.50 | 4.00 | 3.50 |
-| Economics/practicality | 4.67 | 3.83 | 2.83 | 3.00 | 3.00 | 4.33 | 2.17 | 3.00 | 3.00 | 2.50 | 2.50 | 2.50 |
-| Overall average | 4.10 | 3.88 | 4.14 | 3.74 | 3.72 | 3.67 | 2.65 | 4.45 | 4.48 | 3.43 | 3.79 | 3.43 |
+| Criterion | gemma4:31b-cloud | glm-5.1:cloud | gpt5.4-xhigh | qwen-3.6plus | minimax-m2.7-cloud | kimi-k2-thinking | deepseek-v3.2 | gpt5.6-sol-xhigh | gpt5.6-luna-max | deepseek-v4.1-flash | glm-5.3-flash | tencent-hy4-preview | anon-2026-09-19 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---: |---: |---: |---: |---:|
+| Correctness | 4.00 | 3.83 | 4.33 | 4.00 | 3.67 | 3.50 | 2.67 | 4.83 | 4.83 | 3.50 | 4.00 | 4.50 | 5.00 |
+| Repo comprehension | 4.00 | 3.83 | 4.50 | 4.17 | 4.00 | 3.50 | 2.83 | 4.67 | 5.00 | 3.50 | 4.00 | 4.50 | 5.00 |
+| Change safety | 3.83 | 3.50 | 4.00 | 3.33 | 3.50 | 3.33 | 2.33 | 4.50 | 4.67 | 4.00 | 4.00 | 2.50 | 4.00 |
+| Engineering judgement | 4.00 | 3.67 | 4.33 | 3.67 | 3.50 | 3.33 | 2.50 | 4.67 | 4.67 | 3.00 | 4.00 | 3.00 | 4.50 |
+| Maintainability | 4.00 | 4.00 | 4.17 | 4.00 | 4.17 | 3.50 | 2.86 | 4.67 | 4.50 | 4.00 | 4.00 | 3.50 | 4.50 |
+| Clarity | 4.17 | 4.50 | 4.83 | 4.00 | 4.17 | 4.17 | 3.17 | 4.83 | 4.67 | 3.50 | 4.00 | 3.50 | 4.00 |
+| Economics/practicality | 4.67 | 3.83 | 2.83 | 3.00 | 3.00 | 4.33 | 2.17 | 3.00 | 3.00 | 2.50 | 2.50 | 2.50 | 2.00 |
+| Overall average | 4.10 | 3.88 | 4.14 | 3.74 | 3.72 | 3.67 | 2.65 | 4.45 | 4.48 | 3.43 | 3.79 | 3.43 | 4.14 |
 
-Provisional columns: `deepseek-v4.1-flash`, `glm-5.3-flash`, `tencent-hy4-preview` were run on Task 2 and the anchor only (2026-09-18 addenda), so their averages cover those two tasks, include the anchor, and are provisional until the remaining primary tasks are run; they are not comparable with the six-task composite of the other columns.
+Provisional columns: `deepseek-v4.1-flash`, `glm-5.3-flash`, `tencent-hy4-preview`, `anon-2026-09-19` were run on Task 2 and the anchor only (2026-09-18 and 2026-09-19 addenda), so their averages cover those two tasks, include the anchor, and are provisional until the remaining primary tasks are run; they are not comparable with the six-task composite of the other columns.
 
 ## Overall Ranking
 
 1. `gpt5.6-luna-max` - `4.48`
 2. `gpt5.6-sol-xhigh` - `4.45`
 3. `gpt5.4-xhigh` - `4.14`
-4. `gemma4:31b-cloud` - `4.10`
-5. `glm-5.1:cloud` - `3.88`
-6. `glm-5.3-flash` - `3.79` (provisional: Task 2 and anchor only)
-7. `qwen-3.6plus` - `3.74`
-8. `minimax-m2.7-cloud` - `3.72`
-9. `kimi-k2-thinking` - `3.67`
-10. `deepseek-v4.1-flash` - `3.43` (provisional: Task 2 and anchor only)
-11. `tencent-hy4-preview` - `3.43` (provisional: Task 2 and anchor only)
-12. `deepseek-v3.2` - `2.65`
+4. `anon-2026-09-19` - `4.14` (provisional: Task 2 and anchor only)
+5. `gemma4:31b-cloud` - `4.10`
+6. `glm-5.1:cloud` - `3.88`
+7. `glm-5.3-flash` - `3.79` (provisional: Task 2 and anchor only)
+8. `qwen-3.6plus` - `3.74`
+9. `minimax-m2.7-cloud` - `3.72`
+10. `kimi-k2-thinking` - `3.67`
+11. `deepseek-v4.1-flash` - `3.43` (provisional: Task 2 and anchor only)
+12. `tencent-hy4-preview` - `3.43` (provisional: Task 2 and anchor only)
+13. `deepseek-v3.2` - `2.65`
 
 September 2026 note: the `gpt5.6-sol-xhigh` and `gpt5.6-luna-max` rows were scored blind by a new judge alongside April anchor responses and shifted onto the April scale with per-task calibration offsets (see `benchmarks/refresh_2026-09_calibration.md`). On three tasks the shift saturates at the 5 cap, so Sol's blind margin over Luna on deep-03 and deep-04 is not visible in these averages. April rows are unchanged.
 
