@@ -94,7 +94,7 @@ def test_parse_scorecard_v2_deep01():
     # refresh rows are appended, not substituted
     assert task["scores"]["gpt5.6-sol-xhigh"]["Correctness"] == 5.0
     assert task["scores"]["gpt5.6-luna-max"]["Economics/practicality"] == 3.0
-    assert len(task["scores"]) == 9
+    assert len(task["scores"]) == 10          # + gemma4:26b-local (2026-09-19 addendum)
     assert len(task["commentary"]) > 50
 
 

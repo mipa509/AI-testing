@@ -19,6 +19,7 @@
 | `deepseek-v3.2` | 2 | 3 | 2 | 2 | 2 | 3 | 2 | It finds some real bugs, but the proposed `status_from_ratio()` fix is internally inconsistent with its own tests and adds an unjustified tolerance policy. |
 | `gpt5.6-sol-xhigh` | 4 | 4 | 3 | 4 | 4 | 4 | 3 | Most decisive on the mm/m unit bug (converts to a dimensionless slope) with clean tests, but delivers a 1000x output change and an exactly-two-points restriction under the same function name and wrongly claims NaN yields PASS in the current code. |
 | `gpt5.6-luna-max` | 4 | 5 | 4 | 4 | 4 | 4 | 3 | Complete and accurate bug list (zero allowable, sign, equality boundary, spacing, NaN/inf, fewer than two readings, mm/m) with proportionate fixes and tests consistent with them; the unit inconsistency is documented rather than resolved in code. |
+| `gemma4:26b-local` | 3 | 3 | 2 | 3 | 3 | 4 | 3 | Finds the zero-allowable false PASS and the multi-point spacing ambiguity, but its `differential_slope` fix returns 0.0 for invalid spacing, the silent-benign default it called catastrophic elsewhere, one test expects 5.0 where both the original and the fixed code give 10.0, the mm/m unit mixing is a footnote rather than a finding, and no sign convention for heave is stated. |
 
 ## Judge Output Summary
 
@@ -31,6 +32,14 @@ Task summary: Review a foundation-settlement helper for hidden numerical failure
 - Blind pack (one judging round): `gpt5.6-luna-max` 4.17, `gpt5.6-sol-xhigh` 3.83, `gpt5.4-xhigh` 3.00, `deepseek-v3.2` 2.50.
 - Luna gave the most complete and accurate bug list with proportionate fixes and consistent tests, documenting rather than resolving the mm/m inconsistency in code.
 - Sol resolved the unit bug decisively but changed `differential_slope` output by 1000x under the same name, restricted it to exactly two points, and wrongly claimed NaN yields PASS in the current code.
+
+### Gemma 4 26B local addendum (2026-09-19)
+
+- Blind pack (one judging round, 2026-09-19): `gpt5.6-sol-xhigh` 4.00, `gpt5.4-xhigh` 4.00, `gemma4:26b-local` 3.00, `deepseek-v3.2` 2.50 on the six technical criteria; the judge ranked the local model third.
+- Judge's one-line reading of the local model's response: Finds the false-PASS and the multi-point spacing ambiguity, but its own fix reintroduces the same silent-zero anti-pattern for invalid spacing and one test's expected value (5.0) matches neither the original nor the fixed code (both give 10.0).
+- Judge's deduction: `differential_slope` fix returns `0.0` when `spacing_m <= 0` — a silent benign default for invalid input, exactly the failure class it called "catastrophic" in `settlement_ratio`; a downstream check would see zero distortion and pass.
+- Judge's deduction: Test "Sequence Expansion" expects `differential_slope([10, 5, 0], 1) == 5.0`; both the original and A's fixed code return `10.0` (max−min = 10, /1). The test would fail against A's own fix, and the "validates if user is aware" wording is not a test.
+- Judge's deduction: Does not flag the mm/m unit mixing as a bug; it only appears as a footnote. No unit-conversion test, no negative-allowable guard, and the sign convention for heave is never stated despite the prompt asking for it.
 
 ## Manual Override Notes
 
@@ -76,6 +85,12 @@ Provisional `gemma4:31b-cloud` review:
 - Practicality `gpt5.6-sol-xhigh` = 3: same premium Codex route as `gpt5.4-xhigh`, faster on every task with a recorded time, no refusal or truncation, waited for context; scored as the April premium reference.
 - Practicality `gpt5.6-luna-max` = 3: same Codex route on the budget API tier ($0.20 / $1.20 per 1M tokens list price), about 3 to 4 minutes per v2 task, no refusal or truncation, waited for context; low price offset by the slowest latency in the set.
 
+### Gemma 4 26B local addendum (2026-09-19)
+
+- Scoring: technical criteria for `gemma4:26b-local` were scored blind on 2026-09-19 by the same judge family as the September refresh, in a pack with the two April anchors plus `gpt5.6-sol-xhigh` as a consistency check. Over the model's eight packs the anchors failed the calibration gate (MAD 0.59, worst row 1.17), so the blind scores [3, 3, 2, 3, 3, 4] were shifted onto the April scale with the September per-task offset of +0.17, the standing user decision (see `benchmarks/addendum_2026-09-19_gemma4-26b-local.md`). Earlier rows above are unchanged.
+- Manual overrides: none. The judge's claims about the response were checked against the response text; the defects it names are present as described.
+- Practicality `gemma4:26b-local` = 3: free local inference on the user's own hardware, no API cost, no refusal, the two-message protocol followed; on the timed tasks the answer took 3 min 35 s to 7 min 32 s after a 30 to 45 s prompt-only reply (7.7 to 10.8 generated tokens per second, CPU-bound on an 8 GB card), so on the latency-only reading that applies to routes where cost is not counted it is scored as the 3 to 6 minute runs of `gpt5.6-luna-max` and the 2026-09-18 addendum models, not the 4 to 5 April gave the free cloud route for one-to-two-minute answers.
+
 ## Winner
 
 - Winner: `gpt5.6-luna-max`
@@ -83,3 +98,5 @@ Provisional `gemma4:31b-cloud` review:
 - Why it matters in practice: `GPT-5.6 Luna gave the most complete and internally consistent bug list, fixes and tests on a task where no April model was ideal; Sol (3.71) fixed the unit bug more decisively but with a breaking output change and one wrong NaN claim.`
 
 September 2026 refresh: `gpt5.6-luna-max` (overall mean 4.00) beats the April result, so the winner line above was updated. April 2026 result for the seven original models: winner `glm-5.1:cloud` (overall mean 2.86); Difference size: `Small`; Why it matters in practice: `No model was ideal on task 6, but glm still stayed slightly closer to the real helper semantics than minimax, qwen, kimi, deepseek, or gemma.`
+
+Gemma 4 26B local addendum (2026-09-19): `gemma4:26b-local` (overall mean 3.00) does not beat the April result of `gpt5.6-luna-max` (4.00), so the winner line is unchanged.

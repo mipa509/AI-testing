@@ -1,6 +1,6 @@
 # Gemma 4 26B (local) addendum (2026-09-19): blind scoring record
 
-Scope: `gemma4:26b-local` (Ollama `gemma4:26b`, run locally on the user's machine from a plain terminal, no harness, tools or skills) on the same three tasks as the other addenda, run in the order `v3-notebook-01`, `v2-deep-02` (section 6) and `v2-anchor-07` (section 7), as a free-tier comparison point. The method is the September 2026 refresh procedure (`refresh_2026-09_calibration.md`) as applied to the 2026-09-18 and 2026-09-19 addenda. No earlier score, note or winner was changed. This is a different model from the April `gemma4:31b-cloud` row (Ollama cloud, 31B), which is the low anchor in this pack.
+Scope: `gemma4:26b-local` (Ollama `gemma4:26b`, run locally on the user's machine from a plain terminal, no harness, tools or skills) on all eight tasks, run in the order `v3-notebook-01`, `v2-deep-02` (section 6), `v2-anchor-07` (section 7) and the remaining five v2 tasks (section 8), as a free-tier comparison point. Section 8 revises the calibration decision and the practicality scores of the first three tasks; the figures in sections 3 to 7 are as first recorded. The method is the September 2026 refresh procedure (`refresh_2026-09_calibration.md`) as applied to the 2026-09-18 and 2026-09-19 addenda. No earlier score, note or winner was changed. This is a different model from the April `gemma4:31b-cloud` row (Ollama cloud, 31B), which is the low anchor in this pack.
 
 ## 1. Run
 
@@ -267,3 +267,380 @@ A and B are both reviews a checking engineer could accept as-is; the gap between
 - C's "440 × 10³ mm³ from the SCI Blue Book" and D's "106 × 10³ mm³ from the Blue Book" are both attributed to a real source but do not match it; treat as fabricated citations.
 - Response C's line wrapping note is a formatting caveat only; the substantive errors are independent of formatting.
 - D's wide markdown table wraps badly but its content was assessed in full.
+
+## 8. Remaining v2 tasks, eight-pack calibration and revision
+
+The user ran the remaining five v2 tasks later on 2026-09-19 on the same route, this time with `ollama run --verbose`, which prints duration and token counts. Every task followed the two-message protocol and the model waited for the pasted context each time. Hardware: Intel Core i7-9700K, 64 GB RAM, RTX 2070 SUPER 8 GB; llama-server held about 4 GB and about half the CPU while generating, so the 26B weights run mostly on CPU with partial GPU offload.
+
+| Task | Prompt-only reply | Answer | Generated tokens (answer, thinking included) | Rate |
+|---|---|---|---:|---:|
+| `v2-deep-01` | 43.7 s | 7 min 32 s | 3436 | 7.65 tok/s |
+| `v2-deep-03` | 31.3 s | 5 min 31 s | 2995 | 9.09 tok/s |
+| `v2-deep-04` | 43.2 s | 3 min 35 s | 2290 | 10.78 tok/s |
+| `v2-medium-05` | 31.1 s | 5 min 50 s | 2699 | 7.76 tok/s |
+| `v2-medium-06` | 36.4 s | 4 min 21 s | 2687 | 10.38 tok/s |
+
+The prompt-only replies each generated 330 to 510 tokens for a one-line answer, so the counts include hidden thinking. Ollama counts only the last turn's prompt, so these token figures are not comparable with the harness totals of the other routes and are not charted.
+
+### Blind packs
+
+| Task | Seed | A | B | C | D |
+|---|---:|---|---|---|---|
+| `v2-deep-01` | 20261402 | `gpt5.4-xhigh` | `gpt5.6-sol-xhigh` | `qwen-3.6plus` | `gemma4:26b-local` |
+| `v2-deep-03` | 20261404 | `gemma4:26b-local` | `qwen-3.6plus` | `gpt5.4-xhigh` | `gpt5.6-sol-xhigh` |
+| `v2-deep-04` | 20261405 | `gemma4:26b-local` | `gpt5.6-sol-xhigh` | `gpt5.4-xhigh` | `gemma4:31b-cloud` |
+| `v2-medium-05` | 20261406 | `gemma4:26b-local` | `gemma4:31b-cloud` | `gpt5.4-xhigh` | `gpt5.6-sol-xhigh` |
+| `v2-medium-06` | 20261407 | `gemma4:26b-local` | `gpt5.6-sol-xhigh` | `gpt5.4-xhigh` | `deepseek-v3.2` |
+
+### Calibration over all eight packs
+
+| Task | Low anchor | High anchor MAD / signed | Low anchor MAD / signed | Anchor order preserved? | Sol vs Sept blind MAD / signed |
+|---|---|---:|---:|---|---:|
+| `v2-deep-01` | `qwen-3.6plus` | 0.33 / -0.33 | 0.67 / -0.67 | yes (April 4.17 vs 3.67; blind 3.83 vs 3.00) | 0.00 / +0.00 |
+| `v2-deep-02` | `minimax-m2.7-cloud` | 0.50 / -0.17 | 0.33 / -0.33 | yes (April 4.83 vs 3.00; blind 4.67 vs 2.67) | 0.17 / +0.17 |
+| `v2-deep-03` | `qwen-3.6plus` | 1.17 / -1.17 | 0.83 / -0.83 | yes (April 4.83 vs 3.83; blind 3.67 vs 3.00) | 0.00 / +0.00 |
+| `v2-deep-04` | `gemma4:31b-cloud` | 0.67 / -0.67 | 0.83 / -0.83 | NO (April 4.83 vs 4.83; blind 4.17 vs 4.00) | 0.00 / +0.00 |
+| `v2-medium-05` | `gemma4:31b-cloud` | 0.17 / -0.17 | 1.17 / -1.17 | yes (April 4.00 vs 3.83; blind 3.83 vs 2.67) | 0.58 / -0.58 |
+| `v2-medium-06` | `deepseek-v3.2` | 0.83 / +0.50 | 0.17 / +0.17 | yes (April 3.50 vs 2.33; blind 4.00 vs 2.50) | 0.17 / +0.17 |
+| `v2-anchor-07` | `minimax-m2.7-cloud` | 0.50 / -0.17 | 1.00 / +0.00 | yes (April 4.83 vs 2.50; blind 4.67 vs 2.50) | 0.33 / +0.00 |
+| `v3-notebook-01` | `gemma4:31b-cloud` | 0.00 / +0.00 | 0.33 / -0.33 | yes (April 5.00 vs 3.67; blind 5.00 vs 3.33) | 0.67 / +0.67 |
+
+Overall anchor MAD 0.594 (sixteen rows, 96 criterion pairs), signed -0.385, worst row 1.17 (`gpt5.4-xhigh` on deep-03 and `gemma4:31b-cloud` on medium-05, both read 1.17 below April). The gate fails on both counts, in the usual direction for this judge family. The deep-04 anchor order flag reflects an April tie (4.83 each) that the blind pass broke by a sixth of a point, not a reversal. Sol reproduced its September blind scores to within 0.67 everywhere and exactly on three tasks.
+
+**Decision (revision):** the first three packs (notebook, Task 2, anchor) met the gate on their own and were recorded as-is in sections 3, 6 and 7. With eight packs the model's calibration fails, so the standing rule (September per-task offsets, as for `deepseek-v4.1-flash`, `tencent-hy4-preview` and `claude-fable-5.1-high`) is applied to every task of this model for consistency. The Task 2 and anchor integers do not change under their offsets (+0.42 and +0.08); the notebook row moves from [1, 1, 2, 3, 2, 2] (1.83) to [2, 2, 3, 4, 3, 3] (2.83) under +0.71.
+
+| Task | Raw blind (mean) | September offset | On April scale (mean) |
+|---|---:|---:|---:|
+| `v2-deep-01` | [2, 2, 2, 2, 2, 3] (2.17) | +0.67 | [3, 3, 3, 3, 3, 4] (3.17) |
+| `v2-deep-02` | [5, 4, 5, 4, 3, 4] (4.17) | +0.42 | [5, 4, 5, 4, 3, 4] (4.17) |
+| `v2-deep-03` | [3, 3, 4, 3, 3, 3] (3.17) | +1.42 | [4, 4, 5, 4, 4, 4] (4.17) |
+| `v2-deep-04` | [3, 4, 4, 4, 3, 3] (3.50) | +0.96 | [4, 5, 5, 5, 4, 4] (4.50) |
+| `v2-medium-05` | [2, 3, 2, 2, 3, 3] (2.50) | +0.42 | [2, 3, 2, 2, 3, 3] (2.50) |
+| `v2-medium-06` | [3, 3, 2, 3, 3, 4] (3.00) | +0.17 | [3, 3, 2, 3, 3, 4] (3.00) |
+| `v2-anchor-07` | [1, 1, 2, 1, 2, 2] (1.50) | +0.08 | [1, 1, 2, 1, 2, 2] (1.50) |
+| `v3-notebook-01` | [1, 1, 2, 3, 2, 2] (1.83) | +0.71 | [2, 2, 3, 4, 3, 3] (2.83) |
+
+### Manual review
+
+- `v2-deep-01`: Root cause correct and unknown-section guard sensible, but the proposed patch contains `SEIONS[name]`, which would raise `NameError` on every call, and it misses every other defect in the pipeline and reporting files. Checked against the response text; no override.
+- `v2-deep-03`: Sound additive skeleton (default `columns=RESULT_COLUMNS` keeps the legacy slice) but never decides the per-group aggregation rule, ignores divide-by-zero, and is sloppy (`build_slli_summary`, `all(cols in df.columns)`). Checked against the response text; no override.
+- `v2-deep-04`: Spots the trap and rightly prefers leaving the code alone, but its regression tests are mis-specified (expects `"PASS"`/`"FAIL"` from `concrete_utilisation`, which returns floats) and omit negative denominators. Checked against the response text; no override.
+- `v2-medium-05`: Sound review and vectorised outline, but the code contains a stray walrus-in-subscript (`df[REQUIRED_column_subset := REQUIRED_COLUMNS]`, a SyntaxError below Python 3.10 and meaningless above it), silently drops unparseable rows, and still counts zero-length members while excluding their ratio. Checked against the response text; no override.
+- `v2-medium-06`: Finds the false-PASS and the multi-point spacing ambiguity, but its own fix reintroduces the same silent-zero anti-pattern for invalid spacing and one test's expected value (5.0) matches neither the original nor the fixed code (both give 10.0). Checked against the response text; no override.
+
+### Practicality (revision)
+
+- Every task = 3. Free local inference on the user's own hardware, no API cost, no refusal, the two-message protocol followed; on the timed tasks the answer took 3 min 35 s to 7 min 32 s after a 30 to 45 s prompt-only reply (7.7 to 10.8 generated tokens per second, CPU-bound on an 8 GB card), so on the latency-only reading that applies to routes where cost is not counted it is scored as the 3 to 6 minute runs of `gpt5.6-luna-max` and the 2026-09-18 addendum models, not the 4 to 5 April gave the free cloud route for one-to-two-minute answers.
+- Task 2 and the anchor were first scored 4 with latency uncaptured (sections 6 and 7); the timed runs showed the route takes 4 to 8 minutes per task, so they are revised to 3 the same day for consistency with the rule applied to every other model. The notebook stays at 3.
+
+### Results, all eight tasks
+
+| Task | Technical (April scale) | Practicality | Overall mean | April winner (overall) | Winner changed? |
+|---|---|---:|---:|---|---|
+| `v2-deep-01` | [3, 3, 3, 3, 3, 4] (3.17) | 3 | 3.14 | `gpt5.6-sol-xhigh` (4.71) | no |
+| `v2-deep-02` | [5, 4, 5, 4, 3, 4] (4.17) | 3 | 4.00 | `gemma4:31b-cloud` (4.71) | no |
+| `v2-deep-03` | [4, 4, 5, 4, 4, 4] (4.17) | 3 | 4.00 | `gpt5.6-sol-xhigh` (4.71) | no |
+| `v2-deep-04` | [4, 5, 5, 5, 4, 4] (4.50) | 3 | 4.29 | `kimi-k2-thinking` (5.00) | no |
+| `v2-medium-05` | [2, 3, 2, 2, 3, 3] (2.50) | 3 | 2.57 | `gpt5.6-sol-xhigh` (4.57) | no |
+| `v2-medium-06` | [3, 3, 2, 3, 3, 4] (3.00) | 3 | 3.00 | `gpt5.6-luna-max` (4.00) | no |
+| `v2-anchor-07` | [1, 1, 2, 1, 2, 2] (1.50) | 3 | 1.71 | `gpt5.4-xhigh` (4.43) | no |
+| `v3-notebook-01` | [2, 2, 3, 4, 3, 3] (2.83) | 3 | 2.86 | `gpt5.4-xhigh` (4.86) | no |
+
+v2 cross-task average over the six primary tasks (the composite every full model is ranked on): 3.50. The anchor (1.71) is reported separately as for every model. v3: 2.86.
+
+### De-anonymised judge replies, five new tasks
+
+#### `v2-deep-01` - Multi-file bug hunt in a member check pipeline
+
+Label key: A = `gpt5.4-xhigh`, B = `gpt5.6-sol-xhigh`, C = `qwen-3.6plus`, D = `gemma4:26b-local`
+
+##### Judgement: v2-deep-01
+
+###### 1. Task summary
+The responders were asked to review a three-file pandas-based beam bending check pipeline (section library, analysis pipeline, reporting), identify the root cause of inflated major-axis utilisation ratios after a refactor, order any secondary risks by severity, propose the smallest safe multi-file fix with explicit units and section-property conventions, and list tests to add before merging. The planted root cause is a `cm³ → mm³` conversion using `1e2` instead of `1e3` in `section_library.get_section_properties()`; key secondary risks are the signed `max` moment envelope (misses governing hogging moments), the missing guard for unknown sections, and (also legitimately present in the code) pass/fail being decided after rounding and `"Section": "first"` pairing demand with an unrelated section.
+
+###### 2. Score table
+
+| Response | Correctness | Repo comprehension | Change safety | Engineering judgement | Maintainability | Clarity | Note |
+|---|---|---|---|---|---|---|---|
+| A | 4 | 4 | 4 | 3 | 4 | 4 | Correct root cause with a clean minimal patch and good unit-explicit tests, but it never notices the signed-max envelope defect, which is the structurally important secondary risk. |
+| B | 5 | 5 | 4 | 5 | 4 | 4 | Finds the root cause, the envelope defect, the rounding-before-status defect, the section-pairing risk and the NaN drop, all verified against the code with exact line references and correct arithmetic; patch is correct but slightly wider than strictly minimal. |
+| C | 3 | 3 | 3 | 2 | 3 | 4 | Root cause and unknown-section guard are right, but it invents a zero-capacity risk, misses the envelope and rounding defects, and its test 6 locks in the very NaN behaviour it flagged as a risk. |
+| D | 2 | 2 | 2 | 2 | 2 | 3 | Root cause correct and unknown-section guard sensible, but the proposed patch contains `SEIONS[name]`, which would raise `NameError` on every call, and it misses every other defect in the pipeline and reporting files. |
+
+###### 3. Top weaknesses per response
+
+**A**
+- Misses the signed `"Mz_kNm": "max"` envelope defect entirely; for `[-120, +80]` the pipeline checks 80 kN·m and would mark a failing member as passing, so this is a real safety gap left in the "smallest safe fix".
+- No guard for unknown section names (raw `KeyError`), which the task's refactor context makes a plausible risk.
+- Line references are off by one (`section_library.py:10` is the `fy_MPa` line, the bug is on line 11; `analysis_pipeline.py:15` is the props lookup, the resistance line is 16). Minor, but a precision lapse in a code-review deliverable.
+- The `build_member_summary` consistency check is described only as "example intent", not shown as code.
+
+**B**
+- "Reject invalid or missing `Mz_kNm`" is a behaviour change beyond the reported bug: any existing input with blank moment cells (e.g. members with no bending results) would start raising. Defensible, but not the *smallest* patch and not called out as a possible compatibility break.
+- No explicit unknown-section guard; the "validate one section per member" check does not cover a section name absent from `SECTIONS`.
+- Reproduced local file-system links are noise in the write-up (does not affect technical content).
+- The Mz/My axis-convention discussion is correct and appropriately cautious, but lengthens the answer for a task that asked for the smallest safe fix.
+
+**C**
+- Misses both the envelope defect and the rounding-before-status defect, so the "two lines changed, one guard added" patch leaves two real correctness problems in place.
+- The zero/negative capacity guard is an invented risk: `SECTIONS` contains only positive moduli and yield strengths, and returning `float("inf")` silently is worse than raising; it also makes the code harder to reason about.
+- Internal contradiction on NaN handling: section 2c flags silent coercion as a risk, then test 6 asserts that NaN "propagates, not crash", entrenching that behaviour. The explanation of how `decorate_status` treats NaN is muddled ("neither PASS nor FAIL ... they'd be marked FAIL").
+- Minor arithmetic slop: 50/10.065 = 4.968, presented as 4.96.
+
+**D**
+- The proposed `section_library.py` contains `section = SEIONS[name]`, a typo that would raise `NameError` on every lookup. Applying the patch as written breaks the pipeline completely; the task explicitly asked for a safe fix.
+- Misses the envelope defect, the rounding-before-status defect, and the `"Section": "first"` pairing risk; only one file is touched despite the "multi-file fix" instruction.
+- "`NaN <= 1.0` evaluates to `False` in some pandas versions" is hedged and misleading; it is always `False`, so all NaN rows are labelled FAIL with an empty utilisation, which is the actual issue to state.
+- Test 2 proposes inputs without stating the expected result (100/100.65 ≈ 0.9935), so it is not a concrete test; the whole `SECTIONS` dict is reproduced unnecessarily.
+
+###### 4. Ranking (best to worst)
+1. **B** — only response that finds and correctly fixes the unit bug *and* the governing-moment envelope, with verified numbers, exact line references, explicit unit and convention statements, and tests that would catch each defect.
+2. **A** — correct, minimal and safe, with good unit-explicit tests and the rounding/section-pairing catches, but blind to the envelope defect.
+3. **C** — right root cause and a sensible unknown-section guard, undermined by a speculative guard, a self-contradictory NaN position, and no engagement with the aggregation or reporting defects.
+4. **D** — right root cause but the patch as written is broken (`SEIONS`), coverage is the shallowest of the four, and the NaN claim is inaccurate.
+
+###### 5. Practical significance
+The gap between B and A is material for a structural check: A's patch would ship a pipeline that still silently under-reports hogging-governed members, a safety-relevant miss, while B's would not. The gap between A and C is moderate: both fix the headline bug, but C leaves the rounding boundary bug and the envelope bug and adds a dubious guard. D is separated from the others by a hard-stop defect: a reviewer applying its patch verbatim would get a `NameError`, so it is not usable without correction, and its remaining analysis adds little beyond the root cause.
+
+###### 6. Manual-review watch-outs
+- Confirm that the project's solver really maps major-axis moment to the `Mz_kNm` column; B is the only response that flags this convention question instead of assuming it.
+- B's "reject missing moments" change should be checked against real input files before adoption; blank moment cells may be legitimate.
+- C's `float("inf")` return and D's `SEIONS` typo must not be copied into any patch.
+- Any adopted patch should include the envelope test (`[-120, +80]` → governing 120 kN·m) and the rounding-boundary test (`1.0004` → FAIL); only B proposes both, and only A and B propose the rounding one.
+
+#### `v2-deep-03` - Scoped feature design on an existing package
+
+Label key: A = `gemma4:26b-local`, B = `qwen-3.6plus`, C = `gpt5.4-xhigh`, D = `gpt5.6-sol-xhigh`
+
+##### Blind judgement: v2-deep-03
+
+###### 1. Task summary
+The responders were given a three-file structural design package (`design_engine.build_uls_summary` grouping by `Member`/`Section` and taking max `Utilisation_ULS` with a PASS/FAIL `Status`; `io_contract.RESULT_COLUMNS` fixing the four-column report contract plus `normalise_columns`; `report_writer.report_rows` projecting exactly `RESULT_COLUMNS` via `.loc[:, RESULT_COLUMNS]`) and asked for a decision-complete plan, not code, to add an optional serviceability summary computing `DeflectionRatio = Deflection_mm / AllowableDeflection_mm`, while leaving ULS-only callers untouched and keeping `report_rows()` output stable; the deliverable had to cover files changed, interface/schema changes, data flow, backward-compatibility risks, and tests/acceptance criteria.
+
+###### 2. Score table
+
+| Response | Correctness | Repo comprehension | Change safety | Engineering judgement | Maintainability | Clarity | Note |
+|---|---|---|---|---|---|---|---|
+| A | 3 | 3 | 4 | 3 | 3 | 3 | Sound additive skeleton (default `columns=RESULT_COLUMNS` keeps the legacy slice) but never decides the per-group aggregation rule, ignores divide-by-zero, and is sloppy (`build_slli_summary`, `all(cols in df.columns)`). |
+| B | 3 | 3 | 3 | 2 | 3 | 4 | Most concrete, but its `report_rows` rewrite silently drops missing columns (a real semantic change it then claims is "no existing logic modified"), its zero-guard (`pd.NA` into the PASS/FAIL lambda) would raise, and it aggregates numerator and denominator independently (`max`/`first`). |
+| C | 4 | 4 | 5 | 3 | 3 | 3 | Nothing it says about the code is wrong and it is the most conservative, but it hedges nearly every decision the task asked it to make and explicitly leaves the aggregation rule open. |
+| D | 5 | 5 | 5 | 4 | 5 | 5 | Fully additive, decision-complete, and engineering-coherent (row-level ratio, governing row carried intact, deterministic ties, empty schema-correct frame for absence, opt-in `report_sections`); only its validation rules are debatable. |
+
+###### 3. Top weaknesses per response
+
+**A**
+- Names the new function `build_slli_summary` in section 1 and `build_sls_summary` everywhere else; guard written as `if all(cols in df.columns)` which is not valid pseudo-Python. Small, but signals carelessness.
+- No aggregation rule: `build_uls_summary` groups by `Member`/`Section`, so the SLS builder must too, yet A never says how `Deflection_mm`/`AllowableDeflection_mm` collapse per group or whether the ratio is taken before or after grouping.
+- No handling of `AllowableDeflection_mm == 0` or nulls; after the left merge, ULS-only members carry `NaN` in `Status_SLS`, which is not addressed.
+- Invents `Status_SLS` (not requested) and its "ratio calculated correctly" test actually checks status, not the ratio.
+- Does not mention `normalise_columns` in the flow.
+
+**B**
+- `report_rows` change filters `cols` to those present, so a summary missing `Status` would no longer raise `KeyError` but silently emit short records to downstream consumers. This is a hidden contract weakening, and the closing claim "No existing logic is modified" is false.
+- Division guard is buggy as written: `.replace(0, pd.NA)` then `ratio <= 1.0` yields `NA`, and `"PASS" if NA else "FAIL"` raises `TypeError`; the test expecting "inf or NaN with FAIL" is inconsistent with the mitigation.
+- `Deflection_mm=max`, `AllowableDeflection_mm=first` aggregates numerator and denominator from potentially different rows; `first` is order-dependent.
+- `SLS_COLUMNS` includes `Member`/`Section`, forcing the `SLS_COLUMNS[2:]` slicing hack in every caller.
+- Mentions helpers (`report_rows_combined`, `has_sls_data`) that never appear in the plan; offers "alternatively, add `include_sls` to `build_uls_summary`" instead of deciding.
+
+**C**
+- Not decision-complete: "ideally ... or a small wrapper", "or a combined writer with an explicit flag", "optionally `ServiceabilityStatus`", "decide whether such rows are excluded, set to null, or flagged", "depending on chosen API". The task explicitly asked for decisions.
+- Explicitly defers the aggregation rule to "before implementation" rather than fixing it, and its lean ("after aggregation, not per raw row") is the weaker engineering choice.
+- No concrete schema, signatures, or code; tests are generic statements rather than executable specifications.
+- No discussion of what "absent" looks like at the API level (None vs empty frame) or how a combined report is shaped.
+
+**D**
+- Rejecting negative `Deflection_mm` is an invented constraint; sign conventions differ (hogging/upward deflection is legitimate) and an absolute-value or sign-agnostic rule may be more appropriate. Raising on one-sided nulls is also strict, though correctly scoped to the SLS path only.
+- Deliberately omits a serviceability pass/fail field; defensible given the literal request but many consumers will want it, and the point is asserted rather than left as an option.
+- No code sketch of `build_serviceability_summary` itself; the rules are precise enough to implement, but an implementer must translate the idxmax-per-group logic themselves.
+
+###### 4. Ranking (best to worst)
+1. **D** — the only plan that is additive, decision-complete, and engineering-coherent (governing row selected on row-level ratio; existing contract literally untouched; absence represented consistently).
+2. **C** — zero errors and maximally safe, correctly flags the aggregation and divide-by-zero issues, but hands most decisions back to the implementer.
+3. **A** — workable and safe default-argument design, but shallow on the engineering (no aggregation or zero handling) and careless in naming.
+4. **B** — most concrete, yet the concreteness exposes a silent `report_rows` semantics change, a guard that would raise, and incoherent independent aggregation.
+
+###### 5. Practical significance
+The gap between D and the rest is material: D could be handed to an implementer as-is, whereas C needs a design decision round first, A needs the aggregation and zero-division rules added before coding, and B needs its `report_rows` change reverted and its guard/aggregation fixed. C, A and B are within a few points of each other and the ordering among them is arguable; none would break existing ULS-only callers on the default path, so the differences there are about engineering coherence and rigour rather than immediate breakage.
+
+###### Manual-review watch-outs
+- Verify B's `report_rows` "available columns" filter is not merged; it converts a loud `KeyError` into silent partial records.
+- If D's validation is adopted, confirm the project's deflection sign convention before rejecting negatives.
+- All four responses (except D, which reasons about it) leave unspecified what happens to `Status_SLS`/ratio for ULS-only members after a left merge; check NaN handling in any combined-frame approach.
+
+#### `v2-deep-04` - Safe refactor with behaviour preservation constraints
+
+Label key: A = `gemma4:26b-local`, B = `gpt5.6-sol-xhigh`, C = `gpt5.4-xhigh`, D = `gemma4:31b-cloud`
+
+#### Judgement: v2-deep-04
+
+##### 1. Task summary
+
+The responders were asked to review a proposed "deduplicate shared utilisation helpers" refactor across `concrete_checks.py` and `steel_checks.py`, both of which call `common_formatting.format_status`, and to say whether it is safe, what may be shared versus what must stay distinct, give a minimal behaviour-preserving approach, and list regression checks, under constraints that downstream spreadsheets depend on the current status text, that broad rewrites are not wanted, and that any silent change to zero-denominator behaviour is penalised. The hidden trap is that `concrete_utilisation` returns `None` for `v_rd <= 0` (giving `"CHECK INPUT"`) whereas `steel_utilisation` returns `0.0` (giving `"PASS"` via `format_status(0.0)`), so a naive unified helper silently changes one module's status text.
+
+##### 2. Score table
+
+| Response | Correctness | Repo comprehension | Change safety | Engineering judgement | Maintainability | Clarity | Note |
+|---|---|---|---|---|---|---|---|
+| A | 3 | 4 | 4 | 4 | 3 | 3 | Spots the trap and rightly prefers leaving the code alone, but its regression tests are mis-specified (expects `"PASS"`/`"FAIL"` from `concrete_utilisation`, which returns floats) and omit negative denominators. |
+| B | 5 | 5 | 5 | 5 | 4 | 5 | Every claim checks out against the code (including that `format_status(None)` raises `TypeError`), the refactor is exact, the policy is kept visible in each module, and the pytest suite tests exact return values, exact strings, the inclusive boundary and negative denominators. |
+| C | 5 | 4 | 4 | 4 | 4 | 4 | Correct and tight; a parameterised helper with a required sentinel plus a complete test checklist (return values, status text, negatives, boundary), but no full code, no home named for the helper, and no mention of the `None`/`format_status` interaction. |
+| D | 4 | 4 | 4 | 4 | 4 | 4 | Full, behaviour-preserving code with a required `fallback` argument, but the test list only checks status strings (never the `None` vs `0.0` return values) and omits the inclusive `1.0` boundary. |
+
+##### 3. Top weaknesses per response
+
+**A**
+- Regression checks 3 and 4 call `concrete_utilisation(1.0, 1.0)` / `concrete_utilisation(1.1, 1.0)` and expect `"PASS"` / `"FAIL"`; those functions return `1.0` and `1.1`. The tests as written would fail or would be quietly rewritten by whoever implements them; for a task that is explicitly about exactness of status text, that is a real defect.
+- No negative-denominator test even though its own table says "Zero/Negative Denominator" and the code uses `<= 0`.
+- The optional helper gives `fallback_value` a default of `None`; a default makes it easier for a call site to silently pick up the wrong semantics (here a missed argument in steel would propagate `None` into `format_status` and raise, which is at least loud, but a default on a semantics-selecting parameter is still poor design).
+- Table has a redundant row ("Error String Output" repeats "Zero/Negative Denominator"); the analysis is a little padded relative to its content.
+
+**B**
+- The helper `utilisation_or_none` lives in `common_formatting.py`, which is a formatting module; a small naming/placement smell (shared by A and D).
+- `steel_utilisation` becomes an indirection through `None` and back to `0.0`; behaviour-identical, but arguably no simpler than the original two-liner. B does say the lowest-risk option is to leave the functions alone, which mitigates this.
+- The opening "Yes, but only if..." is slightly softer than the rest of the answer, which then effectively says "no to any unified default".
+
+**C**
+- No full modified module code and no stated file location for `utilisation_or`, so the reviewer has to fill in the diff; acceptable for "minimal approach" but less auditable than B or D.
+- Does not note that `format_status(None)` would raise `TypeError`, i.e. why the concrete `None` branch must sit before the formatter.
+- Does not explicitly say that not refactoring at all is a valid outcome; it goes straight to "a small refactor is acceptable".
+- Tests are a checklist rather than runnable code (fine, but less rigorous about exact float values).
+
+**D**
+- Regression tests only exercise `concrete_status` / `steel_status`; they never assert `concrete_utilisation(10, 0) is None` or `steel_utilisation(10, 0) == 0.0`, even though those functions are public and are the layer actually being refactored.
+- No test of the inclusive `util == 1.0 -> "PASS"` boundary, which is the one line of shared logic being touched.
+- Does not consider the "leave it as is" option; presents the helper as what "you should implement".
+- Does not mention the `format_status(None)` hazard.
+
+##### 4. Ranking (best to worst)
+
+1. **B** - only response whose analysis, code and tests are all exact against the supplied code, and it both offers the no-change option and explicitly guards against the configurable-default failure mode.
+2. **C** - fully correct analysis with a required-sentinel helper and the most complete test checklist after B; loses only on depth of code detail and the unstated `None` hazard.
+3. **D** - correct, complete code, but the merge gate it proposes is weaker (status-only tests, no boundary test), which matters for a task about regression protection.
+4. **A** - reaches the right conclusion and the right recommendation, but the mis-specified tests and defaulted helper parameter are errors of exactly the kind the task is probing.
+
+##### 5. Practical significance
+
+Small to moderate. All four responses identify the `None`/`"CHECK INPUT"` versus `0.0`/`"PASS"` split, all preserve status text, and none proposes an unsafe unified helper, so none would cause the spreadsheet regression the task is designed to catch. The separation is in rigour of the merge gate: B and C would catch a regression in either the return values or the status strings; D would miss a change in the utilisation return values or the `1.0` boundary; A's test list would need correcting before it could be run. A reviewer using B could merge with confidence; a reviewer using A would have to redo the tests.
+
+##### 6. Manual-review watch-outs
+
+- Confirm A's regression tests are read as errors, not typos: `concrete_utilisation` returns a float, never a status string.
+- B's float equality assertions (`0.5`, `1.0`, `1.01`) are exact in IEEE double for those inputs; if a reviewer generalises them to other values, `pytest.approx` should be used.
+- All three code-proposing responses (A, B, D) put arithmetic into `common_formatting.py`; if the repo has a stricter module layout, that placement may need adjusting, but it is not a correctness issue.
+- None of the responses questions whether `steel_utilisation` returning `0.0` (and therefore `"PASS"`) for zero capacity is itself a latent engineering bug; the task forbids changing it silently, but a human reviewer may want to flag it for explicit sign-off separately.
+
+#### `v2-medium-05` - Large dataset engineering summary pipeline
+
+Label key: A = `gemma4:26b-local`, B = `gemma4:31b-cloud`, C = `gpt5.4-xhigh`, D = `gpt5.6-sol-xhigh`
+
+##### Blind judgement: v2-medium-05
+
+###### 1. Task summary
+The responders were given a 25-line pandas module that computes an L/250 deflection utilisation ratio per row via an `iterrows()` loop with bare `float()` casts, then groups by Storey/Material to produce MemberCount, MaxRatio, MeanRatio and a PASS/FAIL Status; they were asked to review it or propose a revised implementation addressing performance at several hundred thousand rows, data cleaning/validation, correctness of the utilisation summary, and maintainability. The evaluator notes flag `iterrows()`, unsafe `float()` casts, and unhandled zero/missing lengths as the expected issues, with a preference for solutions that are not over-complicated.
+
+###### 2. Score table
+
+| Response | Correctness | Repo comprehension | Change safety | Engineering judgement | Maintainability | Clarity | Note |
+|---|---|---|---|---|---|---|---|
+| A | 2 | 3 | 2 | 2 | 3 | 3 | Sound review and vectorised outline, but the code contains a stray walrus-in-subscript (`df[REQUIRED_column_subset := REQUIRED_COLUMNS]`, a SyntaxError below Python 3.10 and meaningless above it), silently drops unparseable rows, and still counts zero-length members while excluding their ratio. |
+| B | 3 | 3 | 2 | 2 | 3 | 3 | Simplest correct vectorisation for clean data, but it mutates the caller's DataFrame in place (coerces columns and adds `DeflectionRatio`), does no schema validation, and leaves NaN-ratio rows counted in MemberCount while they vanish from Max/Mean. |
+| C | 4 | 4 | 3 | 4 | 4 | 4 | Tight, line-referenced findings and a clean staged implementation with schema check, fail-fast validation, absolute deflection and a member envelope; the unflagged cost is that `_clean_text` casts numeric group keys (e.g. integer Storey) to string dtype in the output. |
+| D | 5 | 4 | 4 | 4 | 4 | 4 | Most complete and careful revision: dtype-aware identifier cleaning, finiteness and positivity checks with reason counts and example indices, raise/drop policy, parameterised span limit, backward-compatible signature and numerically correct test cases. |
+
+###### 3. Top weaknesses per response
+
+**A**
+- `work_df = df[REQUIRED_column_subset := REQUIRED_COLUMNS].copy()` is an unparenthesised assignment expression inside a subscript: SyntaxError on Python < 3.10, and a pointless throwaway variable on 3.10+. Signals unverified code.
+- `dropna` silently discards rows with non-numeric Length/Deflection, so a storey can report PASS with members missing and no warning; MemberCount still includes zero-length members whose ratio became NaN, so count and ratio populations disagree.
+- Negative lengths and signed (negative) deflections are unhandled, so a large negative deflection yields a negative ratio and a PASS; the claim that `inf` "might bypass the PASS logic" is backwards (inf fails; -inf passes).
+- Empty-frame early return happens before the column check, so an empty frame with the wrong schema passes silently.
+- Overconfident performance claims ("milliseconds", "SIMD") without qualification.
+
+**B**
+- Mutates the input DataFrame (`df[col] = ...`, `df["DeflectionRatio"] = ...`), a side effect the original did not have; will also raise SettingWithCopyWarning on slices.
+- No required-column validation, no handling of negative lengths, signed deflection, or empty input beyond incidental behaviour.
+- Rows with NaN Length/Deflection are retained and counted in MemberCount but excluded from MaxRatio/MeanRatio, so the summary is internally inconsistent with no warning.
+- `1000.0` and the `1.0` threshold remain magic numbers despite the "constants" claim.
+- Review is shallow: does not notice its own in-place mutation or the missing schema check.
+
+**C**
+- `_clean_text` does `astype("string")` unconditionally, so integer or float Storey/Material/Member keys come back as StringDtype in the summary; downstream `summary.Storey == 1` would silently return nothing. Not mentioned.
+- `sort=False` changes the output row order relative to the original sorted groupby; not mentioned.
+- Fail-fast on any invalid row with no drop/report option means a dataset that previously produced a (NaN-tolerant) summary now raises; the alternative is only mentioned in prose.
+- The member-envelope step changes MemberCount/MeanRatio semantics when a member has multiple rows; stated, but it is an assumption about the export format.
+
+**D**
+- Most complex of the four (raise/drop policy, span-limit validation, reason counts); proportionate for a production pipeline but somewhat beyond the stated scope, given the evaluator preference for not over-complicating.
+- `sort=False` changes output row order relative to the original; not mentioned.
+- Default `errors="raise"` makes any NaN in the numeric columns fatal, which is stricter than the original's implicit NaN tolerance; stated, but pipelines relying on the old behaviour will break.
+- Uses a tuple for `df.loc[:, _REQUIRED_COLUMNS]`; this works on flat column indexes in modern pandas but a list would be the unambiguous idiom (the code itself converts to `list(...)` for groupby).
+
+###### 4. Ranking (best to worst)
+1. **D** — correct, vectorised, validates everything the notes ask for and more, preserves key dtypes, and documents every semantic change with a numerically verified test case.
+2. **C** — nearly as strong and more concise, but the silent string-casting of numeric group keys is an unflagged output change.
+3. **B** — runs and gives correct numbers on clean data, but in-place mutation of the caller's frame and zero validation make it unsafe to drop in.
+4. **A** — the better review of the bottom pair, but the code carries a possible syntax error and silently drops rows in a pass/fail summary.
+
+###### 5. Practical significance
+The gap between the top pair (C, D) and the bottom pair (A, B) is material: C and D could be merged after small fixes (C: guard the string cast on non-object keys; D: optionally mention ordering), whereas A needs the walrus artefact removed and a decision on drop-vs-raise before it can even be imported reliably, and B must stop mutating its input and add a schema check. Within pairs the differences are modest: D beats C mainly on dtype safety and diagnostics; B edges A only because B's code runs everywhere while A's may not. All four fix the headline `iterrows()` and `float()` problems; only C and D address signed deflection, negative lengths and the count/ratio population mismatch.
+
+Manual-review watch-outs: confirm the target Python version before judging A's walrus line; check whether Storey/Member are numeric in real exports (affects C); confirm whether exports contain multiple rows per member (affects the envelope semantics in C and D); and note that C and D both change group row ordering via `sort=False`.
+
+#### `v2-medium-06` - Review plus targeted test design
+
+Label key: A = `gemma4:26b-local`, B = `gpt5.6-sol-xhigh`, C = `gpt5.4-xhigh`, D = `deepseek-v3.2`
+
+##### Judgement: v2-medium-06
+
+###### 1. Task summary
+The responders were given a 14-line Python helper (`settlement_ratio`, `differential_slope`, `status_from_ratio`) for early-stage foundation assessment and asked to identify the key bugs/risks, propose minimum fixes, and design a small, high-value test set, being explicit about sign conventions and units. The planted failures are: `settlement_ratio()` returning `0.0` for `allowable_mm == 0` (which yields a false PASS), `differential_slope()` dividing mm by m without conversion or documentation, and the unguarded `spacing_m == 0` / borderline-threshold behaviour that good tests should pin down.
+
+###### 2. Score table
+
+| Response | Correctness | Repo comprehension | Change safety | Engineering judgement | Maintainability | Clarity | Note |
+|---|---|---|---|---|---|---|---|
+| A | 3 | 3 | 2 | 3 | 3 | 4 | Finds the false-PASS and the multi-point spacing ambiguity, but its own fix reintroduces the same silent-zero anti-pattern for invalid spacing and one test's expected value (5.0) matches neither the original nor the fixed code (both give 10.0). |
+| B | 4 | 4 | 3 | 4 | 4 | 5 | Most complete finding list with explicit sign/unit assumptions and a fully self-consistent test set that directly catches the zero-allowable and mm-to-m failures, marred by an incorrect NaN claim and several breaking API changes labelled "minimum". |
+| C | 4 | 4 | 4 | 4 | 4 | 4 | Proportionate, well-documented fixes that keep mm/m but make it explicit, with consistent tests; misses the multi-point ambiguity, cites wrong line numbers, and flips the equality boundary to the less conservative side. |
+| D | 2 | 3 | 2 | 2 | 3 | 3 | Adds a default 5 % "engineering tolerance" that silently makes ratios up to 1.049 PASS for every caller, its own boundary tests then fail against its own code, and the integration test contains an mm-vs-mm/m unit error (L/300 over 5 m is 3.33 mm/m, not 16.7 mm/m). |
+
+###### 3. Top weaknesses per response
+
+**A**
+- `differential_slope` fix returns `0.0` when `spacing_m <= 0` — a silent benign default for invalid input, exactly the failure class it called "catastrophic" in `settlement_ratio`; a downstream check would see zero distortion and pass.
+- Test "Sequence Expansion" expects `differential_slope([10, 5, 0], 1) == 5.0`; both the original and A's fixed code return `10.0` (max−min = 10, /1). The test would fail against A's own fix, and the "validates if user is aware" wording is not a test.
+- Does not flag the mm/m unit mixing as a bug; it only appears as a footnote. No unit-conversion test, no negative-allowable guard, and the sign convention for heave is never stated despite the prompt asking for it.
+- `float('inf')` sentinel forces FAIL (correct direction) but propagates silently into any downstream arithmetic instead of failing loudly.
+
+**B**
+- Claim that "NaN can silently produce a PASS" is wrong for the supplied code: `nan < 1.0` is `False`, so `status_from_ratio(nan)` returns `"FAIL"` (and would under B's `<=` too). Overconfident misread of the code's actual behaviour.
+- "Minimum code fixes" are actually four contract-breaking changes: raising instead of returning `0.0` for <2 points, rejecting anything other than exactly two points, dividing by 1000 (a 1000× change in output magnitude for any existing caller comparing against a mm/m limit), and flipping `<` to `<=`. All are flagged, but the scaling change and the equality flip could silently alter downstream results.
+- Equality flip makes ratio = 1.0 PASS where the original code failed it — a change in the less conservative direction, adopted on the basis of "normally" with only a "confirm this" caveat.
+
+**C**
+- Misses the multi-point ambiguity (`max − min` over a single `spacing_m` when the extreme points may not be adjacent) and keeps the `return 0.0` for <2 points, even writing a test that locks that behaviour in.
+- Line references are wrong (`:10` for `status_from_ratio` is actually the slope return; `:8` for the unit-inconsistent return is the `return 0.0` line; the division is line 10). Substantive reading is right, but citations are sloppy.
+- Flips equality to `<= 1.0` PASS (less conservative) on "usually acceptable", and applies `abs()` so heave is assessed by magnitude — a defensible choice but a silent semantic change to results for negative inputs.
+- Unit test `differential_slope([10, 16], 3) == 2.0` passes against the original code as well, so it documents the mm/m convention rather than catching a hidden failure.
+
+**D**
+- `status_from_ratio(ratio, tolerance=0.05)` changes the default outcome for all callers: ratio 1.00–1.049 becomes PASS. An invented, non-conservative relaxation of a serviceability check with no basis in the supplied code.
+- Its own tests contradict its own code: `status_from_ratio(1.00) == "FAIL"` and `status_from_ratio(1.01) == "FAIL"` both fail, because with the default tolerance `1.00 < 1.05` → `"PASS"`.
+- Hidden unit error in the integration test: "5000 mm / 300 = 16.7 mm/m" conflates an allowable differential settlement (16.7 mm over 5 m) with a gradient (3.33 mm/m). The assertion still passes only because 1.4 < 16.7, so the wrong limit would never be caught.
+- Empty list raises but a single point returns `0.0` — inconsistent validation. The test set is the largest of the four and includes a demo-style integration test, against the "no huge test matrix" constraint. Multi-point ambiguity not mentioned, yet the integration test relies on it.
+
+###### 4. Ranking (best to worst)
+1. **B** — most complete identification of the planted and adjacent issues, explicit sign/unit assumptions, and the only test set that would actually fail against the original code on both the zero-allowable and the mm-to-m conversion; held back by the wrong NaN claim and over-broad "minimum" changes.
+2. **C** — near-tie with B; more proportionate and safer to apply (keeps mm/m, documents it, raises on bad denominators), but misses the multi-point ambiguity, cites wrong lines, and its unit test does not discriminate original from fixed code.
+3. **A** — correct headline findings, but the fix reintroduces a silent-zero default and one test's expected value is inconsistent with its own code; no sign convention, unit issue not treated as a bug.
+4. **D** — the tolerance change is the single most unsafe proposal in the set, its boundary tests fail against its own implementation, and the integration test embeds a unit error.
+
+###### 5. Practical significance
+B and C are both acceptable review outputs and the gap between them is small: B is the better bug report and test design, C is the safer patch. Either would need a reviewer to decide the equality-boundary convention before merging. A is a step below — its findings are usable but its patch and one test would need correction before use. D is materially worse: applying its `status_from_ratio` change as written would loosen a pass/fail safety check for every caller, and its test file would not run green, so it is not a mergeable contribution without rework.
+
+###### 6. Manual-review watch-outs
+- Confirm the project's intended threshold convention (`<` vs `<=` at ratio 1.0) before accepting B, C or D; three of four responses flipped it without evidence from the code.
+- Confirm whether `differential_slope` is meant to return mm/m or a dimensionless gradient; B's ×1/1000 change is only correct if callers expect dimensionless.
+- Verify D's tolerance change is rejected; check that no reviewer treats "engineering tolerance" as a legitimate default.
+- A's `spacing_m <= 0 → 0.0` and D's single-point `0.0` both preserve a silent-benign-default path that should be flagged regardless of which patch is chosen.

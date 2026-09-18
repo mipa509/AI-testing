@@ -19,6 +19,7 @@
 | `deepseek-v3.2` | 4 | 4 | 3 | 3 | 4 | 4 | 3 | Correctly found the unit-conversion defect, but the proposed fix widens behaviour by swallowing errors and introducing `ERROR` status handling. |
 | `gpt5.6-sol-xhigh` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Blind-judged top pair with Luna: found the cm3 to mm3 root cause, the signed-moment envelope risk and the rounding-before-status bug in the right severity order with stated assumptions, though the pipeline validations are described in prose rather than code. |
 | `gpt5.6-luna-max` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Blind-judged top pair with Sol: found the root cause, the envelope, the first/max section mismatch and the rounding-before-status bug and shipped complete runnable code, but ranked a speculative axis-naming question above the envelope defect and patched more broadly than the minimum. |
+| `gemma4:26b-local` | 3 | 3 | 3 | 3 | 3 | 4 | 3 | Names the planted 1e2 conversion as the root cause with the tenfold effect explained and adds a sensible unknown-section guard, but the pasted patch contains `SEIONS[name]`, which raises NameError on every lookup, it misses the signed-max envelope, the rounding-before-status defect and the section-pairing risk, touches one file despite the multi-file brief, hedges the NaN behaviour wrongly, and its capacity test states no expected value. |
 
 ## Judge Output Summary
 
@@ -31,6 +32,14 @@ Task summary: Diagnose why major-axis beam utilisation ratios became too high af
 - Blind pack (one judging round): `gpt5.6-sol-xhigh` and `gpt5.6-luna-max` tied at 4.50 on the six technical criteria, ahead of the April anchors `gpt5.4-xhigh` (3.33) and `qwen-3.6plus` (3.17) as re-scored by the same judge.
 - Both new models found the `1e2` versus `1e3` conversion root cause and, unlike the two anchors, also caught the signed-maximum envelope risk, the section/moment first-max mismatch and the rounding-before-status bug.
 - The judge placed Sol first on the tie for severity ordering and patch scope; Luna shipped complete runnable code but ranked a speculative axis-naming question above the envelope defect and patched more broadly than the minimum.
+
+### Gemma 4 26B local addendum (2026-09-19)
+
+- Blind pack (one judging round, 2026-09-19): `gpt5.6-sol-xhigh` 4.50, `gpt5.4-xhigh` 3.83, `qwen-3.6plus` 3.00, `gemma4:26b-local` 2.17 on the six technical criteria; the judge ranked the local model last.
+- Judge's one-line reading of the local model's response: Root cause correct and unknown-section guard sensible, but the proposed patch contains `SEIONS[name]`, which would raise `NameError` on every call, and it misses every other defect in the pipeline and reporting files.
+- Judge's deduction: The proposed `section_library.py` contains `section = SEIONS[name]`, a typo that would raise `NameError` on every lookup. Applying the patch as written breaks the pipeline completely; the task explicitly asked for a safe fix.
+- Judge's deduction: Misses the envelope defect, the rounding-before-status defect, and the `"Section": "first"` pairing risk; only one file is touched despite the "multi-file fix" instruction.
+- Judge's deduction: "`NaN <= 1.0` evaluates to `False` in some pandas versions" is hedged and misleading; it is always `False`, so all NaN rows are labelled FAIL with an empty utilisation, which is the actual issue to state.
 
 ## Manual Override Notes
 
@@ -76,6 +85,12 @@ Provisional `gemma4:31b-cloud` review:
 - Practicality `gpt5.6-sol-xhigh` = 3: same premium Codex route as `gpt5.4-xhigh`, faster on every task with a recorded time, no refusal or truncation, waited for context; scored as the April premium reference.
 - Practicality `gpt5.6-luna-max` = 3: same Codex route on the budget API tier ($0.20 / $1.20 per 1M tokens list price), about 3 to 4 minutes per v2 task, no refusal or truncation, waited for context; low price offset by the slowest latency in the set.
 
+### Gemma 4 26B local addendum (2026-09-19)
+
+- Scoring: technical criteria for `gemma4:26b-local` were scored blind on 2026-09-19 by the same judge family as the September refresh, in a pack with the two April anchors plus `gpt5.6-sol-xhigh` as a consistency check. Over the model's eight packs the anchors failed the calibration gate (MAD 0.59, worst row 1.17), so the blind scores [2, 2, 2, 2, 2, 3] were shifted onto the April scale with the September per-task offset of +0.67, the standing user decision (see `benchmarks/addendum_2026-09-19_gemma4-26b-local.md`). Earlier rows above are unchanged.
+- Manual overrides: none. The judge's claims about the response were checked against the response text; the defects it names are present as described.
+- Practicality `gemma4:26b-local` = 3: free local inference on the user's own hardware, no API cost, no refusal, the two-message protocol followed; on the timed tasks the answer took 3 min 35 s to 7 min 32 s after a 30 to 45 s prompt-only reply (7.7 to 10.8 generated tokens per second, CPU-bound on an 8 GB card), so on the latency-only reading that applies to routes where cost is not counted it is scored as the 3 to 6 minute runs of `gpt5.6-luna-max` and the 2026-09-18 addendum models, not the 4 to 5 April gave the free cloud route for one-to-two-minute answers.
+
 ## Winner
 
 - Winner: `gpt5.6-sol-xhigh`
@@ -83,3 +98,5 @@ Provisional `gemma4:31b-cloud` review:
 - Why it matters in practice: `GPT-5.6 Sol and GPT-5.6 Luna tie at 4.71 overall; both caught the signed-moment envelope risk that the April leaders missed, and Sol is placed first on the blind judge's tie-break for severity ordering and patch scope.`
 
 September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.71) beats the April result, so the winner line above was updated. April 2026 result for the seven original models: winner `gemma4:31b-cloud` (overall mean 4.29); Difference size: `Small`; Why it matters in practice: `Gemma found the core unit bug and paired it with the most repo-grounded secondary risk, giving the strongest overall review without hallucinating a different codebase.`
+
+Gemma 4 26B local addendum (2026-09-19): `gemma4:26b-local` (overall mean 3.14) does not beat the April result of `gpt5.6-sol-xhigh` (4.71), so the winner line is unchanged.

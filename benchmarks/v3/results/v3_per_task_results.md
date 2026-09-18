@@ -14,4 +14,4 @@ Tencent Hy4 Preview addendum (2026-09-18): the winner is unchanged. `tencent-hy4
 
 Claude Fable 5.1 addendum (2026-09-19): the winner is unchanged. `claude-fable-5.1-high` scored 4.71 overall (correct `3.0 m` and `LC2`, runs end to end, Navier derivation with the kern limit, full pass/fail matrix and a closed-form width cross-check; 5.00 on the technical criteria, 3 on practicality for the slowest and most expensive v3 run recorded).
 
-Gemma 4 26B local addendum (2026-09-19): the winner is unchanged. `gemma4:26b-local` scored 2.00 overall (correct derivation, but the code does not run and the conclusion states `2.9 m` with `LC1` governing; 1.83 on the technical criteria, 3 on practicality as a free local run whose notebook needs fixing before it executes).
+Gemma 4 26B local addendum (2026-09-19): the winner is unchanged. `gemma4:26b-local` scored 2.86 overall (revised from 2.00 under the September offset) (correct derivation, but the code does not run and the conclusion states `2.9 m` with `LC1` governing; 2.83 on the technical criteria after the offset, 3 on practicality as a free local run whose notebook needs fixing before it executes).

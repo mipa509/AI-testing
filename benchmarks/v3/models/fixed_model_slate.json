@@ -221,12 +221,12 @@
   {
     "model_id": "gemma4:26b-local",
     "display_name": "Gemma 4 26B (local)",
-    "role": "free local candidate (partial)",
+    "role": "free local candidate",
     "provider": "Ollama local",
     "cost_tier": 1,
     "cost_label": "Free/Cloud",
     "cost_route": "local",
-    "notes": "September 2026 addition. Ollama model gemma4:26b run locally on the user's machine from a plain terminal (no harness, tools or skills), 2026-09-19. Run on v2-deep-02 and v3-notebook-01 only; its v2 average is provisional over Task 2 alone. Latency and token counts not captured. Distinct from the April gemma4:31b-cloud row (Ollama cloud, 31B).",
+    "notes": "September 2026 addition. Ollama model gemma4:26b run locally on the user's machine (i7-9700K, 64 GB, RTX 2070 SUPER 8 GB) from a PowerShell terminal with no harness, tools, skills or web access, 2026-09-19. Run on all six v2 primary tasks, the anchor and the v3 notebook; timings from ollama --verbose on five tasks (3.5 to 7.5 minutes per answer at 8 to 12 tokens/s). Distinct from the April gemma4:31b-cloud row (Ollama cloud, 31B).",
     "pricing": {
       "input_usd_per_1m": 0.0,
       "output_usd_per_1m": 0.0,

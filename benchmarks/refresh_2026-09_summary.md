@@ -177,21 +177,27 @@ Cross-family check: because the judge and the model under test are both Claude m
 
 Four-model pattern on the anchor: the two models that headlined an unrequested LTB verdict (`deepseek-v4.1-flash`, `tencent-hy4-preview`) sit at the bottom of the anchor table, `glm-5.3-flash`, which kept LTB as a validity condition, sits mid-table, and `claude-fable-5.1-high`, which kept the planted PASS as the headline but surrounded it with a full design check, sits with the April mid-field. The task rewards answering the question asked, at the length asked.
 
-## Addendum 2026-09-19: Gemma 4 26B run locally, notebook task only
+## Addendum 2026-09-19: Gemma 4 26B run locally, all tasks
 
-`gemma4:26b-local` (Ollama `gemma4:26b` on the user's own machine, plain terminal, no harness, tools or skills; free) was run on the same three tasks as the other addenda (notebook first, then Task 2, then the anchor) as a free-tier comparison point, and scored the same way. Its anchors met the calibration gate (MAD 0.17), so the blind scores stand without an offset. It is a different model from the April `gemma4:31b-cloud` row. Full record: `benchmarks/addendum_2026-09-19_gemma4-26b-local.md`.
+`gemma4:26b-local` (Ollama `gemma4:26b` on the user's own machine, PowerShell terminal, no harness, tools, skills or web access; free; Intel i7-9700K, 64 GB, RTX 2070 SUPER 8 GB) was run on all eight tasks as a free-tier comparison point and scored the same way. Over its eight packs the anchors failed the calibration gate (MAD 0.59, worst row 1.17), so the September per-task offsets were applied to every task, revising the notebook row first recorded as-is. It is a different model from the April `gemma4:31b-cloud` row. Full record: `benchmarks/addendum_2026-09-19_gemma4-26b-local.md`.
 
 | Task | Blind, six criteria | On April scale | Practicality | Overall | Position on the task |
 |---|---:|---:|---:|---:|---|
-| Task 2 - Repo review traps | 4.17 | 4.17 | 4 | 4.14 | 8th equal of 14 with `qwen-3.6plus`, above the three 2026-09-18 addendum models; winner `gemma4:31b-cloud` (4.71) unchanged |
-| Anchor - EC3 planted-error trap | 1.50 | 1.50 | 4 | 1.86 | 14th of 14, below `minimax-m2.7-cloud` (2.43); winner `gpt5.4-xhigh` (4.43) unchanged |
-| v3 Task 1 - Pad footing notebook | 1.83 | 1.83 | 3 | 2.00 | 14th of 14, below `gpt5.6-luna-max` (3.57); winner `gpt5.4-xhigh` (4.86) unchanged |
+| Task 1 - Multi-file bug hunt | 2.17 | 3.17 | 3 | 3.14 | 9th of 10; winner `gpt5.6-sol-xhigh` (4.71) unchanged |
+| Task 2 - Repo review traps | 4.17 | 4.17 | 3 | 4.00 | 8th equal of 14; winner `gemma4:31b-cloud` (4.71) unchanged |
+| Task 3 - Scoped feature design | 3.17 | 4.17 | 3 | 4.00 | 7th of 10; winner `gpt5.6-sol-xhigh` (4.71) unchanged |
+| Task 4 - Safe refactor | 3.50 | 4.50 | 3 | 4.29 | 9th of 10; winner `kimi-k2-thinking` (5.00) unchanged |
+| Task 5 - Large dataset pipeline | 2.50 | 2.50 | 3 | 2.57 | 10th of 10; winner `gpt5.6-sol-xhigh` (4.57) unchanged |
+| Task 6 - Review plus tests | 3.00 | 3.00 | 3 | 3.00 | 5th of 10; winner `gpt5.6-luna-max` (4.00) unchanged |
+| Anchor - EC3 planted-error trap | 1.50 | 1.50 | 3 | 1.71 | 14th of 14; winner `gpt5.4-xhigh` (4.43) unchanged |
+| v3 Task 1 - Pad footing notebook | 1.83 | 2.83 | 3 | 2.86 | 14th of 14; winner `gpt5.4-xhigh` (4.86) unchanged |
+
+v2 six-task average 3.50, which places it in the lower half of the full table; anchor 1.71, the lowest recorded; v3 2.86, the lowest recorded.
 
 Read:
 
-- The derivation is right: corner pressure from axial plus bending stress with `I = B^4/12` and `c = B/2`, compression-positive convention, a sensible exclusions list, and a search loop that tests both criteria.
-- The deliverable is not: cell 1 has a non-breaking space inside the LC1 load literal (a SyntaxError), the candidate widths are scaled twice to 0.24 to 0.32 m so a repaired notebook still selects nothing, the governing case is tracked by the largest `q_max`, and the conclusion states 2.9 m with LC1 governing, hedged as depending on execution. 2.9 m is the value the task plants as the trap. Two of the six required sections are missing.
-- Against its cloud sibling: April's `gemma4:31b-cloud` reached 3.0 m with runnable code and scored 3.71 overall with the same LC3-by-`q_max` slip; the 26B local model at 2.00 shows what the smaller weights lose on this task.
-- The repo review is a different story: all three planted blockers found with the right fixes and a correct dimensional argument, in a short review that follows the brief. It lost points only for depth (no line references, worked numbers or tests, combination column unexamined). Free, local, and level with a paid API model from April.
-- The anchor is the worst of the three and the most instructive: with no web access the model produced a Blue Book citation for a plastic modulus of about 440 cm3 that does not exist in the table (353), never saw that the snippet uses the minor-axis property, and described the original code as printing FAIL when it prints PASS. The PASS verdict is right by coincidence with capacity overstated by a quarter. A fabricated citation is the failure mode a checking engineer cannot catch from the answer alone.
-- Cost: none. Latency was not captured; `ollama run <model> --verbose` would record it next time.
+- Best where the code is in front of it and the ask is a review: Task 2 (all three planted blockers, 4.17 on the technical criteria) and Task 4 (the None-versus-0.0 trap seen, and the right advice to leave the helpers alone). Task 3's plan is safe but undecided on aggregation and zero division.
+- Weak wherever it has to write code that must run or supply numbers from memory: the notebook does not execute (non-breaking space in a literal, widths scaled twice), the Task 1 patch has a `SEIONS` typo that raises on every call, the Task 5 rewrite has a walrus-in-subscript artefact and silently drops rows, the Task 6 fix reintroduces a silent zero, and the anchor cites a Blue Book modulus that does not exist in the table.
+- The pattern the judges kept naming: right diagnosis, unverified deliverable. Every one of its patches and tests would need a human pass before use; two of its own tests contradict its own code.
+- Practicality: free, and it waited for the context every time, but on consumer hardware with an 8 GB card the 26B weights run mostly on CPU at 8 to 12 tokens per second, so each answer took 3.5 to 7.5 minutes after a 30 to 45 s prompt-only reply. Scored 3 on every task on the latency-only reading.
+- Against its cloud sibling: April's `gemma4:31b-cloud` scored 4.10 on the v2 composite and 4.00 on the anchor with runnable code; the 26B local model shows what the smaller weights and the lack of tooling cost on these tasks.

@@ -19,6 +19,7 @@
 | `deepseek-v3.2` | 4 | 4 | 3 | 4 | 4 | 4 | 3 | Strong on vectorisation and validation, but it expands the scope into a much larger redesign with extra stats, helper functions, and reporting features. |
 | `gpt5.6-sol-xhigh` | 5 | 5 | 4 | 5 | 5 | 5 | 3 | Blind winner in both judging rounds: the most rigorous vectorised rewrite (dtype-aware key normalisation, finiteness checks, reason-coded diagnostics, raise/drop policy), at the cost of extra length and a documented member-envelope grain change. |
 | `gpt5.6-luna-max` | 5 | 5 | 4 | 5 | 4 | 5 | 3 | Proportionate, semantics-preserving vectorised rewrite with fail-fast validation including infinity and non-positive length, but it stringifies the key columns unconditionally and does not flag the changed group ordering. |
+| `gemma4:26b-local` | 2 | 3 | 2 | 2 | 3 | 3 | 3 | A sound review of the iterrows, float-cast and zero-length problems with a vectorised rewrite, but the code carries a walrus expression inside a subscript (`df[REQUIRED_column_subset := REQUIRED_COLUMNS]`), silently drops unparseable rows from a pass/fail summary, counts zero-length members whose ratio it has removed, leaves negative lengths and signed deflections unhandled, and checks columns only after an empty-frame early return. |
 
 ## Judge Output Summary
 
@@ -31,6 +32,14 @@ Task summary: Review a member-summary pipeline for large-data performance, clean
 - Blind pack judged twice: `gpt5.6-sol-xhigh` 4.83 and 4.67, `gpt5.6-luna-max` 4.67 and 4.33, `gpt5.4-xhigh` 4.33 in both rounds, `gemma4:31b-cloud` 2.67 in both rounds.
 - Sol, Luna and the April `gpt5.4-xhigh` response were all judged safe-to-apply vectorised rewrites that fix the row loop, the unsafe float casts and zero/missing lengths; Sol was the most rigorous on dtypes, finiteness and diagnostics at the cost of length and a documented grain change.
 - Luna was judged the most proportionate rewrite that preserves the original aggregation semantics, with unflagged key stringification and group-order changes as its main deductions.
+
+### Gemma 4 26B local addendum (2026-09-19)
+
+- Blind pack (one judging round, 2026-09-19): `gpt5.6-sol-xhigh` 4.17, `gpt5.4-xhigh` 3.83, `gemma4:31b-cloud` 2.67, `gemma4:26b-local` 2.50 on the six technical criteria; the judge ranked the local model last.
+- Judge's one-line reading of the local model's response: Sound review and vectorised outline, but the code contains a stray walrus-in-subscript (`df[REQUIRED_column_subset := REQUIRED_COLUMNS]`, a SyntaxError below Python 3.10 and meaningless above it), silently drops unparseable rows, and still counts zero-length members while excluding their ratio.
+- Judge's deduction: `work_df = df[REQUIRED_column_subset := REQUIRED_COLUMNS].copy()` is an unparenthesised assignment expression inside a subscript: SyntaxError on Python < 3.10, and a pointless throwaway variable on 3.10+. Signals unverified code.
+- Judge's deduction: `dropna` silently discards rows with non-numeric Length/Deflection, so a storey can report PASS with members missing and no warning; MemberCount still includes zero-length members whose ratio became NaN, so count and ratio populations disagree.
+- Judge's deduction: Negative lengths and signed (negative) deflections are unhandled, so a large negative deflection yields a negative ratio and a PASS; the claim that `inf` "might bypass the PASS logic" is backwards (inf fails; -inf passes).
 
 ## Manual Override Notes
 
@@ -76,6 +85,12 @@ Provisional `gemma4:31b-cloud` review:
 - Practicality `gpt5.6-sol-xhigh` = 3: same premium Codex route as `gpt5.4-xhigh`, faster on every task with a recorded time, no refusal or truncation, waited for context; scored as the April premium reference.
 - Practicality `gpt5.6-luna-max` = 3: same Codex route on the budget API tier ($0.20 / $1.20 per 1M tokens list price), about 3 to 4 minutes per v2 task, no refusal or truncation, waited for context; low price offset by the slowest latency in the set.
 
+### Gemma 4 26B local addendum (2026-09-19)
+
+- Scoring: technical criteria for `gemma4:26b-local` were scored blind on 2026-09-19 by the same judge family as the September refresh, in a pack with the two April anchors plus `gpt5.6-sol-xhigh` as a consistency check. Over the model's eight packs the anchors failed the calibration gate (MAD 0.59, worst row 1.17), so the blind scores [2, 3, 2, 2, 3, 3] were shifted onto the April scale with the September per-task offset of +0.42, the standing user decision (see `benchmarks/addendum_2026-09-19_gemma4-26b-local.md`). Earlier rows above are unchanged.
+- Manual overrides: none. The judge's claims about the response were checked against the response text; the defects it names are present as described.
+- Practicality `gemma4:26b-local` = 3: free local inference on the user's own hardware, no API cost, no refusal, the two-message protocol followed; on the timed tasks the answer took 3 min 35 s to 7 min 32 s after a 30 to 45 s prompt-only reply (7.7 to 10.8 generated tokens per second, CPU-bound on an 8 GB card), so on the latency-only reading that applies to routes where cost is not counted it is scored as the 3 to 6 minute runs of `gpt5.6-luna-max` and the 2026-09-18 addendum models, not the 4 to 5 April gave the free cloud route for one-to-two-minute answers.
+
 ## Winner
 
 - Winner: `gpt5.6-sol-xhigh`
@@ -83,3 +98,5 @@ Provisional `gemma4:31b-cloud` review:
 - Why it matters in practice: `GPT-5.6 Sol delivered the most rigorous safe vectorised rewrite; Luna (4.43) and the April GPT-5.4 (4.00) are both safe-to-apply alternatives, and kimi-k2-thinking keeps the best free/cloud value.`
 
 September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.57) beats the April result, so the winner line above was updated. April 2026 result for the seven original models: winner `kimi-k2-thinking` (overall mean 4.00); Difference size: `Small`; Why it matters in practice: `All six recognised the vectorisation need, but kimi still best balanced performance improvement with a stable output contract.`
+
+Gemma 4 26B local addendum (2026-09-19): `gemma4:26b-local` (overall mean 2.57) does not beat the April result of `gpt5.6-sol-xhigh` (4.57), so the winner line is unchanged.
