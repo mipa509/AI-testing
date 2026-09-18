@@ -848,15 +848,21 @@ function renderUsageChart(round) {
   const isCost = usageMeasure === 'cost';
   const labels = [...taskIds, 'Total'];
   const usedColors = new Set();
+  const usedHollow = new Set();
   const datasets = modelIds.map((id, i) => {
     const m = byId[id];
     let color = TIER_COLOR[m.cost_tier];
     let hollow = false;
     if (usedColors.has(color)) {
       const free = SERIES_SLOT.find(c => !usedColors.has(c));   // same-tier fallback to a free slot
-      if (free) color = free; else hollow = true;                // more series than slots: outline, never a new hue
+      if (free) color = free;
+      else {                                                    // more series than slots: outline in the next unused
+        hollow = true;                                          // hollow slot colour, never a new hue
+        color = SERIES_SLOT.find(c => !usedHollow.has(c)) || color;
+        usedHollow.add(color);
+      }
     }
-    usedColors.add(color);
+    if (!hollow) usedColors.add(color);
     const vals = taskIds.map(t => {
       const u = usage[t][id];
       if (!u) return null;
