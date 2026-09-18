@@ -206,6 +206,7 @@
     "provider": "Undisclosed (agentic CLI session)",
     "cost_tier": 3,
     "cost_label": "Premium",
-    "notes": "September 2026 addition, placeholder id. Run by the user on 2026-09-19 from an agentic CLI coding session with the vendor withheld until scoring was complete; to be renamed when disclosed. Run on three tasks only (v2-deep-02, v2-anchor-07, v3-notebook-01); its v2 average is provisional over the tasks run. Session cost $1.29 (deep-02), $1.48 (anchor) and $2.65 (v3); no list price recorded."
+    "notes": "September 2026 addition, placeholder id. Run by the user on 2026-09-19 from an agentic CLI coding session with the vendor withheld until scoring was complete; to be renamed when disclosed. Run on three tasks only (v2-deep-02, v2-anchor-07, v3-notebook-01); its v2 average is provisional over the tasks run. Subscription plan; session cost $1.29 (deep-02), $1.48 (anchor) and $2.65 (v3) recorded but not scored (practicality counts cost only for API-billed runs from this addendum on); no list price recorded.",
+    "cost_route": "subscription"
   }
 ]

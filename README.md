@@ -97,8 +97,8 @@ The unchanged EC3 trap task is reported separately as an anchor comparison and i
 Headline v2 ranking (September 2026 refresh rows scored blind with calibration against April anchors; April rows unchanged):
 1. `gpt5.6-luna-max` - `4.48`
 2. `gpt5.6-sol-xhigh` - `4.45`
-3. `gpt5.4-xhigh` - `4.14`
-4. `anon-2026-09-19` - `4.14` (provisional: Task 2 and anchor only)
+3. `anon-2026-09-19` - `4.21` (provisional: Task 2 and anchor only)
+4. `gpt5.4-xhigh` - `4.14`
 5. `gemma4:31b-cloud` - `4.10`
 6. `glm-5.1:cloud` - `3.88`
 7. `glm-5.3-flash` - `3.79` (provisional: Task 2 and anchor only)

@@ -178,7 +178,7 @@ def test_discover_rounds():
     anon_model = next(m for m in v2["models"] if m["model_id"] == "anon-2026-09-19")
     assert anon_model["cost_tier"] == 3                            # explicit; no list price recorded
     assert anon_model["blended_price_usd_per_1m"] is None
-    assert v2["ranking"]["anon-2026-09-19"]["Overall average"] == 4.14
+    assert v2["ranking"]["anon-2026-09-19"]["Overall average"] == 4.21
 
 
 def test_discover_rounds_explicit_cost_tier_overrides_provider_keyword(tmp_path):

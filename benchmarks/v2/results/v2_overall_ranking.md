@@ -12,8 +12,8 @@ This ranking covers the six new v2 tasks for `gemma4:31b-cloud`, `glm-5.1:cloud`
 | Engineering judgement | 4.00 | 3.67 | 4.33 | 3.67 | 3.50 | 3.33 | 2.50 | 4.67 | 4.67 | 3.00 | 4.00 | 3.00 | 4.50 |
 | Maintainability | 4.00 | 4.00 | 4.17 | 4.00 | 4.17 | 3.50 | 2.86 | 4.67 | 4.50 | 4.00 | 4.00 | 3.50 | 4.50 |
 | Clarity | 4.17 | 4.50 | 4.83 | 4.00 | 4.17 | 4.17 | 3.17 | 4.83 | 4.67 | 3.50 | 4.00 | 3.50 | 4.00 |
-| Economics/practicality | 4.67 | 3.83 | 2.83 | 3.00 | 3.00 | 4.33 | 2.17 | 3.00 | 3.00 | 2.50 | 2.50 | 2.50 | 2.00 |
-| Overall average | 4.10 | 3.88 | 4.14 | 3.74 | 3.72 | 3.67 | 2.65 | 4.45 | 4.48 | 3.43 | 3.79 | 3.43 | 4.14 |
+| Economics/practicality | 4.67 | 3.83 | 2.83 | 3.00 | 3.00 | 4.33 | 2.17 | 3.00 | 3.00 | 2.50 | 2.50 | 2.50 | 2.50 |
+| Overall average | 4.10 | 3.88 | 4.14 | 3.74 | 3.72 | 3.67 | 2.65 | 4.45 | 4.48 | 3.43 | 3.79 | 3.43 | 4.21 |
 
 Provisional columns: `deepseek-v4.1-flash`, `glm-5.3-flash`, `tencent-hy4-preview`, `anon-2026-09-19` were run on Task 2 and the anchor only (2026-09-18 and 2026-09-19 addenda), so their averages cover those two tasks, include the anchor, and are provisional until the remaining primary tasks are run; they are not comparable with the six-task composite of the other columns.
 
@@ -21,8 +21,8 @@ Provisional columns: `deepseek-v4.1-flash`, `glm-5.3-flash`, `tencent-hy4-previe
 
 1. `gpt5.6-luna-max` - `4.48`
 2. `gpt5.6-sol-xhigh` - `4.45`
-3. `gpt5.4-xhigh` - `4.14`
-4. `anon-2026-09-19` - `4.14` (provisional: Task 2 and anchor only)
+3. `anon-2026-09-19` - `4.21` (provisional: Task 2 and anchor only)
+4. `gpt5.4-xhigh` - `4.14`
 5. `gemma4:31b-cloud` - `4.10`
 6. `glm-5.1:cloud` - `3.88`
 7. `glm-5.3-flash` - `3.79` (provisional: Task 2 and anchor only)
