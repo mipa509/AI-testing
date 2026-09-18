@@ -21,6 +21,7 @@
 | `gpt5.6-luna-max` | 3 | 3 | 4 | 4 | 4 | 4 | 3 | Narrative, closed-form equations and final answers are right and derived from N/A +/- M*y/I, but the coded point-pressure function uses 6*M*x/B^3 instead of 12*M*x/B^4, so its own consistency assert fails at the first candidate and the notebook does not run past code cell 3 (verified by execution). |
 | `deepseek-v4.1-flash` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Correct, unit-suffixed, guarded notebook that runs end to end (verified by execution), selects 3.0 m with LC2 governing, explains the 2.9 m rejection and cross-checks against the kern rule; deductions in the blind pack only for loose cell alternation, a section-modulus rather than second-moment derivation, and length. |
 | `glm-5.3-flash` | 4 | 4 | 4 | 5 | 4 | 4 | 3 | Fullest written treatment among the addendum models (derivation via S = B^3/6, model justification, eccentricity directions, a full candidate sweep) and a Markdown conclusion of 3.0 m with LC2 governing, but its code prints LC3 as the governing case, contradicting the text (verified by execution), and its middle-third equivalence claim is wrong for biaxial loading. |
+| `tencent-hy4-preview` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Fully correct and executable (3.0 m, LC2 governing through uplift, 2.9 m rejected at -0.410 kPa) with an explicit M*c/I derivation, exact-fraction arithmetic, all four corner pressures and closed-form minimum-width bounds; ranked first in its blind pack, with deductions only for defining e_x = Mx/N and e_y = My/N (the reverse of the reference convention), a swapped second-moment subscript in the stated field equation, and length. |
 
 ## Judge Output Summary
 
@@ -48,6 +49,12 @@
 - GLM 5.3 Flash met every analysis-note requirement (derivation via `S = B^3/6`, model justification, `e_x` and `e_y` directions, a full candidate sweep printing `qmax` and `qmin` for every case) and its Markdown selects `3.0 m` with `LC2` governing and explains the `2.9 m` rejection; the four code cells run end to end (verified by execution).
 - Deductions: Code Cell 4 defines the governing case as the highest `qmax / q_allow` and prints `LC3`, contradicting the Markdown conclusion, and the claim that keeping each eccentricity within `B/6` is exactly equivalent to `qmin >= 0` is wrong for biaxial loading (the condition is `6e_x/B + 6e_y/B <= 1`), so the conclusion's middle-third explanation of the 2.9 m failure is incorrect.
 
+### Tencent Hy4 Preview addendum (2026-09-18)
+
+- Blind pack (one judging round, 2026-09-18): `tencent-hy4-preview` 4.83, `gpt5.4-xhigh` 4.50, `gpt5.6-sol-xhigh` 3.50, `gemma4:31b-cloud` 2.67; the judge ranked Hy4 first as the stronger audit document.
+- Tencent Hy4 Preview derived the corner pressure from `M*c/I` with `I = B^4/12`, used exact-fraction arithmetic, evaluated all four corners, added closed-form minimum-width bounds per case, selected `3.0 m` with `LC2` governing through uplift and explained the `2.9 m` rejection at `-0.410 kPa`; the five code cells run end to end (verified by execution).
+- Deductions: it defines `e_x = Mx/N` and `e_y = My/N`, the reverse of the reference convention, so its eccentricity columns are swapped relative to the reference table; the stated pressure field pairs each moment with the wrong second-moment subscript (harmless for a square); and the draft is long for the task.
+
 ## Manual Override Notes
 
 - Scores were locked by manual engineering review plus direct execution of the calculation cells.
@@ -73,6 +80,12 @@
 - Manual overrides: none. The judge's reading was verified by running the four fenced code cells in order with standard-library Python: the notebook runs end to end, selects `3.0 m`, and prints `Governing case (highest qmax/q_allow): LC3`, contradicting the Markdown's `LC2`. No score was changed.
 - Practicality `glm-5.3-flash` = 3: 5 min 56 s and about 35k tokens (about $0.0094 billed) with a notebook that runs end to end but prints a governing case that contradicts its own conclusion; matches the September score for `gpt5.6-luna-max`.
 
+### Tencent Hy4 Preview addendum (2026-09-18)
+
+- Scoring: technical criteria for `tencent-hy4-preview` were scored blind on 2026-09-18 by the same judge family as the September refresh, in a pack with the same two April anchors plus `gpt5.6-sol-xhigh` as a consistency check, then shifted onto the April scale with the September per-task offset of +0.71 (the standing user decision for packs that fail the calibration gate, as for `deepseek-v4.1-flash`; see `benchmarks/addendum_2026-09-18_tencent-hy4-preview.md`). Earlier rows above are unchanged.
+- Manual overrides: none. The judge's reading was verified by running the five fenced code cells in order with standard-library Python: the notebook runs end to end, selects `3.0 m`, and prints `LC2` for no-uplift and `LC3` for bearing utilisation. The reversed eccentricity naming is stated and applied consistently, so it stays a unit-and-assumption deduction. No score was changed.
+- Practicality `tencent-hy4-preview` = 3: 3 min 18 s and about 43k tokens (about $0.128 billed) with a notebook that runs end to end; scored as the other addendum models on this task.
+
 ## Winner
 
 - Winner: `gpt5.4-xhigh`
@@ -84,3 +97,5 @@ September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.29) and `gpt5.6-luna-
 DeepSeek V4.1 Flash addendum (2026-09-18): `deepseek-v4.1-flash` (overall mean 4.71) does not beat the April result of `gpt5.4-xhigh` (4.86), so the winner line is unchanged.
 
 GLM 5.3 Flash addendum (2026-09-18): `glm-5.3-flash` (overall mean 4.00) does not beat the April result of `gpt5.4-xhigh` (4.86), so the winner line is unchanged.
+
+Tencent Hy4 Preview addendum (2026-09-18): `tencent-hy4-preview` (overall mean 4.71) does not beat the April result of `gpt5.4-xhigh` (4.86), so the winner line is unchanged.

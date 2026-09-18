@@ -21,6 +21,7 @@
 | `gpt5.6-luna-max` | 5 | 5 | 5 | 4 | 4 | 5 | 2 | Finds both planted faults, uses the correct tabulated Wpl,y = 353 cm3, reaches PASS at 0.916 and flags LTB, load factors and self-weight as caveats without replacing the objective, though its LTB figure is asserted without working. |
 | `deepseek-v4.1-flash` | 3 | 2 | 4 | 3 | 4 | 3 | 2 | Reaches the correct corrected numbers (Wpl,y = 353 cm3, Mc,Rd = 97.08 kNm, utilisation 0.916) with a well-commented fix, but its headline verdict is not adequate on an LTB check the task did not pose, its narrative misdescribes the as-written code, and it asserts the planted 49.0 cm3 is the tabulated minor-axis value. |
 | `glm-5.3-flash` | 4 | 4 | 4 | 4 | 4 | 4 | 2 | Finds both planted faults and reaches the correct cross-section PASS at utilisation 0.920 with restraint, shear and deflection stated as validity conditions, but uses Wpl,y = 351.5 cm3 instead of the tabulated 353, quotes a wrong minor-axis modulus of about 25.1 cm3, and repeats the prompt file's anchor header lines; no web lookup. |
+| `tencent-hy4-preview` | 4 | 4 | 2 | 2 | 3 | 3 | 2 | Finds and explains both planted faults, uses the tabulated Wpl,y = 353 cm3 with a geometric cross-check and reaches the cross-section PASS, but headlines the verdict as not adequate on LTB and deflection checks the task did not pose, silently adds factored self-weight to the input load, and replaces the snippet with a full design script; web lookup appears to have been used. |
 
 ## Judge Output Summary
 
@@ -45,6 +46,12 @@ Task summary: Re-run the old EC3 beam-check trap unchanged and compare whether m
 - Blind pack (one judging round, 2026-09-18): `gpt5.6-sol-xhigh` 5.00, `gpt5.4-xhigh` 4.50, `glm-5.3-flash` 4.00, `minimax-m2.7-cloud` 2.00.
 - GLM 5.3 Flash found both planted faults, corrected the axis and the N.mm to kN.m conversion, and reached the correct cross-section `PASS` at utilisation 0.920 with lateral restraint, shear and deflection stated as validity conditions rather than as a replacement problem.
 - Deductions: `Wpl,y = 351.5 cm3` instead of the tabulated 353 (conservative, immaterial to the verdict), a wrong minor-axis modulus of about 25.1 cm3 (the tables give about 54.8), and a header that repeats the prompt file's historical-anchor framing lines; no web lookup was used.
+
+### Tencent Hy4 Preview addendum (2026-09-18)
+
+- Blind pack (one judging round, 2026-09-18): `gpt5.6-sol-xhigh` 5.00, `gpt5.4-xhigh` 4.67, `tencent-hy4-preview` 3.00, `minimax-m2.7-cloud` 2.00.
+- Tencent Hy4 Preview found and explained both planted faults, including why they cancel, used the tabulated `Wpl,y = 353 cm3` with a geometric cross-check and reached the cross-section `PASS` at 0.933 after adding self-weight.
+- Deductions: the headline verdict is NOT adequate on LTB and deflection checks the task did not pose, the input load is silently altered by adding factored self-weight (`M_Ed` 90.69 instead of 88.89 kNm) while treating 18.5 kN/m as a full ULS load, and the corrected code is a wholesale rewrite with a no-op shear-interaction line; the judge treated this as replacing the planted objective with a design study.
 
 ## Manual Override Notes
 
@@ -102,6 +109,12 @@ Provisional `deepseek-v3.2` review:
 - Manual overrides: none. Checked against the evaluator notes: both planted faults are corrected and the verdict is the corrected `PASS`; the property slips (351.5 and about 25.1 cm3) are as the judge describes. The repeated header lines come from the task's `prompt.md`, which the agent read from the folder, not from evaluator material, and were not treated as contamination. No score was changed.
 - Practicality `glm-5.3-flash` = 2: 10 min 34 s, the second-slowest anchor run after `deepseek-v4.1-flash`, no web lookup; the September floor for slow but usable runs, despite the near-zero cost (about $0.0065).
 
+### Tencent Hy4 Preview addendum (2026-09-18)
+
+- Scoring: technical criteria for `tencent-hy4-preview` were scored blind on 2026-09-18 by the same judge family as the September refresh, in a pack with the same two April anchors plus `gpt5.6-sol-xhigh` as a consistency check, then shifted onto the April scale with the September per-task offset of +0.08 (the standing user decision for packs that fail the calibration gate, as for `deepseek-v4.1-flash`; see `benchmarks/addendum_2026-09-18_tencent-hy4-preview.md`). Earlier rows above are unchanged.
+- Manual overrides: none. Checked against the evaluator notes: both planted faults are corrected and the cross-section numbers are right; the verdict drift and the altered input load are as the judge describes and are exactly what the notes penalise. No score was changed.
+- Practicality `tencent-hy4-preview` = 2: 12 min 50 s and about 65k tokens (about $0.115 billed), with web lookup; the September floor for slow but usable runs.
+
 ## Winner
 
 - Winner: `gpt5.4-xhigh`
@@ -113,3 +126,5 @@ September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.43) and `gpt5.6-luna-
 DeepSeek V4.1 Flash addendum (2026-09-18): `deepseek-v4.1-flash` (overall mean 3.00) does not beat the April result of `gpt5.4-xhigh` (4.43), so the winner line is unchanged.
 
 GLM 5.3 Flash addendum (2026-09-18): `glm-5.3-flash` (overall mean 3.71) does not beat the April result of `gpt5.4-xhigh` (4.43), so the winner line is unchanged.
+
+Tencent Hy4 Preview addendum (2026-09-18): `tencent-hy4-preview` (overall mean 2.86) does not beat the April result of `gpt5.4-xhigh` (4.43), so the winner line is unchanged.
