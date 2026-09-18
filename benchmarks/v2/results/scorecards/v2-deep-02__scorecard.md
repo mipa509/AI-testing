@@ -17,12 +17,20 @@
 | `minimax-m2.7-cloud` | 2 | 3 | 3 | 2 | 4 | 4 | 3 | It stayed on the real codebase and found the load-factor and reporting bugs, but it missed the actual resistance unit defect and replaced it with a weaker `gamma_M0` standards point. |
 | `kimi-k2-thinking` | 5 | 5 | 5 | 4 | 4 | 5 | 5 | Strong task fit: it found the three key release blockers, including the reporting trap that `glm` missed; minor overreach on configurability/compliance extras. |
 | `deepseek-v3.2` | 1 | 1 | 1 | 1 | 1 | 2 | 1 | Severe context failure: the final review targets an invented package with nonexistent functions and misses the actual supplied defects. |
+| `gpt5.6-sol-xhigh` | 5 | 4 | 5 | 4 | 4 | 5 | 3 | Found all three planted blockers with a full dimensional derivation plus a well-argued extra finding on the unused combination label, but its line references do not match the supplied files and it rated the under-factored imposed load only High. |
+| `gpt5.6-luna-max` | 5 | 5 | 5 | 4 | 4 | 4 | 3 | Found all three planted blockers with a correct worked numeric example and useful notes on the combination label and package imports, though its finding-1 fix direction (psi factors, combination as input) over-reaches the minimum fix. |
 
 ## Judge Output Summary
 
 Manual comparative pass completed for all seven models.
 
 Task summary: Review a steel beam ULS screening package for unit conversion, load combination, and reporting integrity defects before release.
+
+### September 2026 refresh
+
+- Blind pack (one judging round): `gpt5.4-xhigh` 4.67, then `gpt5.6-sol-xhigh` and `gpt5.6-luna-max` tied at 4.50, with `minimax-m2.7-cloud` at 2.33.
+- All three top responses found the missing 1.50 imposed-load factor, the cm3-as-mm3 resistance error and the review table that returns only the least-utilised row; the judge called the differences among them second-order.
+- Sol lost points for line references that do not match the supplied files and for rating the under-factored load only High; Luna for a finding-1 fix direction (psi factors, combination as input) beyond the minimum fix.
 
 ## Manual Override Notes
 
@@ -61,8 +69,17 @@ Provisional `gemma4:31b-cloud` review:
 - The answer stayed concise and proportionate, with less unnecessary standards/configurability drift than `kimi`.
 - This is one of the cleanest task-2 reviews in the set.
 
+### September 2026 refresh
+
+- Scoring: technical criteria for `gpt5.6-sol-xhigh` and `gpt5.6-luna-max` were scored blind by a new judge alongside two April anchor responses, then shifted onto the April scale with a per-task offset of +0.42 derived from those anchors (see `benchmarks/refresh_2026-09_calibration.md`). The April rows above are unchanged.
+- Manual overrides: none. The de-anonymised judgements were checked against the evaluator notes and no score was changed.
+- Practicality `gpt5.6-sol-xhigh` = 3: same premium Codex route as `gpt5.4-xhigh`, faster on every task with a recorded time, no refusal or truncation, waited for context; scored as the April premium reference.
+- Practicality `gpt5.6-luna-max` = 3: same Codex route on the budget API tier ($0.20 / $1.20 per 1M tokens list price), about 3 to 4 minutes per v2 task, no refusal or truncation, waited for context; low price offset by the slowest latency in the set.
+
 ## Winner
 
 - Winner: `gemma4:31b-cloud`
 - Difference size: `Very small over gpt5.4-xhigh`
 - Why it matters in practice: `Gemma and gpt5.4 both produced top-tier task-2 reviews, but gemma still has the stronger practicality/economics profile for repeated use on this kind of repo review.`
+
+September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.29) and `gpt5.6-luna-max` (4.29) do not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.

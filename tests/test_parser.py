@@ -81,11 +81,17 @@ def test_parse_scorecard_v2_deep01():
 
     assert task["task_id"] == "v2-deep-01"
     assert task["task_title"] == "Multi-file bug hunt in a member check pipeline"
-    assert task["winner"] == "gemma4:31b-cloud"
-    assert task["difference_size"].lower() == "small"
+    # September 2026 refresh: gpt5.6-sol-xhigh overtook the April winner gemma4:31b-cloud
+    assert task["winner"] == "gpt5.6-sol-xhigh"
+    assert task["difference_size"].lower() == "very small"
+    # April rows are frozen
     assert task["scores"]["gpt5.4-xhigh"]["Correctness"] == 4.0
     assert task["scores"]["kimi-k2-thinking"]["Correctness"] == 1.0
     assert "gemma4:31b-cloud" in task["notes"]
+    # refresh rows are appended, not substituted
+    assert task["scores"]["gpt5.6-sol-xhigh"]["Correctness"] == 5.0
+    assert task["scores"]["gpt5.6-luna-max"]["Economics/practicality"] == 3.0
+    assert len(task["scores"]) == 9
     assert len(task["commentary"]) > 50
 
 
@@ -131,3 +137,37 @@ def test_discover_rounds():
 
     qwen_model = next(m for m in v2["models"] if m["model_id"] == "qwen-3.6plus")
     assert qwen_model["cost_tier"] == 2
+
+    # gpt5.6-luna-max is an OpenAI budget-tier API model; the slate sets its tier explicitly
+    luna_model = next(m for m in v2["models"] if m["model_id"] == "gpt5.6-luna-max")
+    assert luna_model["cost_tier"] == 2
+    assert luna_model["cost_label"] == "Paid API"
+
+
+def test_discover_rounds_explicit_cost_tier_overrides_provider_keyword(tmp_path):
+    """A slate entry may carry cost_tier / cost_label; they take precedence over the provider keyword mapping."""
+    import json
+    models_dir = tmp_path / "benchmarks" / "vx" / "models"
+    models_dir.mkdir(parents=True)
+    slate = [
+        {"model_id": "premium-by-keyword", "display_name": "P", "role": "r", "provider": "OpenAI API", "notes": ""},
+        {"model_id": "budget-explicit", "display_name": "B", "role": "r", "provider": "OpenAI API", "notes": "",
+         "cost_tier": 2, "cost_label": "Paid API"},
+        {"model_id": "free-explicit-label-only", "display_name": "F", "role": "r", "provider": "Ollama cloud", "notes": "",
+         "cost_label": "Free/Local"},
+    ]
+    (models_dir / "fixed_model_slate.json").write_text(json.dumps(slate), encoding="utf-8")
+
+    rounds = discover_rounds(tmp_path)
+    assert [r["round_id"] for r in rounds] == ["vx"]
+    by_id = {m["model_id"]: m for m in rounds[0]["models"]}
+
+    # keyword mapping still applies when nothing explicit is given
+    assert by_id["premium-by-keyword"]["cost_tier"] == 3
+    assert by_id["premium-by-keyword"]["cost_label"] == "Premium"
+    # explicit values win over the keyword mapping
+    assert by_id["budget-explicit"]["cost_tier"] == 2
+    assert by_id["budget-explicit"]["cost_label"] == "Paid API"
+    # a partial override keeps the keyword-derived value for the missing field
+    assert by_id["free-explicit-label-only"]["cost_tier"] == 1
+    assert by_id["free-explicit-label-only"]["cost_label"] == "Free/Local"

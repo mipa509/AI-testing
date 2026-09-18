@@ -171,7 +171,9 @@ def discover_rounds(repo_root: Path):
       round_id    : str          e.g. "v2"
       label       : str          e.g. "V2"
       models      : list[dict]   from fixed_model_slate.json, augmented with
-                                 cost_tier (1/2/3) and cost_label
+                                 cost_tier (1/2/3) and cost_label; derived from
+                                 the provider keyword unless the slate entry
+                                 sets them explicitly
       task_manifest: list[dict]  from task_manifest.json (empty list if absent)
       criteria    : list[str]    from overall ranking table
       ranking     : dict[model_id, dict[criterion, float]]
@@ -191,21 +193,24 @@ def discover_rounds(repo_root: Path):
         with open(slate_path, encoding="utf-8") as f:
             models = json.load(f)
 
-        # Augment models with cost tier
+        # Augment models with cost tier.
+        # Default: derived from provider keywords. A slate entry may set
+        # "cost_tier" and/or "cost_label" explicitly; explicit values win.
         PREMIUM_KEYWORDS = {"openai", "subscription"}
         FREE_KEYWORDS    = {"ollama"}
 
         for model in models:
             provider_lower = model.get("provider", "").lower()
             if any(kw in provider_lower for kw in PREMIUM_KEYWORDS):
-                model["cost_tier"] = 3
-                model["cost_label"] = "Premium"
+                default_tier, default_label = 3, "Premium"
             elif any(kw in provider_lower for kw in FREE_KEYWORDS):
-                model["cost_tier"] = 1
-                model["cost_label"] = "Free/Cloud"
+                default_tier, default_label = 1, "Free/Cloud"
             else:
-                model["cost_tier"] = 2   # everything else assumed paid API
-                model["cost_label"] = "Paid API"
+                default_tier, default_label = 2, "Paid API"   # everything else assumed paid API
+            if model.get("cost_tier") is None:
+                model["cost_tier"] = default_tier
+            if not model.get("cost_label"):
+                model["cost_label"] = default_label
 
         # Task manifest (optional)
         manifest_path = item / "tasks" / "task_manifest.json"
