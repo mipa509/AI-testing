@@ -19,6 +19,7 @@
 | `deepseek-v3.2` | 1 | 1 | 1 | 1 | 1 | 2 | 1 | Severe context failure: the final review targets an invented package with nonexistent functions and misses the actual supplied defects. |
 | `gpt5.6-sol-xhigh` | 5 | 4 | 5 | 4 | 4 | 5 | 3 | Found all three planted blockers with a full dimensional derivation plus a well-argued extra finding on the unused combination label, but its line references do not match the supplied files and it rated the under-factored imposed load only High. |
 | `gpt5.6-luna-max` | 5 | 5 | 5 | 4 | 4 | 4 | 3 | Found all three planted blockers with a correct worked numeric example and useful notes on the combination label and package imports, though its finding-1 fix direction (psi factors, combination as input) over-reaches the minimum fix. |
+| `deepseek-v4.1-flash` | 4 | 5 | 4 | 3 | 4 | 4 | 3 | Found all three planted blockers with correct numeric examples and the strongest not-escalated section, but it over-escalates rounding to High, infers SLS rows from the combination label, wrongly claims the two numeric errors mask each other, and runs to three times the requested length. |
 
 ## Judge Output Summary
 
@@ -31,6 +32,12 @@ Task summary: Review a steel beam ULS screening package for unit conversion, loa
 - Blind pack (one judging round): `gpt5.4-xhigh` 4.67, then `gpt5.6-sol-xhigh` and `gpt5.6-luna-max` tied at 4.50, with `minimax-m2.7-cloud` at 2.33.
 - All three top responses found the missing 1.50 imposed-load factor, the cm3-as-mm3 resistance error and the review table that returns only the least-utilised row; the judge called the differences among them second-order.
 - Sol lost points for line references that do not match the supplied files and for rating the under-factored load only High; Luna for a finding-1 fix direction (psi factors, combination as input) beyond the minimum fix.
+
+### DeepSeek V4.1 Flash addendum (2026-09-18)
+
+- Blind pack (one judging round, 2026-09-18): `gpt5.4-xhigh` 4.50, `gpt5.6-sol-xhigh` 4.33, `deepseek-v4.1-flash` 4.00, `minimax-m2.7-cloud` 2.33 on the six technical criteria.
+- DeepSeek V4.1 Flash found all three planted blockers (unused `ULS_GAMMA_Q`, `1e6` instead of `1e3`, ascending sort plus `[:1]`) with correct numeric examples and the strongest deliberately-not-escalated section; the judge said any of the top three responses would lead a maintainer to the same fixes.
+- Deductions: rounding-before-status escalated to High, an SLS-rows inference from the `combination` label presented as fact, a wrong claim that the two numeric errors mask each other, a float-equality test suggestion, and about three times the requested length.
 
 ## Manual Override Notes
 
@@ -76,6 +83,12 @@ Provisional `gemma4:31b-cloud` review:
 - Practicality `gpt5.6-sol-xhigh` = 3: same premium Codex route as `gpt5.4-xhigh`, faster on every task with a recorded time, no refusal or truncation, waited for context; scored as the April premium reference.
 - Practicality `gpt5.6-luna-max` = 3: same Codex route on the budget API tier ($0.20 / $1.20 per 1M tokens list price), about 3 to 4 minutes per v2 task, no refusal or truncation, waited for context; low price offset by the slowest latency in the set.
 
+### DeepSeek V4.1 Flash addendum (2026-09-18)
+
+- Scoring: technical criteria for `deepseek-v4.1-flash` were scored blind on 2026-09-18 by the same judge family as the September refresh, in a pack with the same two April anchors plus `gpt5.6-sol-xhigh` as a consistency check, then shifted onto the April scale with the September per-task offset of +0.42 (user decision; see `benchmarks/addendum_2026-09-18_deepseek-v4.1-flash.md`). The April and September rows above are unchanged.
+- Manual overrides: none. The de-anonymised judgement was checked against the evaluator notes; all three planted findings are present and no score was changed.
+- Practicality `deepseek-v4.1-flash` = 3: 2 min 45 s and about 35k tokens on a cheap paid API route (about $0.0135 billed through OpenRouter), no refusal or truncation, followed the instruction to read only the task folder; scored as `gpt5.6-luna-max` on this task.
+
 ## Winner
 
 - Winner: `gemma4:31b-cloud`
@@ -83,3 +96,5 @@ Provisional `gemma4:31b-cloud` review:
 - Why it matters in practice: `Gemma and gpt5.4 both produced top-tier task-2 reviews, but gemma still has the stronger practicality/economics profile for repeated use on this kind of repo review.`
 
 September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.29) and `gpt5.6-luna-max` (4.29) do not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.
+
+DeepSeek V4.1 Flash addendum (2026-09-18): `deepseek-v4.1-flash` (overall mean 3.86) does not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.
