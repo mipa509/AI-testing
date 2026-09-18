@@ -12,10 +12,10 @@ Artifacts include benchmark packs, written reports, per-task result summaries, p
 | Round | Focus | Scope | Current leader | Main files |
 |---|---|---|---|---|
 | `v1` | Short coding and review prompts | `6` tasks, `3` models | `gemma4:31b-cloud` (`3.93`) | `benchmarks/v1/`, `structural_engineering_benchmark_report.md` |
-| `v2` | Larger-context repo reading and change design | `6` primary tasks + `1` historical anchor, `7` models (April 2026) + `2` (September 2026 refresh) + `1` partial (2026-09-18 addendum, Task 2 and anchor only) | `gpt5.6-luna-max` (`4.48`), `gpt5.6-sol-xhigh` (`4.45`); April leader `gpt5.4-xhigh` (`4.14`) | `benchmarks/v2/`, `structural_engineering_benchmark_report_v2.md`, `benchmarks/refresh_2026-09_summary.md` |
-| `v3` | Deterministic notebook-style code generation | `1` notebook task, `7` models (April 2026) + `2` (September 2026 refresh) + `1` (2026-09-18 addendum) | `gpt5.4-xhigh` (`4.86`) | `benchmarks/v3/`, `benchmarks/v3/results/`, `benchmarks/refresh_2026-09_summary.md` |
+| `v2` | Larger-context repo reading and change design | `6` primary tasks + `1` historical anchor, `7` models (April 2026) + `2` (September 2026 refresh) + `2` partial (2026-09-18 addenda, Task 2 and anchor only, provisional averages) | `gpt5.6-luna-max` (`4.48`), `gpt5.6-sol-xhigh` (`4.45`); April leader `gpt5.4-xhigh` (`4.14`) | `benchmarks/v2/`, `structural_engineering_benchmark_report_v2.md`, `benchmarks/refresh_2026-09_summary.md` |
+| `v3` | Deterministic notebook-style code generation | `1` notebook task, `7` models (April 2026) + `2` (September 2026 refresh) + `2` (2026-09-18 addenda) | `gpt5.4-xhigh` (`4.86`) | `benchmarks/v3/`, `benchmarks/v3/results/`, `benchmarks/refresh_2026-09_summary.md` |
 
-September 2026 refresh: `gpt5.6-sol-xhigh` (successor to `gpt5.4-xhigh`) and `gpt5.6-luna-max` (budget API tier) were run on the unchanged v2 and v3 tasks and scored blind with calibration against the April results. The then-vs-now comparison is in `benchmarks/refresh_2026-09_summary.md`; the calibration procedure and judge replies are in `benchmarks/refresh_2026-09_calibration.md`. The April full reports are unchanged. A 2026-09-18 addendum adds `deepseek-v4.1-flash` on three tasks (v2 Task 2, the anchor and the v3 notebook), scored the same way; see `benchmarks/addendum_2026-09-18_deepseek-v4.1-flash.md` and the addendum section of the summary.
+September 2026 refresh: `gpt5.6-sol-xhigh` (successor to `gpt5.4-xhigh`) and `gpt5.6-luna-max` (budget API tier) were run on the unchanged v2 and v3 tasks and scored blind with calibration against the April results. The then-vs-now comparison is in `benchmarks/refresh_2026-09_summary.md`; the calibration procedure and judge replies are in `benchmarks/refresh_2026-09_calibration.md`. The April full reports are unchanged. Two 2026-09-18 addenda add `deepseek-v4.1-flash` and `glm-5.3-flash` on three tasks each (v2 Task 2, the anchor and the v3 notebook), scored the same way; see `benchmarks/addendum_2026-09-18_deepseek-v4.1-flash.md`, `benchmarks/addendum_2026-09-18_glm-5.3-flash.md` and the addendum sections of the summary. Their v2 averages are provisional (Task 2 and anchor only).
 
 ## Start Here
 
@@ -80,7 +80,8 @@ Current scored model set:
 - `deepseek-v3.2`
 - `gpt5.6-sol-xhigh` (September 2026 refresh)
 - `gpt5.6-luna-max` (September 2026 refresh)
-- `deepseek-v4.1-flash` (2026-09-18 addendum; Task 2 and anchor only, no cross-task average)
+- `deepseek-v4.1-flash` (2026-09-18 addendum; Task 2 and anchor only, provisional v2 average)
+- `glm-5.3-flash` (2026-09-18 addendum; Task 2 and anchor only, provisional v2 average)
 
 Scope:
 - `6` new v2 tasks
@@ -97,10 +98,12 @@ Headline v2 ranking (September 2026 refresh rows scored blind with calibration a
 3. `gpt5.4-xhigh` - `4.14`
 4. `gemma4:31b-cloud` - `4.10`
 5. `glm-5.1:cloud` - `3.88`
-6. `qwen-3.6plus` - `3.74`
-7. `minimax-m2.7-cloud` - `3.72`
-8. `kimi-k2-thinking` - `3.67`
-9. `deepseek-v3.2` - `2.65`
+6. `glm-5.3-flash` - `3.79` (provisional: Task 2 and anchor only)
+7. `qwen-3.6plus` - `3.74`
+8. `minimax-m2.7-cloud` - `3.72`
+9. `kimi-k2-thinking` - `3.67`
+10. `deepseek-v4.1-flash` - `3.43` (provisional: Task 2 and anchor only)
+11. `deepseek-v3.2` - `2.65`
 
 Current v2 primary task winners:
 
@@ -122,7 +125,7 @@ Latest report-aligned takeaways:
 - Biggest operational weakness observed: severe context-fidelity failures before or without the supplied files on weaker models; slower responses (about 3 to 4 minutes per task) from `gpt5.6-luna-max`
 
 Historical anchor:
-- winner on corrected engineering standard: `gpt5.4-xhigh` (September 2026: `gpt5.6-sol-xhigh` ties it at 4.43 overall with the same corrected answer; `gpt5.6-luna-max` 4.29; `deepseek-v4.1-flash` 3.00 on the 2026-09-18 addendum)
+- winner on corrected engineering standard: `gpt5.4-xhigh` (September 2026: `gpt5.6-sol-xhigh` ties it at 4.43 overall with the same corrected answer; `gpt5.6-luna-max` 4.29; `deepseek-v4.1-flash` 3.00 and `glm-5.3-flash` 3.71 on the 2026-09-18 addenda)
 - strongest free/cloud value result on the primary six-task set: `gemma4:31b-cloud`
 
 ### V3 - Notebook-style code-generation benchmark
@@ -138,6 +141,7 @@ Current scored model set:
 - `gpt5.6-sol-xhigh` (September 2026 refresh)
 - `gpt5.6-luna-max` (September 2026 refresh)
 - `deepseek-v4.1-flash` (2026-09-18 addendum)
+- `glm-5.3-flash` (2026-09-18 addendum)
 
 Benchmark shape:
 - `1` deterministic notebook-style task
@@ -147,15 +151,16 @@ Benchmark shape:
 
 Headline v3 ranking (September 2026 refresh rows scored blind with calibration against April anchors; April rows unchanged):
 1. `gpt5.4-xhigh` - `4.86`
-2. `deepseek-v4.1-flash` - `4.71` (2026-09-18 addendum; tie with `glm-5.1:cloud` ordered by technical mean)
+2. `deepseek-v4.1-flash` - `4.71` (2026-09-18 addendum)
 3. `glm-5.1:cloud` - `4.71`
 4. `minimax-m2.7-cloud` - `4.43`
 5. `kimi-k2-thinking` - `4.29`
 6. `gpt5.6-sol-xhigh` - `4.29`
 7. `deepseek-v3.2` - `4.14`
-8. `qwen-3.6plus` - `4.00`
-9. `gemma4:31b-cloud` - `3.71`
-10. `gpt5.6-luna-max` - `3.57`
+8. `glm-5.3-flash` - `4.00` (2026-09-18 addendum)
+9. `qwen-3.6plus` - `4.00`
+10. `gemma4:31b-cloud` - `3.71`
+11. `gpt5.6-luna-max` - `3.57`
 
 Current v3 task result:
 
@@ -170,6 +175,7 @@ Current v3 takeaways:
 - Biggest operational weakness observed: long think time on several otherwise strong models, plus conclusion-level governing-case mistakes that still need human review
 - September 2026 note: `gpt5.6-sol-xhigh` did not match its predecessor here (correct and executable, but no derivation or eccentricity definitions); `gpt5.6-luna-max` states the right answer but its notebook fails its own consistency assert until a one-line formula fix is applied
 - 2026-09-18 addendum: `deepseek-v4.1-flash` scores 4.71, level with `glm-5.1:cloud`, with a notebook that runs end to end and a kern-rule cross-check; weakest on the EC3 anchor (3.00), where it headlined an unrequested LTB verdict
+- 2026-09-18 addendum: `glm-5.3-flash` scores 4.00 with the fullest written derivation of the addendum models, but its code prints `LC3` as governing against the `LC2` in its text; steadier on the EC3 anchor (3.71)
 
 ## Repository Structure
 

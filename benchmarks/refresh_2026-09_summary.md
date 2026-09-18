@@ -115,4 +115,23 @@ Read:
 - Cost and time: the three runs were billed about $0.10 in total through OpenRouter (list price $0.15 / $0.60 per 1M tokens); latencies were 2 min 45 s, about 15 min and 4 min 15 s.
 - Calibration: anchor MAD 0.64 and signed -0.47 against April with anchor order preserved on every task, and `gpt5.6-sol-xhigh` within 0.17 of its September blind scores, so the judge family is consistent with the September round.
 
-Caveats specific to this addendum: three tasks only, so no v2 cross-task average and no place in the v2 overall ranking; the agent read the task files from the workspace folder rather than receiving them as pasted messages, read the other task folders unasked on two runs, and on the anchor read the two header lines of the prompt file above the text block; web lookups were blocked on the anchor whereas the September models had them; one run per task.
+Caveats specific to this addendum: three tasks only, so its v2 average is provisional (Task 2 and the anchor, marked as such in the v2 ranking) until the remaining primary tasks are run; the agent read the task files from the workspace folder rather than receiving them as pasted messages, read the other task folders unasked on two runs, and on the anchor read the two header lines of the prompt file above the text block; web lookups were blocked on the anchor whereas the September models had them; one run per task.
+
+## Addendum 2026-09-18: GLM 5.3 Flash on the same three tasks
+
+`glm-5.3-flash` (OpenRouter `z-ai/glm-5.3-flash`, reasoning effort high, same VS Code agent route as the DeepSeek runs) was run on the same three tasks and scored the same way. Its anchors met the calibration gate (MAD 0.50, no row above 1.0), so the blind scores stand as-is with no offset. Full record: `benchmarks/addendum_2026-09-18_glm-5.3-flash.md`.
+
+| Task | Blind, six criteria | Practicality | Overall | Position on the task |
+|---|---:|---:|---:|---|
+| Task 2 - Repo review traps | 4.00 | 3 | 3.86 | 7th equal of 11 with `deepseek-v4.1-flash`; winner `gemma4:31b-cloud` (4.71) unchanged |
+| Anchor - EC3 planted-error trap | 4.00 | 2 | 3.71 | 8th of 11, between `qwen-3.6plus` (3.86) and `deepseek-v3.2` (3.43); winner `gpt5.4-xhigh` (4.43) unchanged |
+| v3 Task 1 - Pad footing notebook | 4.17 | 3 | 4.00 | 8th of 11, level with `qwen-3.6plus`; winner `gpt5.4-xhigh` (4.86) unchanged |
+
+Read:
+
+- Grounded and complete on the repo review: all three planted blockers found with numeric examples; deductions for a rounding-direction claim the code cannot produce and for length.
+- Steadier than DeepSeek on the anchor: both faults corrected, `PASS` at 0.920, LTB kept as a validity condition rather than a headline verdict, but a slightly off major-axis modulus (351.5 for 353) and a wrong minor-axis one (about 25.1 for about 54.8), with no web lookup.
+- Weaker than DeepSeek on the notebook: the Markdown has the fullest derivation and sweep of the addendum models and names `LC2`, but the code prints `LC3` as governing (verified by execution) and the middle-third equivalence used to explain the 2.9 m failure is wrong for biaxial loading.
+- Cost and time: about $0.03 for the three runs; 4 min 30 s, 5 min 56 s and 10 min 34 s.
+
+Provisional v2 averages: with two partial models in hand, the v2 cross-task table now carries provisional columns for `deepseek-v4.1-flash` and `glm-5.3-flash` averaged over the v2 tasks they ran (Task 2 and the anchor). They include the anchor, so they are not comparable with the six-task composite of the full models and will be replaced when the remaining tasks are run.
