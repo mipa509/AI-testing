@@ -23,6 +23,7 @@
 | `glm-5.3-flash` | 4 | 4 | 4 | 4 | 4 | 4 | 3 | Found all three planted blockers with good numeric examples, but it asserts an unconservative rounding path (1.004 rounding to PASS) that cannot occur under the code's strict less-than test and rates rounding High on that basis, offers reverse=True on a one-row return as the primary reporting fix, and is the longest of the responses judged. |
 | `tencent-hy4-preview` | 5 | 5 | 3 | 4 | 4 | 4 | 3 | Found all three planted blockers with correct worked numbers and was the only response in its pack to explain that the two arithmetic errors act in opposite directions, but it runs far beyond the short high-signal brief, proposes minimum fixes that are not minimum (a mandatory section-class key, a new row schema, packaging rework) and rests some findings on assumptions the three supplied files cannot support. |
 | `claude-fable-5.1-high` | 5 | 5 | 4 | 5 | 5 | 4 | 3 | Found all three planted blockers and verified them with a fully correct worked example (25.5 vs 21.5 kN/m, 521.9 vs 0.522 kNm), and was the only response in its pack to explain that the two arithmetic errors pull in opposite directions so a partial fix is more dangerous than the current state; ranked first in the pack, with deductions for running past the short high-signal brief, grading the unused combination label High on inference, and two later findings that drift from minimum fixes into design recommendations. |
+| `gemma4:26b-local` | 5 | 4 | 5 | 4 | 3 | 4 | 4 | Found all three planted blockers with the correct fix directions and a correct dimensional argument for the 1000x resistance error, in a short four-part review that follows the brief, but gives no line references, no worked numbers and no regression tests, never examines the combination column, and waves the rounding-before-status defect through as an accepted margin. |
 
 ## Judge Output Summary
 
@@ -59,6 +60,12 @@ Task summary: Review a steel beam ULS screening package for unit conversion, loa
 - Blind pack (one judging round, 2026-09-19): `claude-fable-5.1-high` 4.67, `gpt5.6-sol-xhigh` 4.50, `gpt5.4-xhigh` 4.33, `minimax-m2.7-cloud` 2.33 on the six technical criteria; the judge ranked the new model first.
 - Claude Fable 5.1 found all three planted blockers, verified them with a worked example the judge re-computed without finding an error (25.5 vs 21.5 kN/m, 114.8 vs 96.8 kNm, 521.9 vs 0.522 kNm), and was the only response in its pack to explain that the two arithmetic errors act in opposite directions, so fixing only the loud unit error would ship a PASS on the safest member computed with an unconservative load.
 - Deductions on change safety and clarity: seven findings plus an interaction section and a release gate exceed the short high-signal brief, the unused combination label is graded High on inference about inputs the files do not show, and findings 6 (gamma_M0 and class guard) and 7 (provenance columns) drift from minimum fixes into design recommendations.
+
+### Gemma 4 26B local addendum (2026-09-19)
+
+- Blind pack (one judging round, 2026-09-19): `gpt5.6-sol-xhigh` 4.67, `gpt5.4-xhigh` 4.67, `gemma4:26b-local` 4.17, `minimax-m2.7-cloud` 2.67 on the six technical criteria; the judge ranked the local model third, behind Sol and `gpt5.4-xhigh` and well clear of minimax.
+- Gemma 4 26B (local) found all three planted blockers: the one-row report (critical, ascending sort explained), the unapplied gamma_Q (critical, unconservative) and the 1e6 divisor (high, with a correct cm3 x MPa = N.m argument), each with a minimal correct fix, and it kept the simply supported UDL assumption in scope.
+- Deductions: no line references, no worked numeric example, no regression tests, the combination column is never examined despite the brief's combinations focus, and the rounding-before-status defect is left non-escalated on the assumption that the user accepts the margin; the reporting fix keeps the ascending sort.
 
 ## Manual Override Notes
 
@@ -128,6 +135,12 @@ Provisional `gemma4:31b-cloud` review:
 - Manual overrides: none. The de-anonymised judgement was checked against the evaluator notes; all three planted findings are present and the worked table was re-computed. No score was changed.
 - Practicality `claude-fable-5.1-high` = 3: 4 min 14 s API time, 6 min 11 s wall clock, no refusal or truncation; the slowest run recorded on this task (Sol under 1 min, the OpenRouter addenda 2 to 4.5 min) but usable, so scored as the 3-minute runs of `gpt5.6-luna-max` and the addendum models. The run was on a subscription plan, so its $1.29 session figure is not counted. Practicality rule from this addendum on (user decision, 2026-09-19): cost is neglected for runs made on a subscription plan and counted only for API-billed runs; April and September rows are frozen and keep the earlier reading, under which premium models were scored as expensive whatever the route. First scored 2 on the cost-inclusive reading; rescored the same day.
 
+### Gemma 4 26B local addendum (2026-09-19)
+
+- Scoring: technical criteria for `gemma4:26b-local` were scored blind on 2026-09-19 by the same judge family as the September refresh, in a pack with the two April anchors plus `gpt5.6-sol-xhigh` as a consistency check. The anchors met the calibration gate (this task: high anchor MAD 0.50, low anchor 0.33; both tasks together MAD 0.29), so the blind scores are used as-is, as for `glm-5.3-flash` (see `benchmarks/addendum_2026-09-19_gemma4-26b-local.md`). Earlier rows above are unchanged.
+- Manual overrides: none. Checked against the evaluator notes: all three planted findings are present with the correct fix directions, the dimensional argument for the unit error is right, and the rounding note states the correct (conservative) direction.
+- Practicality `gemma4:26b-local` = 4: free local inference on the user's own hardware, no API cost, plain terminal, no refusal or truncation, a complete review that follows the brief's four-part structure; latency and token counts not captured, so the 5 April gave the free cloud route on this task is not claimed. Cost is not a factor on this route under the rule adopted with the Claude Fable 5.1 addendum.
+
 ## Winner
 
 - Winner: `gemma4:31b-cloud`
@@ -143,3 +156,5 @@ GLM 5.3 Flash addendum (2026-09-18): `glm-5.3-flash` (overall mean 3.86) does no
 Tencent Hy4 Preview addendum (2026-09-18): `tencent-hy4-preview` (overall mean 4.00) does not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.
 
 Claude Fable 5.1 addendum (2026-09-19): `claude-fable-5.1-high` (overall mean 4.43) does not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.
+
+Gemma 4 26B local addendum (2026-09-19): `gemma4:26b-local` (overall mean 4.14) does not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.

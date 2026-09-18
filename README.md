@@ -12,7 +12,7 @@ Artifacts include benchmark packs, written reports, per-task result summaries, p
 | Round | Focus | Scope | Current leader | Main files |
 |---|---|---|---|---|
 | `v1` | Short coding and review prompts | `6` tasks, `3` models | `gemma4:31b-cloud` (`3.93`) | `benchmarks/v1/`, `structural_engineering_benchmark_report.md` |
-| `v2` | Larger-context repo reading and change design | `6` primary tasks + `1` historical anchor, `7` models (April 2026) + `2` (September 2026 refresh) + `3` partial (2026-09-18 addenda) + `1` partial (2026-09-19 addendum, Claude Fable 5.1), Task 2 and anchor only, provisional averages | `gpt5.6-luna-max` (`4.48`), `gpt5.6-sol-xhigh` (`4.45`); April leader `gpt5.4-xhigh` (`4.14`) | `benchmarks/v2/`, `structural_engineering_benchmark_report_v2.md`, `benchmarks/refresh_2026-09_summary.md` |
+| `v2` | Larger-context repo reading and change design | `6` primary tasks + `1` historical anchor, `7` models (April 2026) + `2` (September 2026 refresh) + `3` partial (2026-09-18 addenda) + `1` partial (2026-09-19 addendum, Claude Fable 5.1), Task 2 and anchor only, provisional averages + `1` partial (2026-09-19 addendum, Gemma 4 26B local), Task 2 only | `gpt5.6-luna-max` (`4.48`), `gpt5.6-sol-xhigh` (`4.45`); April leader `gpt5.4-xhigh` (`4.14`) | `benchmarks/v2/`, `structural_engineering_benchmark_report_v2.md`, `benchmarks/refresh_2026-09_summary.md` |
 | `v3` | Deterministic notebook-style code generation | `1` notebook task, `7` models (April 2026) + `2` (September 2026 refresh) + `3` (2026-09-18 addenda) + `1` (2026-09-19 addendum, Claude Fable 5.1) + `1` (2026-09-19 addendum, Gemma 4 26B local, v3 only) | `gpt5.4-xhigh` (`4.86`) | `benchmarks/v3/`, `benchmarks/v3/results/`, `benchmarks/refresh_2026-09_summary.md` |
 
 September 2026 refresh: `gpt5.6-sol-xhigh` (successor to `gpt5.4-xhigh`) and `gpt5.6-luna-max` (budget API tier) were run on the unchanged v2 and v3 tasks and scored blind with calibration against the April results. The then-vs-now comparison is in `benchmarks/refresh_2026-09_summary.md`; the calibration procedure and judge replies are in `benchmarks/refresh_2026-09_calibration.md`. The April full reports are unchanged. Three 2026-09-18 addenda add `deepseek-v4.1-flash`, `glm-5.3-flash` and `tencent-hy4-preview` on three tasks each (v2 Task 2, the anchor and the v3 notebook), scored the same way; see `benchmarks/addendum_2026-09-18_deepseek-v4.1-flash.md`, `benchmarks/addendum_2026-09-18_glm-5.3-flash.md`, `benchmarks/addendum_2026-09-18_tencent-hy4-preview.md` and the addendum sections of the summary. Their v2 averages are provisional (Task 2 and anchor only). A 2026-09-19 addendum adds `claude-fable-5.1-high` (Anthropic Claude Fable 5.1 at effort high, run in Claude Code; identity withheld from the judges until scoring was complete) on the same three tasks; see `benchmarks/addendum_2026-09-19_claude-fable-5.1-high.md`.
@@ -84,6 +84,7 @@ Current scored model set:
 - `glm-5.3-flash` (2026-09-18 addendum; Task 2 and anchor only, provisional v2 average)
 - `tencent-hy4-preview` (2026-09-18 addendum; Task 2 and anchor only, provisional v2 average)
 - `claude-fable-5.1-high` (2026-09-19 addendum; Anthropic, Claude Code subscription; Task 2 and anchor only, provisional v2 average)
+- `gemma4:26b-local` (2026-09-19 addendum; Ollama local, free; Task 2 only, provisional v2 average)
 
 Scope:
 - `6` new v2 tasks
@@ -97,17 +98,18 @@ The unchanged EC3 trap task is reported separately as an anchor comparison and i
 Headline v2 ranking (September 2026 refresh rows scored blind with calibration against April anchors; April rows unchanged):
 1. `gpt5.6-luna-max` - `4.48`
 2. `gpt5.6-sol-xhigh` - `4.45`
-3. `claude-fable-5.1-high` - `4.21` (provisional: Task 2 and anchor only)
+3. `claude-fable-5.1-high` - `4.21` (provisional: Task 2 and the anchor only)
 4. `gpt5.4-xhigh` - `4.14`
-5. `gemma4:31b-cloud` - `4.10`
-6. `glm-5.1:cloud` - `3.88`
-7. `glm-5.3-flash` - `3.79` (provisional: Task 2 and anchor only)
-8. `qwen-3.6plus` - `3.74`
-9. `minimax-m2.7-cloud` - `3.72`
-10. `kimi-k2-thinking` - `3.67`
-11. `deepseek-v4.1-flash` - `3.43` (provisional: Task 2 and anchor only)
-12. `tencent-hy4-preview` - `3.43` (provisional: Task 2 and anchor only)
-13. `deepseek-v3.2` - `2.65`
+5. `gemma4:26b-local` - `4.14` (provisional: Task 2 only)
+6. `gemma4:31b-cloud` - `4.10`
+7. `glm-5.1:cloud` - `3.88`
+8. `glm-5.3-flash` - `3.79` (provisional: Task 2 and the anchor only)
+9. `qwen-3.6plus` - `3.74`
+10. `minimax-m2.7-cloud` - `3.72`
+11. `kimi-k2-thinking` - `3.67`
+12. `deepseek-v4.1-flash` - `3.43` (provisional: Task 2 and the anchor only)
+13. `tencent-hy4-preview` - `3.43` (provisional: Task 2 and the anchor only)
+14. `deepseek-v3.2` - `2.65`
 
 Current v2 primary task winners:
 
@@ -148,7 +150,7 @@ Current scored model set:
 - `glm-5.3-flash` (2026-09-18 addendum)
 - `tencent-hy4-preview` (2026-09-18 addendum)
 - `claude-fable-5.1-high` (2026-09-19 addendum; Anthropic, Claude Code subscription)
-- `gemma4:26b-local` (2026-09-19 addendum; Ollama local, free; v3 only)
+- `gemma4:26b-local` (2026-09-19 addendum; Ollama local, free)
 
 Benchmark shape:
 - `1` deterministic notebook-style task

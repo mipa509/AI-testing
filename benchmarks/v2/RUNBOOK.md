@@ -33,6 +33,7 @@ Use these exact model IDs for the current scored slate:
 - `glm-5.3-flash` (2026-09-18 addendum)
 - `tencent-hy4-preview` (2026-09-18 addendum)
 - `claude-fable-5.1-high` (2026-09-19 addendum)
+- `gemma4:26b-local` (2026-09-19 addendum; local Ollama, Task 2 only)
 
 ## 3. Folder Convention While Running
 

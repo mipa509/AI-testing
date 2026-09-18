@@ -1,6 +1,6 @@
 # Gemma 4 26B (local) addendum (2026-09-19): blind scoring record
 
-Scope: `gemma4:26b-local` (Ollama `gemma4:26b`, run locally on the user's machine from a plain terminal, no harness, tools or skills) on one task, `v3-notebook-01`, as a free-tier comparison point. The method is the September 2026 refresh procedure (`refresh_2026-09_calibration.md`) as applied to the 2026-09-18 and 2026-09-19 addenda. No earlier score, note or winner was changed. This is a different model from the April `gemma4:31b-cloud` row (Ollama cloud, 31B), which is the low anchor in this pack.
+Scope: `gemma4:26b-local` (Ollama `gemma4:26b`, run locally on the user's machine from a plain terminal, no harness, tools or skills) on two tasks, `v3-notebook-01` first and `v2-deep-02` later the same day (section 6), as a free-tier comparison point. The method is the September 2026 refresh procedure (`refresh_2026-09_calibration.md`) as applied to the 2026-09-18 and 2026-09-19 addenda. No earlier score, note or winner was changed. This is a different model from the April `gemma4:31b-cloud` row (Ollama cloud, 31B), which is the low anchor in this pack.
 
 ## 1. Run
 
@@ -98,3 +98,84 @@ C and D are both engineering-usable as written; the gap between them is one para
 - B's LC3 "governing case" is defensible only as "governs peak bearing"; it is not the case that governs selection.
 - D's use of |Mx|, |My| is numerically equivalent to the reference for the all-positive inputs given, and is a coherent worst-corner convention, but it is not the derivation the brief asked for.
 - Only C and D flag the 2.9 m rejection value (-0.41 kPa) explicitly; B's notebook would show it only if a reader added a sweep printout.
+
+## 6. Task 2 (`v2-deep-02`), run later the same day
+
+Same route (`ollama run gemma4:26b`, plain terminal, prompt then the pasted `context_combined.md`), response copied from the terminal with its line wrapping. Latency, tokens and cost not captured.
+
+| Task | Seed | A | B | C | D |
+|---|---:|---|---|---|---|
+| `v2-deep-02` | 20261403 | `gpt5.6-sol-xhigh` | `gemma4:26b-local` | `gpt5.4-xhigh` | `minimax-m2.7-cloud` |
+
+| Task | Low anchor | High anchor MAD / signed | Low anchor MAD / signed | Anchor order preserved? | Sol vs Sept blind MAD / signed |
+|---|---|---:|---:|---|---:|
+| `v2-deep-02` | `minimax-m2.7-cloud` | 0.50 / -0.17 | 0.33 / -0.33 | yes (April 4.83 vs 3.00; blind 4.67 vs 2.67) | 0.17 / +0.17 |
+
+Across both packs the anchor MAD is 0.292 (signed -0.208, worst row 0.50), so the gate passes and the blind scores stand without an offset (the September offset would have added +0.42 and rounded the row to the same integers anyway).
+
+- Manual review: all three planted findings present with the correct fix directions; the dimensional argument (cm3 x MPa = N.m, divide by 1000 for kNm) is right; the rounding note gives the correct, conservative direction. The judge's deductions (no line references, no worked numbers or tests, combination column unexamined, rounding waved through) match the response. No override.
+- Practicality = 4: free local route, complete answer in the brief's structure, no refusal; latency not captured, so the 5 April gave the free cloud route here is not claimed.
+
+| Task | Technical (April scale) | Practicality | Overall mean | April winner (overall) | Winner changed? |
+|---|---|---:|---:|---|---|
+| `v2-deep-02` | [5, 4, 5, 4, 3, 4] (4.17) | 4 | 4.14 | `gemma4:31b-cloud` (4.71) | no |
+
+Context for the free tier: on this task the 26B local model is a competent short review, level with `qwen-3.6plus` (4.14) and above the three 2026-09-18 addendum models, while its April cloud sibling won the task at 4.71. The notebook task, not this one, is where the smaller weights fell over.
+
+### De-anonymised judge reply
+
+Label key: A = `gpt5.6-sol-xhigh`, B = `gemma4:26b-local`, C = `gpt5.4-xhigh`, D = `minimax-m2.7-cloud`
+
+#### Judgement: v2-deep-02
+
+##### 1. Task summary
+The responders were asked to code-review a three-file package (`load_factors.py`, `beam_capacity.py`, `reporting.py`) intended for major-axis steel beam ULS screening, returning severity-ordered findings, engineering significance, minimum fix direction, and deliberately non-escalated items, with focus on correctness, units, combinations and reporting integrity. The three seeded defects are: the imposed-load factor `ULS_GAMMA_Q = 1.50` is defined but never applied; `major_axis_resistance_kNm()` divides `Wpl_y_cm3 * fy_MPa` by `1e6` instead of `1e3` (cm³ × N/mm² = 1000 Nmm = 1 Nm, so the result is 1000× too small); and `build_review_table()` sorts ascending and returns `[:1]`, i.e. only the least-utilised row. Secondary: rounding before pass/fail classification.
+
+##### 2. Score table
+
+| Response | Correctness | Repo comprehension | Change safety | Engineering judgement | Maintainability | Clarity | Note |
+|---|---|---|---|---|---|---|---|
+| A | 5 | 4 | 5 | 5 | 4 | 5 | Finds all three seeded bugs with a correct worked unit example (1000 cm³ × 355 MPa = 355 kNm vs 0.355 from the code), adds a valid combination-label integrity finding, but several cited line numbers are off. |
+| B | 5 | 4 | 5 | 4 | 3 | 4 | All three primary bugs found with a correct dimensional argument and minimal correct fixes, but shallow beyond that: no line references, no test guidance, and the combination column is never examined. |
+| C | 5 | 5 | 5 | 4 | 5 | 4 | All three primary bugs found with accurate line references, regression-test recommendations and a proportionate API-rename suggestion; misses the combination-label point and reads densely. |
+| D | 2 | 2 | 3 | 2 | 3 | 4 | Well formatted, but explicitly asserts the `1e6` divisor is correct, invents a γ_M0 "Critical" that is numerically vacuous, and misdescribes the truncation as returning the worst-case beam. |
+
+##### 3. Top weaknesses per response
+
+**A**
+- Line references are inaccurate against the supplied files (e.g. cites `reporting.py:14–15` for the sort/slice, which is at lines 17–18; `load_factors.py:6–7` for the return at line 6). Minor, but it is a repo-reading slip in an otherwise precise review.
+- Ranks the missing `γ_Q` as "High" below the truncation "Critical"; both are flagged, but an unconservative load factor arguably deserves parity with the reporting bug.
+- Finding 5 (combination label) is valid but partly speculative about input semantics ("if the input can represent alternative ULS combinations") — it is framed as a contract question rather than a proven defect, which is the right framing but adds length.
+
+**B**
+- No file line references and no proposed tests; the fixes are stated as bare edits ("change `1e6` to `1000`") with nothing to lock the conversion down.
+- Does not examine the `combination` column at all despite the prompt's explicit "combinations" focus.
+- Leaves rounding-before-status as non-escalated "assuming the user accepts the rounding margin" — a soft assumption; it is a reporting-integrity defect at the acceptance limit and should at least be a Low/Medium finding.
+- Minimal fix for reporting keeps ascending sort, so failures land at the bottom of the table; acceptable but not the best direction.
+
+**C**
+- Misses the combination-label integrity point (the `combination` string is passed through unvalidated and unused).
+- Findings are single dense paragraphs; harder to scan than A or D, though nothing is omitted.
+- No worked numeric example for the unit error, although the dimensional reasoning stated is correct.
+
+**D**
+- Misses the seeded unit error outright and states in the non-escalated table that "The `1e6` conversion is correct but opaque" — a confident, false claim on the exact category the task told it to focus on.
+- Finding 2 (γ_M0) is invented and self-refuting: "overstated by a factor of 1.0" is no overstatement; the recommended fix is a signature change that also carries the wrong `/1e6` forward.
+- Finding 3 mischaracterises the truncation as returning "the worst-case beam only" — the ascending sort with `[:1]` returns the *least* utilised row, which is the unsafe direction. Both the risk description and the severity narrative are therefore wrong.
+- Rounding fix (`util <= 1.0` on the already-rounded value) does not address the root cause; the "Python float arithmetic rarely lands precisely on 1.0" explanation is muddled, and "an exactly-at-limit beam should fail by most design philosophies" is contrary to the usual `≤ 1.0` acceptance.
+- Claims "No type hints on function signatures" — every function in the supplied code is type-hinted, indicating shallow reading.
+
+##### 4. Ranking (best to worst)
+1. **A** — all three seeded defects correct with a checkable numeric example, plus the most task-relevant extra finding (combination label vs actual calculation); only line-number slips detract.
+2. **C** — equally correct on the seeded defects, most accurate repo referencing, and the best maintainability guidance (regression tests, API rename); loses narrowly for missing the combination point and denser presentation.
+3. **B** — correct and safe on the three primaries but shallow: no line refs, no tests, rounding waved through, combination column ignored.
+4. **D** — misses and explicitly denies the 1000× unit bug, fabricates a γ_M0 critical, and inverts the direction of the truncation defect.
+
+##### 5. Practical significance
+A, C and B would each let a maintainer fix the three real defects correctly; the gap between them is depth and auditability (worked numbers, line refs, tests, the combination-label contract), not correctness. D is materially different in kind: applying D's review would ship the package with the 1000× resistance error intact and with a misleading understanding of what the truncated report shows, while adding a γ_M0 parameter that changes nothing at the default. The A–C gap is marginal; the B–D gap is a release-blocking difference.
+
+##### 6. Manual-review watch-outs
+- Confirm the intended kNm conversion: `Wpl_y_cm3 * fy_MPa / 1e3` (A, B and C agree; D's assertion that `/1e6` is correct should be disregarded).
+- Decide the acceptance rule (`<= 1.0` vs `< 1.0`) and whether status is computed on raw or rounded utilisation before adopting any of the rounding fixes.
+- Decide whether `build_review_table` should return the full table (A/B/C/D) or a governing row per member; A and D both note a per-member `max`/`groupby` would be needed if the latter.
+- A's finding 5 (combination string unused by the calculation) is a genuine reporting-integrity gap not listed in the evaluator notes; worth carrying into the fix scope.
