@@ -146,10 +146,16 @@ def test_discover_rounds():
     assert luna_model["cost_tier"] == 2
     assert luna_model["cost_label"] == "Paid API"
 
-    # every model in both slates carries sourced list pricing for the cost chart
+    # every model in both slates carries sourced list pricing for the cost chart,
+    # except the undisclosed 2026-09-19 model, which has no list price until it is named
+    # (the template lists unpriced models under the chart instead of plotting them)
+    UNPRICED = {"anon-2026-09-19"}
     for r in rounds:
+        unpriced = {m["model_id"] for m in r["models"] if m["blended_price_usd_per_1m"] is None}
+        assert unpriced == UNPRICED, unpriced
         for model in r["models"]:
-            assert model["blended_price_usd_per_1m"] is not None, model["model_id"]
+            if model["model_id"] in UNPRICED:
+                continue
             assert model["pricing"]["as_of"] == "2026-09-17"
             assert model["pricing"]["source"].startswith("https://")
     assert luna_model["blended_price_usd_per_1m"] == 0.45          # 0.75*0.20 + 0.25*1.20
