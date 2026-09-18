@@ -122,7 +122,7 @@ def test_discover_rounds():
     assert "v1" not in round_ids
 
     v2 = next(r for r in rounds if r["round_id"] == "v2")
-    assert len(v2["models"]) == 12
+    assert len(v2["models"]) == 13
     assert v2["models"][0]["model_id"] == "gemma4:31b-cloud"
     v2_model_ids = {m["model_id"] for m in v2["models"]}
     assert {"gpt5.6-sol-xhigh", "gpt5.6-luna-max"} <= v2_model_ids
@@ -169,6 +169,10 @@ def test_discover_rounds():
     assert hy4_model["cost_tier"] == 2
     assert hy4_model["blended_price_usd_per_1m"] == 1.25075       # 0.75*0.834 + 0.25*2.501
     assert v2["ranking"]["tencent-hy4-preview"]["Overall average"] == 3.43
+    anon_model = next(m for m in v2["models"] if m["model_id"] == "anon-2026-09-19")
+    assert anon_model["cost_tier"] == 3                            # explicit; no list price recorded
+    assert anon_model["blended_price_usd_per_1m"] is None
+    assert v2["ranking"]["anon-2026-09-19"]["Overall average"] == 4.14
 
 
 def test_discover_rounds_explicit_cost_tier_overrides_provider_keyword(tmp_path):
