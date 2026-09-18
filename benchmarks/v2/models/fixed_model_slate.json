@@ -144,5 +144,23 @@
       "source_model_id": "openai/gpt-5.6-luna",
       "note": "Matches OpenAI's published rate after the 2026-07-30 price cut. Benchmark runs used the Codex VS Code extension on a subscription plan."
     }
+  },
+  {
+    "model_id": "deepseek-v4.1-flash",
+    "display_name": "DeepSeek V4.1 Flash",
+    "role": "low-cost candidate (three-task subset)",
+    "provider": "OpenRouter API",
+    "cost_tier": 2,
+    "cost_label": "Paid API",
+    "notes": "September 2026 addition. OpenRouter model deepseek/deepseek-v4.1-flash at reasoning effort high, run from a VS Code agent chat. Run on three tasks only (v2-deep-02, v2-anchor-07, v3-notebook-01), so it has no v2 cross-task average.",
+    "pricing": {
+      "input_usd_per_1m": 0.15,
+      "output_usd_per_1m": 0.6,
+      "unit": "USD per 1M tokens, list price",
+      "as_of": "2026-09-17",
+      "source": "https://openrouter.ai/api/v1/models",
+      "source_model_id": "deepseek/deepseek-v4.1-flash",
+      "note": "OpenRouter listing. Benchmark runs were billed through OpenRouter: about $0.0135 (deep-02), $0.05 (anchor) and $0.04 (v3)."
+    }
   }
 ]

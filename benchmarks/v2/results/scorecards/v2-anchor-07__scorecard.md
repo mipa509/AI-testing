@@ -19,6 +19,7 @@
 | `deepseek-v3.2` | 3 | 5 | 3 | 3 | 4 | 4 | 2 | It fixes the planted axis and unit faults, but like `glm` it uses a conservative major-axis modulus and therefore lands on the wrong final adequacy verdict. |
 | `gpt5.6-sol-xhigh` | 5 | 5 | 5 | 5 | 4 | 5 | 2 | Finds both planted faults, cross-checks the corrected 97.08 kNm against the tabulated Mc,y,Rd, verifies the low-shear condition and shows the LTB interpolation, reaching the correct PASS at 0.916; the only blemish is an unused V_Ed in the corrected script. |
 | `gpt5.6-luna-max` | 5 | 5 | 5 | 4 | 4 | 5 | 2 | Finds both planted faults, uses the correct tabulated Wpl,y = 353 cm3, reaches PASS at 0.916 and flags LTB, load factors and self-weight as caveats without replacing the objective, though its LTB figure is asserted without working. |
+| `deepseek-v4.1-flash` | 3 | 2 | 4 | 3 | 4 | 3 | 2 | Reaches the correct corrected numbers (Wpl,y = 353 cm3, Mc,Rd = 97.08 kNm, utilisation 0.916) with a well-commented fix, but its headline verdict is not adequate on an LTB check the task did not pose, its narrative misdescribes the as-written code, and it asserts the planted 49.0 cm3 is the tabulated minor-axis value. |
 
 ## Judge Output Summary
 
@@ -31,6 +32,12 @@ Task summary: Re-run the old EC3 beam-check trap unchanged and compare whether m
 - Blind pack (one judging round): `gpt5.6-sol-xhigh` 4.83, `gpt5.6-luna-max` 4.67, `gpt5.4-xhigh` 4.67, `minimax-m2.7-cloud` 2.50.
 - Both new models fixed the axis and unit faults, used the tabulated `Wpl,y = 353 cm3`, reached the correct cross-section `PASS` at utilisation 0.916 and added a proportionate LTB caveat without replacing the planted objective, matching the April `gpt5.4-xhigh` result.
 - Sol additionally cross-checked `Mc,y,Rd` against the tabulated value, verified the low-shear condition and showed the LTB interpolation; Luna asserted its LTB figure without working. Both used web lookup, as the April `gpt5.4-xhigh` run did.
+
+### DeepSeek V4.1 Flash addendum (2026-09-18)
+
+- Blind pack (one judging round, 2026-09-18): `gpt5.6-sol-xhigh` 5.00, `gpt5.4-xhigh` 4.33, `deepseek-v4.1-flash` 3.17, `minimax-m2.7-cloud` 2.17.
+- DeepSeek V4.1 Flash reached the correct corrected numbers (`Wpl,y = 353 cm3`, `Mc,Rd = 97.08 kNm`, utilisation 0.916, Class 1 check, corrected script printing PASS) but led with the verdict that the section is not adequate because of an LTB check at about 2.9 utilisation that the task did not pose, which the judge treated as displacing the planted objective.
+- Further deductions: the narrative misdescribes the as-written code (a phantom `1e6` divisor, 'prints FAIL' when it prints PASS at 6.6e-6, 'out by 10^3' against 10^6 in the body), it asserts the planted `49.0 cm3` is the tabulated minor-axis value (the tables give about 54.8), and the response carries the agent-mode tool trace plus unrequested workspace reads. Web lookups were attempted but blocked, so properties were quoted from memory.
 
 ## Manual Override Notes
 
@@ -76,6 +83,12 @@ Provisional `deepseek-v3.2` review:
 - Practicality `gpt5.6-sol-xhigh` = 2: 3 min 30 s with web lookup and about 85k tokens on the premium route, faster than April's `gpt5.4-xhigh` (4 min 38 s) but still the slowest and most expensive class of anchor answer, so scored as the April reference.
 - Practicality `gpt5.6-luna-max` = 2: over 6 min 30 s and about 131k tokens, the slowest run in the whole refresh, despite the low list price.
 
+### DeepSeek V4.1 Flash addendum (2026-09-18)
+
+- Scoring: technical criteria for `deepseek-v4.1-flash` were scored blind on 2026-09-18 by the same judge family as the September refresh, in a pack with the same two April anchors plus `gpt5.6-sol-xhigh` as a consistency check, then shifted onto the April scale with the September per-task offset of +0.08 (user decision; see `benchmarks/addendum_2026-09-18_deepseek-v4.1-flash.md`). The April and September rows above are unchanged.
+- Manual overrides: none. The judge's watch-out on the minor-axis modulus was checked: SCI P363 tabulates about 54.8 cm3 for `Wpl,z`, so the response's claim that the planted 49.0 value matches the tables is wrong and the deduction stands. The agent-mode tool trace was flagged to the judge as a capture feature and was not penalised as invented narration.
+- Practicality `deepseek-v4.1-flash` = 2: about 15 min and 55k tokens, the slowest run in any round, with unrequested reads of the other task folders and blocked web lookups; the floor used in September for slow but usable runs, despite the near-zero cost (about $0.05).
+
 ## Winner
 
 - Winner: `gpt5.4-xhigh`
@@ -83,3 +96,5 @@ Provisional `deepseek-v3.2` review:
 - Why it matters in practice: `On the corrected-engineering standard, GPT-5.4 is the cleanest anchor answer: it fixes the planted faults, uses the best section-property value, reaches the correct `PASS` result, and adds a well-scoped buckling caveat without drifting away from the task.`
 
 September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.43) and `gpt5.6-luna-max` (4.29) do not beat the April result of `gpt5.4-xhigh` (4.43), so the winner line is unchanged.
+
+DeepSeek V4.1 Flash addendum (2026-09-18): `deepseek-v4.1-flash` (overall mean 3.00) does not beat the April result of `gpt5.4-xhigh` (4.43), so the winner line is unchanged.

@@ -96,3 +96,23 @@ Practicality scores given: Sol 3 on the six primary tasks, 2 on the anchor, 4 on
 - Capture artefacts: the Sol v3 output lost its Markdown fences in the copy and was judged on content; the Sol task-1 run received the context as attached files rather than pasted text, so its output contains absolute file links; all other runs received pasted text.
 - Cost figures are list-price upper bounds, not billed amounts.
 - Scores for the seven April models, their notes and their April winners are unchanged; only the per-task winner lines changed where a new model's overall mean beat the April winner (tasks 1, 3, 5 and 6).
+
+## Addendum 2026-09-18: DeepSeek V4.1 Flash on three tasks
+
+`deepseek-v4.1-flash` (OpenRouter `deepseek/deepseek-v4.1-flash`, reasoning effort high, run by the user from a VS Code agent chat) was run on the three tasks that separated the models best in the rounds above: the repo review with unit and reporting traps, the EC3 anchor and the pad footing notebook. It was scored with the same blind procedure, in packs holding the same April anchors plus `gpt5.6-sol-xhigh` as a consistency check, and shifted onto the April scale with the September per-task offsets (user decision). Full record, seeds, mapping and judge replies: `benchmarks/addendum_2026-09-18_deepseek-v4.1-flash.md`.
+
+| Task | Blind, six criteria | On April scale | Practicality | Overall | Position on the task |
+|---|---:|---:|---:|---:|---|
+| Task 2 - Repo review traps | 4.00 | 4.00 | 3 | 3.86 | 7th of 10, between `qwen-3.6plus` (4.14) and `glm-5.1:cloud` (3.43); winner `gemma4:31b-cloud` (4.71) unchanged |
+| Anchor - EC3 planted-error trap | 3.17 | 3.17 | 2 | 3.00 | 9th of 10, above `minimax-m2.7-cloud` (2.43) only; winner `gpt5.4-xhigh` (4.43) unchanged |
+| v3 Task 1 - Pad footing notebook | 4.83 | 5.00 | 3 | 4.71 | 2nd of 10, level with `glm-5.1:cloud`; winner `gpt5.4-xhigh` (4.86) unchanged |
+
+Read:
+
+- The DeepSeek V3.2 failure mode is gone: on Task 2 the model reviewed the supplied files, found all three planted blockers and scored within half a point of `gpt5.4-xhigh` and `gpt5.6-sol-xhigh` in the same blind pack.
+- It was strongest on the executable deliverable: blind 4.83 on the notebook, level with `gpt5.4-xhigh` and above `gpt5.6-sol-xhigh` (3.67); the six code cells run end to end, select `3.0 m` with `LC2` governing and cross-check the no-uplift rule against the kern criterion.
+- It was weakest on the hand-calculation anchor: correct corrected numbers, but a headline verdict of not adequate on an LTB check the task did not pose, a narrative that contradicts itself about the original code, and an endorsement of the planted `49.0 cm3` as the tabulated minor-axis value. The run took about 15 minutes with blocked web lookups.
+- Cost and time: the three runs were billed about $0.10 in total through OpenRouter (list price $0.15 / $0.60 per 1M tokens); latencies were 2 min 45 s, about 15 min and 4 min 15 s.
+- Calibration: anchor MAD 0.64 and signed -0.47 against April with anchor order preserved on every task, and `gpt5.6-sol-xhigh` within 0.17 of its September blind scores, so the judge family is consistent with the September round.
+
+Caveats specific to this addendum: three tasks only, so no v2 cross-task average and no place in the v2 overall ranking; the agent read the task files from the workspace folder rather than receiving them as pasted messages, read the other task folders unasked on two runs, and on the anchor read the two header lines of the prompt file above the text block; web lookups were blocked on the anchor whereas the September models had them; one run per task.

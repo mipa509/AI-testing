@@ -29,6 +29,8 @@ This ranking covers the six new v2 tasks for `gemma4:31b-cloud`, `glm-5.1:cloud`
 
 September 2026 note: the `gpt5.6-sol-xhigh` and `gpt5.6-luna-max` rows were scored blind by a new judge alongside April anchor responses and shifted onto the April scale with per-task calibration offsets (see `benchmarks/refresh_2026-09_calibration.md`). On three tasks the shift saturates at the 5 cap, so Sol's blind margin over Luna on deep-03 and deep-04 is not visible in these averages. April rows are unchanged.
 
+DeepSeek V4.1 Flash addendum (2026-09-18): `deepseek-v4.1-flash` was run on Task 2 and the anchor only, so it has no cross-task average and is not in the table above; see `v2_per_task_results.md`, `anchor_task6_comparison.md` and `benchmarks/addendum_2026-09-18_deepseek-v4.1-flash.md`.
+
 ## Recommended Use Cases
 
 - Best premium reference model: `gpt5.6-sol-xhigh` (September 2026; like-for-like successor to `gpt5.4-xhigh`, 4.45 against 4.14)
