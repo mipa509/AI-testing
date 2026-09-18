@@ -135,3 +135,22 @@ Read:
 - Cost and time: about $0.03 for the three runs; 4 min 30 s, 5 min 56 s and 10 min 34 s.
 
 Provisional v2 averages: with two partial models in hand, the v2 cross-task table now carries provisional columns for `deepseek-v4.1-flash` and `glm-5.3-flash` averaged over the v2 tasks they ran (Task 2 and the anchor). They include the anchor, so they are not comparable with the six-task composite of the full models and will be replaced when the remaining tasks are run.
+
+## Addendum 2026-09-18: Tencent Hy4 Preview on the same three tasks
+
+`tencent-hy4-preview` (OpenRouter `tencent/hy4-preview`, reasoning effort high, same VS Code agent route, list price $0.83 / $2.50 per 1M tokens, about seven times the two flash models) was run on the same three tasks and scored the same way. Its anchors failed the calibration gate in the usual direction, so the September per-task offsets were applied, as for DeepSeek. Full record: `benchmarks/addendum_2026-09-18_tencent-hy4-preview.md`.
+
+| Task | Blind, six criteria | On April scale | Practicality | Overall | Position on the task |
+|---|---:|---:|---:|---:|---|
+| Task 2 - Repo review traps | 4.17 | 4.17 | 3 | 4.00 | 7th of 12, the best of the three addendum models; winner `gemma4:31b-cloud` (4.71) unchanged |
+| Anchor - EC3 planted-error trap | 3.00 | 3.00 | 2 | 2.86 | 11th of 12, above `minimax-m2.7-cloud` (2.43) only; winner `gpt5.4-xhigh` (4.43) unchanged |
+| v3 Task 1 - Pad footing notebook | 4.83 | 5.00 | 3 | 4.71 | 2nd equal of 12 with `deepseek-v4.1-flash` and `glm-5.1:cloud`; winner `gpt5.4-xhigh` (4.86) unchanged |
+
+Read:
+
+- The deepest repo review of the day: all three planted blockers with worked numbers, and the only response in its pack to explain that the two arithmetic errors pull in opposite directions. It lost points on change safety for proposing caller-breaking "minimum" fixes and for length.
+- The best notebook of the addendum models by the blind judge, ranked above `gpt5.4-xhigh` in its pack: an `M*c/I` derivation, exact-fraction arithmetic, all four corner pressures, closed-form minimum-width bounds and both governing cases identified; it runs end to end. Deductions only for reversed eccentricity naming and length.
+- The same anchor failure as DeepSeek, in a more elaborate form: correct diagnosis and numbers, then a NOT adequate headline on LTB and deflection checks the task did not pose, with factored self-weight added to the input load. Nearly 13 minutes.
+- Cost and time: about $0.34 for the three runs, ten times the flash models but still small; 1 min 59 s, 3 min 18 s and 12 min 50 s.
+
+Three-model pattern on the anchor: the two models that headlined an unrequested LTB verdict (`deepseek-v4.1-flash`, `tencent-hy4-preview`) sit at the bottom of the anchor table, while `glm-5.3-flash`, which kept LTB as a validity condition, sits mid-table. The task rewards answering the question asked.
