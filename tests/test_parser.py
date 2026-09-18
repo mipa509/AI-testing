@@ -172,7 +172,7 @@ def test_discover_rounds():
     fable_model = next(m for m in v2["models"] if m["model_id"] == "claude-fable-5.1-high")
     assert fable_model["cost_tier"] == 3                            # explicit: subscription capture, premium tier
     assert fable_model["blended_price_usd_per_1m"] == 20.0          # 0.75*10 + 0.25*50
-    assert v2["ranking"]["claude-fable-5.1-high"]["Overall average"] == 4.21
+    assert v2["ranking"]["claude-fable-5.1-high"]["Overall average"] == 4.00   # two-judge mean, 2026-09-19
 
 
 def test_discover_rounds_explicit_cost_tier_overrides_provider_keyword(tmp_path):
