@@ -22,6 +22,7 @@
 | `deepseek-v4.1-flash` | 4 | 5 | 4 | 3 | 4 | 4 | 3 | Found all three planted blockers with correct numeric examples and the strongest not-escalated section, but it over-escalates rounding to High, infers SLS rows from the combination label, wrongly claims the two numeric errors mask each other, and runs to three times the requested length. |
 | `glm-5.3-flash` | 4 | 4 | 4 | 4 | 4 | 4 | 3 | Found all three planted blockers with good numeric examples, but it asserts an unconservative rounding path (1.004 rounding to PASS) that cannot occur under the code's strict less-than test and rates rounding High on that basis, offers reverse=True on a one-row return as the primary reporting fix, and is the longest of the responses judged. |
 | `tencent-hy4-preview` | 5 | 5 | 3 | 4 | 4 | 4 | 3 | Found all three planted blockers with correct worked numbers and was the only response in its pack to explain that the two arithmetic errors act in opposite directions, but it runs far beyond the short high-signal brief, proposes minimum fixes that are not minimum (a mandatory section-class key, a new row schema, packaging rework) and rests some findings on assumptions the three supplied files cannot support. |
+| `anon-2026-09-19` | 5 | 5 | 4 | 5 | 5 | 4 | 2 | Found all three planted blockers and verified them with a fully correct worked example (25.5 vs 21.5 kN/m, 521.9 vs 0.522 kNm), and was the only response in its pack to explain that the two arithmetic errors pull in opposite directions so a partial fix is more dangerous than the current state; ranked first in the pack, with deductions for running past the short high-signal brief, grading the unused combination label High on inference, and two later findings that drift from minimum fixes into design recommendations. |
 
 ## Judge Output Summary
 
@@ -52,6 +53,12 @@ Task summary: Review a steel beam ULS screening package for unit conversion, loa
 - Blind pack (one judging round, 2026-09-18): `gpt5.6-sol-xhigh` 4.83, `gpt5.4-xhigh` 4.33, `tencent-hy4-preview` 4.17, `minimax-m2.7-cloud` 2.50 on the six technical criteria.
 - Tencent Hy4 Preview found all three planted blockers with correct worked numbers and was the only response in the pack to explain that the two arithmetic errors act in opposite directions; the judge called it technically the deepest review.
 - Deductions, mainly on change safety: far longer than the short high-signal brief, minimum fixes that are not minimum (a mandatory section-class key that would break callers, a new row schema, packaging rework), and assumptions about tests and import layout that the three supplied files cannot support.
+
+### Anonymous model addendum (2026-09-19)
+
+- Blind pack (one judging round, 2026-09-19): `anon-2026-09-19` 4.67, `gpt5.6-sol-xhigh` 4.50, `gpt5.4-xhigh` 4.33, `minimax-m2.7-cloud` 2.33 on the six technical criteria; the judge ranked the new model first.
+- The anonymous model found all three planted blockers, verified them with a worked example the judge re-computed without finding an error (25.5 vs 21.5 kN/m, 114.8 vs 96.8 kNm, 521.9 vs 0.522 kNm), and was the only response in its pack to explain that the two arithmetic errors act in opposite directions, so fixing only the loud unit error would ship a PASS on the safest member computed with an unconservative load.
+- Deductions on change safety and clarity: seven findings plus an interaction section and a release gate exceed the short high-signal brief, the unused combination label is graded High on inference about inputs the files do not show, and findings 6 (gamma_M0 and class guard) and 7 (provenance columns) drift from minimum fixes into design recommendations.
 
 ## Manual Override Notes
 
@@ -115,6 +122,12 @@ Provisional `gemma4:31b-cloud` review:
 - Manual overrides: none. The de-anonymised judgement was checked against the evaluator notes; all three planted findings are present and the worked numbers are right. No score was changed.
 - Practicality `tencent-hy4-preview` = 3: 1 min 59 s and about 37k tokens (about $0.094 billed through OpenRouter) on a mid-tier paid route about seven times the flash models' list price, no refusal or truncation; the fastest addendum run on this task, scored as the other paid-API models.
 
+### Anonymous model addendum (2026-09-19)
+
+- Scoring: technical criteria for `anon-2026-09-19` (a placeholder id; the model's identity was withheld from the orchestrator and the judge until scoring was complete) were scored blind on 2026-09-19 by the same judge family as the September refresh, in a pack with the same two April anchors plus `gpt5.6-sol-xhigh` as a consistency check, then shifted onto the April scale with the September per-task offset of +0.42 (the standing user decision for packs that fail the calibration gate, as for `deepseek-v4.1-flash` and `tencent-hy4-preview`; see `benchmarks/addendum_2026-09-19_anon-2026-09-19.md`). Earlier rows above are unchanged.
+- Manual overrides: none. The de-anonymised judgement was checked against the evaluator notes; all three planted findings are present and the worked table was re-computed. No score was changed.
+- Practicality `anon-2026-09-19` = 2: 4 min 14 s API time, 6 min 11 s wall clock and $1.29 session cost on a premium agentic CLI route, no refusal or truncation; slower than every other premium run on this task and the most expensive recorded, so scored as April scored `gpt5.4-xhigh` here (slower and less economical than the best free or cloud answers).
+
 ## Winner
 
 - Winner: `gemma4:31b-cloud`
@@ -128,3 +141,5 @@ DeepSeek V4.1 Flash addendum (2026-09-18): `deepseek-v4.1-flash` (overall mean 3
 GLM 5.3 Flash addendum (2026-09-18): `glm-5.3-flash` (overall mean 3.86) does not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.
 
 Tencent Hy4 Preview addendum (2026-09-18): `tencent-hy4-preview` (overall mean 4.00) does not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.
+
+Anonymous model addendum (2026-09-19): `anon-2026-09-19` (overall mean 4.29) does not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.
