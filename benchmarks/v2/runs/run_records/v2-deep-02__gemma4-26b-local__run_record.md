@@ -10,7 +10,7 @@
 - `raw_output_path`: `runs/raw_outputs/v2-deep-02__gemma4-26b-local__raw.md`
 - `run_route`: `ollama run gemma4:26b in a PowerShell terminal on the user's machine (local weights, no harness, tools, skills or web access)`
 - `rate_limit_or_refusal_notes`: none; no refusal or truncation
-- `latency_notes`: not captured (plain terminal run). `ollama run <model> --verbose` would print duration and token counts after the reply.
+- `latency_notes`: not captured (plain terminal run). `ollama run <model> --verbose` would print duration and token counts after the reply. The four later tasks on the same route, timed with `ollama --verbose`, took 4 min 18 s to 8 min 16 s each including the prompt-only reply, at 7.7 to 10.8 generated tokens per second. Hardware: Intel Core i7-9700K, 64 GB RAM, RTX 2070 SUPER 8 GB; llama-server held about 4 GB and about 50 percent CPU while generating, so the 26B weights run mostly on CPU with partial GPU offload, which is consistent with the 8 to 12 tokens per second observed.
 - `token_usage_or_cost`: not captured; free local inference, no API cost.
 - `manual_observations`: Second task for this local model (after the v3 notebook). User's note: the model waited for the pasted context before answering, as the two-message protocol requires. The review cites the three real files and their functions. The response is short and follows the four-part structure the prompt asks for (findings, significance, minimum fix, non-escalated).
 
