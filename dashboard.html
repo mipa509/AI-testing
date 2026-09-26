@@ -908,10 +908,11 @@ function renderUsageChart(round) {
 
   const recorded = modelIds.length;
   document.getElementById('usage-chart-sub').textContent =
-    'Grouped bars per task for the models with recorded usage. Toggle between Codex-reported tokens and the estimated cost at list price.';
+    'Grouped bars per task for the models with recorded usage. Toggle between the token totals each run\'s harness reported and the estimated cost at list price.';
   document.getElementById('usage-chart-note').textContent =
     `Usage recorded for ${recorded} of ${round.models.length} models; the April 2026 run records carry no token counts. `
-    + 'Codex reports one total token figure per run (input, output and reasoning together), so the estimated cost prices every token at the model\'s output list rate and is an upper bound. '
+    + 'Each harness (Codex, VS Code agent chat, GitHub Copilot) reports one total token figure per run (input, output and reasoning together), so the estimated cost prices every token at the model\'s output list rate and is an upper bound. '
+    + 'Harness totals are not strictly comparable: GitHub Copilot counts its own system prompt and tool definitions (about 30k per run), so its bars sit higher for the same work. '
     + 'A Total bar is drawn only for models with usage recorded on every task in the round; partial sums are marked in the table view.';
 
   if (usageChart) { usageChart.destroy(); usageChart = null; }
@@ -986,7 +987,7 @@ function renderUsageChart(round) {
           grid: { color: INK.grid, lineWidth: 1 },
           border: { color: INK.grid },
           title: { display: true, color: INK.muted, font: CHART_FONT,
-                   text: isCost ? 'Estimated cost, USD (tokens x output list price, upper bound)' : 'Codex-reported tokens (thousands)' },
+                   text: isCost ? 'Estimated cost, USD (tokens x output list price, upper bound)' : 'Harness-reported tokens (thousands)' },
         },
       },
       plugins: {
