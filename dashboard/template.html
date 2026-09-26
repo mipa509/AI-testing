@@ -701,7 +701,8 @@ function renderPriceChart(round) {
 
   const isLog = priceScale === 'log';
   const unpriced = round.models.filter(m => m.blended_price_usd_per_1m === null || m.blended_price_usd_per_1m === undefined || (isLog && m.blended_price_usd_per_1m <= 0));
-  const asOf = (round.models.find(m => m.pricing && m.pricing.as_of) || {}).pricing?.as_of || 'n/a';
+  const asOfDates = [...new Set(round.models.map(m => m.pricing?.as_of).filter(Boolean))].sort();
+  const asOf = asOfDates.length > 1 ? `${asOfDates[0]} to ${asOfDates[asOfDates.length - 1]}` : (asOfDates[0] || 'n/a');
 
   const tiers = [
     { tier: 1, label: 'Free/Cloud' },
