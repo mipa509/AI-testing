@@ -201,3 +201,28 @@ Read:
 - The pattern the judges kept naming: right diagnosis, unverified deliverable. Every one of its patches and tests would need a human pass before use; two of its own tests contradict its own code.
 - Practicality: free, and it waited for the context every time, but on consumer hardware with an 8 GB card the 26B weights run mostly on CPU at 8 to 12 tokens per second, so each answer took 3.5 to 7.5 minutes after a 30 to 45 s prompt-only reply. Scored 3 on every task on the latency-only reading.
 - Against its cloud sibling: April's `gemma4:31b-cloud` scored 4.10 on the v2 composite and 4.00 on the anchor with runnable code; the 26B local model shows what the smaller weights and the lack of tooling cost on these tasks.
+
+## Addendum 2026-09-26: Qwen 3.8 27B via OpenRouter, all tasks
+
+`qwen-3.8-27b-high` (OpenRouter `qwen/qwen3.8-27b` at reasoning effort high, run by the user from the GitHub Copilot agent chat in VS Code, one fresh chat per task on a local sandbox folder; list price $0.42 / $3.00 per 1M tokens) was run on all eight tasks and scored the same way. Over its eight packs the anchors failed the calibration gate (MAD 0.72, worst row 1.17), so the September per-task offsets were applied to every task, the standing rule. Practicality is 3 on every task: the runs were billed through the API, and the user chose to score this route consistently with the three 2026-09-18 addendum models rather than give the fast tasks a 4. Record: `benchmarks/addendum_2026-09-26_qwen-3.8-27b-high.md`.
+
+| Task | Blind, six criteria | On April scale | Practicality | Overall | Position on the task |
+|---|---:|---:|---:|---:|---|
+| Task 1 - Multi-file bug hunt | 3.67 | 4.67 | 3 | 4.43 | 3rd of 11; winner `gpt5.6-sol-xhigh` (4.71) unchanged |
+| Task 2 - Repo review traps | 4.67 | 4.67 | 3 | 4.43 | 3rd equal of 15; winner `gemma4:31b-cloud` (4.71) unchanged |
+| Task 3 - Scoped feature design | 4.33 | 5.00 | 3 | 4.71 | 1st equal of 11 with `gpt5.6-sol-xhigh` and `gpt5.6-luna-max`; winner `gpt5.6-sol-xhigh` unchanged (a tie does not replace the winner) |
+| Task 4 - Safe refactor | 5.00 | 5.00 | 3 | 4.71 | 4th equal of 11; winner `kimi-k2-thinking` (5.00) unchanged |
+| Task 5 - Large dataset pipeline | 3.33 | 3.33 | 3 | 3.29 | 10th of 11; winner `gpt5.6-sol-xhigh` (4.57) unchanged |
+| Task 6 - Review plus tests | 4.17 | 4.17 | 3 | 4.00 | 1st equal of 11 with `gpt5.6-luna-max`; winner unchanged |
+| Anchor - EC3 planted-error trap | 2.83 | 2.83 | 3 | 2.86 | 12th equal of 15; winner `gpt5.4-xhigh` (4.43) unchanged |
+| v3 Task 1 - Pad footing notebook | 4.83 | 5.00 | 3 | 4.71 | 2nd equal of 15; winner `gpt5.4-xhigh` (4.86) unchanged |
+
+v2 six-task average 4.26, third of fifteen behind `gpt5.6-luna-max` (4.48) and `gpt5.6-sol-xhigh` (4.45) and ahead of April's `gpt5.4-xhigh` (4.14); anchor 2.86; v3 4.71. All eight runs cost $0.441 on OpenRouter.
+
+Read:
+
+- The strongest showing of any model outside the September OpenAI pair on the v2 primary tasks. The blind judge placed it first in three packs (repo review, safe refactor, review plus tests), ahead of both `gpt5.6-sol-xhigh` and `gpt5.4-xhigh`, and second in three more.
+- Fast and cheap: 39 s to 2 min on most v2 tasks at $0.02 to $0.04 each; the notebook took 8 min 18 s and $0.18 because the model miscalculated and corrected itself during the run, but the delivered notebook runs end to end and gives 3.0 m with LC2 governing.
+- Two weak spots. On the anchor it named both planted errors but invented a major-axis modulus (588 cm3 against the tabulated 353 cm3), so its utilisation of 0.55 overstates capacity by about two thirds, the unconservative direction. On the dataset pipeline its rewrite silently drops invalid rows from a pass/fail summary while claiming to report them.
+- Against its April sibling: `qwen-3.6plus` scored 3.74 on the v2 composite; the 27B model at effort high adds half a point.
+
