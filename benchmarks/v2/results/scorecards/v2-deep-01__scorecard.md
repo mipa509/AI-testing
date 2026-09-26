@@ -20,6 +20,7 @@
 | `gpt5.6-sol-xhigh` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Blind-judged top pair with Luna: found the cm3 to mm3 root cause, the signed-moment envelope risk and the rounding-before-status bug in the right severity order with stated assumptions, though the pipeline validations are described in prose rather than code. |
 | `gpt5.6-luna-max` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Blind-judged top pair with Sol: found the root cause, the envelope, the first/max section mismatch and the rounding-before-status bug and shipped complete runnable code, but ranked a speculative axis-naming question above the envelope defect and patched more broadly than the minimum. |
 | `gemma4:26b-local` | 3 | 3 | 3 | 3 | 3 | 4 | 3 | Names the planted 1e2 conversion as the root cause with the tenfold effect explained and adds a sensible unknown-section guard, but the pasted patch contains `SEIONS[name]`, which raises NameError on every lookup, it misses the signed-max envelope, the rounding-before-status defect and the section-pairing risk, touches one file despite the multi-file brief, hedges the NaN behaviour wrongly, and its capacity test states no expected value. |
+| `qwen-3.8-27b-high` | 5 | 5 | 4 | 4 | 5 | 5 | 3 | Correct `1e2` root cause with a worked 254x146x31 UB example and the broadest secondary sweep (NaN status, unknown-section guard, mixed sections, axis naming), but it misses the signed-max moment envelope, proposes a test that would pin the signed max, and defers the rounding-before-status defect instead of fixing it. |
 
 ## Judge Output Summary
 
@@ -40,6 +41,14 @@ Task summary: Diagnose why major-axis beam utilisation ratios became too high af
 - Judge's deduction: The proposed `section_library.py` contains `section = SEIONS[name]`, a typo that would raise `NameError` on every lookup. Applying the patch as written breaks the pipeline completely; the task explicitly asked for a safe fix.
 - Judge's deduction: Misses the envelope defect, the rounding-before-status defect, and the `"Section": "first"` pairing risk; only one file is touched despite the "multi-file fix" instruction.
 - Judge's deduction: "`NaN <= 1.0` evaluates to `False` in some pandas versions" is hedged and misleading; it is always `False`, so all NaN rows are labelled FAIL with an empty utilisation, which is the actual issue to state.
+
+### Qwen 3.8 27B addendum (2026-09-26)
+
+- Blind pack (one judging round, 2026-09-26): `gpt5.6-sol-xhigh` 4.50, `qwen-3.8-27b-high` 3.67, `qwen-3.6plus` 3.67, `gpt5.4-xhigh` 3.50 on the six technical criteria; the judge ranked `qwen-3.8-27b-high` second in its pack (level on the mean with `qwen-3.6plus`, placed above it on the ranking).
+- Judge's one-line reading of the response: Broadest secondary sweep (NaN status, unknown section, mixed sections, sort order, gamma_M0, axis naming) but misses the envelope entirely, proposes a test that would lock in the signed-max behaviour, and defers the rounding bug rather than fixing it.
+- Judge's deduction: Misses the envelope defect and actively proposes `test_build_member_summary_takes_max_moment` ("assert the max is used"), which would pin the signed-max behaviour and make the future envelope fix a test failure.
+- Judge's deduction: Sees the rounding-before-status problem but defers it ("document and assert the intended behaviour"); classifying pass/fail from a rounded value is a defect, not a design choice.
+- Judge's deduction: The new `"DATA"` status changes the reporting contract for any consumer that partitions on PASS/FAIL; not a smallest-safe change.
 
 ## Manual Override Notes
 
@@ -91,6 +100,12 @@ Provisional `gemma4:31b-cloud` review:
 - Manual overrides: none. The judge's claims about the response were checked against the response text; the defects it names are present as described.
 - Practicality `gemma4:26b-local` = 3: free local inference on the user's own hardware, no API cost, no refusal, the two-message protocol followed; on the timed tasks the answer took 3 min 35 s to 7 min 32 s after a 30 to 45 s prompt-only reply (7.7 to 10.8 generated tokens per second, CPU-bound on an 8 GB card), so on the latency-only reading that applies to routes where cost is not counted it is scored as the 3 to 6 minute runs of `gpt5.6-luna-max` and the 2026-09-18 addendum models, not the 4 to 5 April gave the free cloud route for one-to-two-minute answers.
 
+### Qwen 3.8 27B addendum (2026-09-26)
+
+- Scoring: technical criteria for `qwen-3.8-27b-high` were scored blind on 2026-09-26 by the same judge family as the September refresh (a Claude Fable 5.1 subagent), in a pack with the two April anchors plus `gpt5.6-sol-xhigh` as a consistency check. Over the model's eight packs the anchors failed the calibration gate (MAD 0.72, worst row 1.17), so the blind scores [4, 4, 3, 3, 4, 4] were shifted onto the April scale with the September per-task offset of +0.67, the standing user decision (see `benchmarks/addendum_2026-09-26_qwen-3.8-27b-high.md`). Earlier rows above are unchanged.
+- Manual review: Checked against the response text: the signed `max` aggregation is never questioned and `test_build_member_summary_takes_max_moment` asserts the max is used, as the judge says. No override.
+- Practicality `qwen-3.8-27b-high` = 3: paid API route (OpenRouter through the GitHub Copilot agent in VS Code, list price $0.42 / $3.00 per 1M input / output tokens), 53 s and about $0.022, no refusal or truncation. Scored as `tencent-hy4-preview`, `deepseek-v4.1-flash` and `glm-5.3-flash` on the same route: no paid-API run has scored above 3 on a v2 task, and Hy4's near-identical deep-02 run (1 min 59 s) got 3 (user decision, 2026-09-26: score this route consistently).
+
 ## Winner
 
 - Winner: `gpt5.6-sol-xhigh`
@@ -100,3 +115,5 @@ Provisional `gemma4:31b-cloud` review:
 September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.71) beats the April result, so the winner line above was updated. April 2026 result for the seven original models: winner `gemma4:31b-cloud` (overall mean 4.29); Difference size: `Small`; Why it matters in practice: `Gemma found the core unit bug and paired it with the most repo-grounded secondary risk, giving the strongest overall review without hallucinating a different codebase.`
 
 Gemma 4 26B local addendum (2026-09-19): `gemma4:26b-local` (overall mean 3.14) does not beat the April result of `gpt5.6-sol-xhigh` (4.71), so the winner line is unchanged.
+
+Qwen 3.8 27B addendum (2026-09-26): `qwen-3.8-27b-high` (overall mean 4.43) does not beat the standing result of `gpt5.6-sol-xhigh` (4.71), so the winner line is unchanged.

@@ -20,6 +20,7 @@
 | `gpt5.6-sol-xhigh` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Blind winner in both judging rounds: recommends leave-as-is as the lowest-risk option, gives an explicit-policy helper that preserves the zero-denominator split, notes format_status(None) would raise, and supplies runnable parametrised tests covering the boundary and both denominators. |
 | `gpt5.6-luna-max` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Correct parametrised helper with full code that flags the fallback-argument misuse risk and asks for spreadsheet output comparison, but its regression set misses the inclusive 1.0 boundary and utilisation-level asserts and it lists the <= 0 guard under both shared and distinct. |
 | `gemma4:26b-local` | 4 | 5 | 5 | 5 | 4 | 4 | 3 | Spots the planted None-versus-0.0 zero-denominator split and rightly prefers leaving the helpers alone, offering a parameterised fallback helper only if insisted on, but two of its four regression checks expect status strings from functions that return floats, it omits the negative-denominator case its own table names, and the helper's semantics-selecting parameter is given a default. |
+| `qwen-3.8-27b-high` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Identifies the concrete None/`CHECK INPUT` versus steel 0.0/`PASS` split as deliberate, recommends effectively no code change beyond an optional one-line division helper, flags the steel zero-capacity PASS as a separate decision, and gates the merge on a pre/post diff of the spreadsheet status columns. |
 
 ## Judge Output Summary
 
@@ -40,6 +41,13 @@ Task summary: Assess whether a shared utilisation helper can be extracted withou
 - Judge's deduction: Regression checks 3 and 4 call `concrete_utilisation(1.0, 1.0)` / `concrete_utilisation(1.1, 1.0)` and expect `"PASS"` / `"FAIL"`; those functions return `1.0` and `1.1`. The tests as written would fail or would be quietly rewritten by whoever implements them; for a task that is explicitly about exactness of status text, that is a real defect.
 - Judge's deduction: No negative-denominator test even though its own table says "Zero/Negative Denominator" and the code uses `<= 0`.
 - Judge's deduction: The optional helper gives `fallback_value` a default of `None`; a default makes it easier for a call site to silently pick up the wrong semantics (here a missed argument in steel would propagate `None` into `format_status` and raise, which is at least loud, but a default on a semantics-selecting parameter is still poor design).
+
+### Qwen 3.8 27B addendum (2026-09-26)
+
+- Blind pack (one judging round, 2026-09-26): `qwen-3.8-27b-high` 5.00, `gpt5.6-sol-xhigh` 4.83, `gpt5.4-xhigh` 4.17, `gemma4:31b-cloud` 3.67 on the six technical criteria; the judge ranked `qwen-3.8-27b-high` first in its pack.
+- Judge's one-line reading of the response: Identifies the sentinel split precisely, recommends effectively no code change, flags the steel zero-capacity `PASS` as a separate decision item, and specifies a pre/post golden-file diff against spreadsheet rows.
+- Judge's deduction: Suggests an optional `divide(num, den)` helper in `common_formatting.py` and then concedes it is "arguably not worth even this"; a division helper in a formatting module is a poor home.
+- Judge's deduction: Attributes intent to the steel sentinel ("treat as no demand, passes") that the repo does not evidence, though it later calls it a latent bug.
 
 ## Manual Override Notes
 
@@ -91,6 +99,12 @@ Provisional `gemma4:31b-cloud` review:
 - Manual overrides: none. The judge's claims about the response were checked against the response text; the defects it names are present as described.
 - Practicality `gemma4:26b-local` = 3: free local inference on the user's own hardware, no API cost, no refusal, the two-message protocol followed; on the timed tasks the answer took 3 min 35 s to 7 min 32 s after a 30 to 45 s prompt-only reply (7.7 to 10.8 generated tokens per second, CPU-bound on an 8 GB card), so on the latency-only reading that applies to routes where cost is not counted it is scored as the 3 to 6 minute runs of `gpt5.6-luna-max` and the 2026-09-18 addendum models, not the 4 to 5 April gave the free cloud route for one-to-two-minute answers.
 
+### Qwen 3.8 27B addendum (2026-09-26)
+
+- Scoring: technical criteria for `qwen-3.8-27b-high` were scored blind on 2026-09-26 by the same judge family as the September refresh (a Claude Fable 5.1 subagent), in a pack with the two April anchors plus `gpt5.6-sol-xhigh` as a consistency check. Over the model's eight packs the anchors failed the calibration gate (MAD 0.72, worst row 1.17), so the blind scores [5, 5, 5, 5, 5, 5] were shifted onto the April scale with the September per-task offset of +0.96, the standing user decision (see `benchmarks/addendum_2026-09-26_qwen-3.8-27b-high.md`). Earlier rows above are unchanged.
+- Manual review: Checked against the response text: the zero and negative capacity split is preserved for both modules and the status strings are left alone. No override.
+- Practicality `qwen-3.8-27b-high` = 3: paid API route (OpenRouter through the GitHub Copilot agent in VS Code, list price $0.42 / $3.00 per 1M input / output tokens), 39 s and about $0.021, no refusal or truncation. Scored as `tencent-hy4-preview`, `deepseek-v4.1-flash` and `glm-5.3-flash` on the same route: no paid-API run has scored above 3 on a v2 task, and Hy4's near-identical deep-02 run (1 min 59 s) got 3 (user decision, 2026-09-26: score this route consistently).
+
 ## Winner
 
 - Winner: `kimi-k2-thinking`
@@ -100,3 +114,5 @@ Provisional `gemma4:31b-cloud` review:
 September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.71) and `gpt5.6-luna-max` (4.71) do not beat the April result of `kimi-k2-thinking` (5.00), so the winner line is unchanged.
 
 Gemma 4 26B local addendum (2026-09-19): `gemma4:26b-local` (overall mean 4.29) does not beat the April result of `kimi-k2-thinking` (5.00), so the winner line is unchanged.
+
+Qwen 3.8 27B addendum (2026-09-26): `qwen-3.8-27b-high` (overall mean 4.71) does not beat the standing result of `kimi-k2-thinking` (5.00), so the winner line is unchanged.
