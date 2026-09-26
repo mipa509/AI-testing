@@ -20,6 +20,7 @@
 | `gpt5.6-sol-xhigh` | 5 | 5 | 4 | 5 | 5 | 5 | 3 | Blind winner in both judging rounds: the most rigorous vectorised rewrite (dtype-aware key normalisation, finiteness checks, reason-coded diagnostics, raise/drop policy), at the cost of extra length and a documented member-envelope grain change. |
 | `gpt5.6-luna-max` | 5 | 5 | 4 | 5 | 4 | 5 | 3 | Proportionate, semantics-preserving vectorised rewrite with fail-fast validation including infinity and non-positive length, but it stringifies the key columns unconditionally and does not flag the changed group ordering. |
 | `gemma4:26b-local` | 2 | 3 | 2 | 2 | 3 | 3 | 3 | A sound review of the iterrows, float-cast and zero-length problems with a vectorised rewrite, but the code carries a walrus expression inside a subscript (`df[REQUIRED_column_subset := REQUIRED_COLUMNS]`), silently drops unparseable rows from a pass/fail summary, counts zero-length members whose ratio it has removed, leaves negative lengths and signed deflections unhandled, and checks columns only after an empty-frame early return. |
+| `qwen-3.8-27b-high` | 3 | 4 | 3 | 3 | 3 | 4 | 3 | Sound review table, vectorised rewrite and patch plan, but the code silently drops invalid rows from a pass/fail summary while its docstring and prose say the exclusions are reported, keeps the full-frame copy it criticised, leaves its N/A branch unreachable, and wrongly says the original loses the index. |
 
 ## Judge Output Summary
 
@@ -40,6 +41,14 @@ Task summary: Review a member-summary pipeline for large-data performance, clean
 - Judge's deduction: `work_df = df[REQUIRED_column_subset := REQUIRED_COLUMNS].copy()` is an unparenthesised assignment expression inside a subscript: SyntaxError on Python < 3.10, and a pointless throwaway variable on 3.10+. Signals unverified code.
 - Judge's deduction: `dropna` silently discards rows with non-numeric Length/Deflection, so a storey can report PASS with members missing and no warning; MemberCount still includes zero-length members whose ratio became NaN, so count and ratio populations disagree.
 - Judge's deduction: Negative lengths and signed (negative) deflections are unhandled, so a large negative deflection yields a negative ratio and a PASS; the claim that `inf` "might bypass the PASS logic" is backwards (inf fails; -inf passes).
+
+### Qwen 3.8 27B addendum (2026-09-26)
+
+- Blind pack (one judging round, 2026-09-26): `gpt5.6-sol-xhigh` 4.67, `gpt5.4-xhigh` 4.17, `qwen-3.8-27b-high` 3.33, `gemma4:31b-cloud` 2.83 on the six technical criteria; the judge ranked `qwen-3.8-27b-high` third in its pack.
+- Judge's one-line reading of the response: Good review table and patch plan, but the code silently drops invalid rows from a PASS/FAIL summary while the docstring and prose claim they are reported, keeps a full-frame copy, and contains one false claim about the original.
+- Judge's deduction: `clean = clean.loc[valid]` discards rows with bad length or deflection without any warning or count, so a group can PASS because its worst member had an unparseable length; the prose and docstring claim the exclusions are reported.
+- Judge's deduction: Keeps `clean = df.copy()` after criticising the memory cost of copying, and wrongly says the original loses the index (`pd.DataFrame(list_of_Series)` keeps the row labels).
+- Judge's deduction: The `N/A` status branch is dead in the revised code because NaN ratios are filtered out before grouping.
 
 ## Manual Override Notes
 
@@ -91,6 +100,12 @@ Provisional `gemma4:31b-cloud` review:
 - Manual overrides: none. The judge's claims about the response were checked against the response text; the defects it names are present as described.
 - Practicality `gemma4:26b-local` = 3: free local inference on the user's own hardware, no API cost, no refusal, the two-message protocol followed; on the timed tasks the answer took 3 min 35 s to 7 min 32 s after a 30 to 45 s prompt-only reply (7.7 to 10.8 generated tokens per second, CPU-bound on an 8 GB card), so on the latency-only reading that applies to routes where cost is not counted it is scored as the 3 to 6 minute runs of `gpt5.6-luna-max` and the 2026-09-18 addendum models, not the 4 to 5 April gave the free cloud route for one-to-two-minute answers.
 
+### Qwen 3.8 27B addendum (2026-09-26)
+
+- Scoring: technical criteria for `qwen-3.8-27b-high` were scored blind on 2026-09-26 by the same judge family as the September refresh (a Claude Fable 5.1 subagent), in a pack with the two April anchors plus `gpt5.6-sol-xhigh` as a consistency check. Over the model's eight packs the anchors failed the calibration gate (MAD 0.72, worst row 1.17), so the blind scores [3, 4, 3, 3, 3, 4] were shifted onto the April scale with the September per-task offset of +0.42, the standing user decision (see `benchmarks/addendum_2026-09-26_qwen-3.8-27b-high.md`). Earlier rows above are unchanged.
+- Manual review: Execution (2026-09-26, pandas 2.2.3): the revised function runs on a dirty frame; a group whose rows are all invalid disappears instead of reaching the `N/A` branch, and `pd.DataFrame` built from `iterrows` rows keeps the original index labels, confirming both judge points. The run note says the agent created a temporary virtual environment and installed pandas to time its code, then removed it. No override.
+- Practicality `qwen-3.8-27b-high` = 3: paid API route (OpenRouter through the GitHub Copilot agent in VS Code, list price $0.42 / $3.00 per 1M input / output tokens), 2 min 59 s and about $0.073 (the agent also created and removed a temporary virtual environment to time its code), no refusal or truncation. Scored as `tencent-hy4-preview`, `deepseek-v4.1-flash` and `glm-5.3-flash` on the same route: no paid-API run has scored above 3 on a v2 task, and Hy4's near-identical deep-02 run (1 min 59 s) got 3 (user decision, 2026-09-26: score this route consistently).
+
 ## Winner
 
 - Winner: `gpt5.6-sol-xhigh`
@@ -100,3 +115,5 @@ Provisional `gemma4:31b-cloud` review:
 September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.57) beats the April result, so the winner line above was updated. April 2026 result for the seven original models: winner `kimi-k2-thinking` (overall mean 4.00); Difference size: `Small`; Why it matters in practice: `All six recognised the vectorisation need, but kimi still best balanced performance improvement with a stable output contract.`
 
 Gemma 4 26B local addendum (2026-09-19): `gemma4:26b-local` (overall mean 2.57) does not beat the April result of `gpt5.6-sol-xhigh` (4.57), so the winner line is unchanged.
+
+Qwen 3.8 27B addendum (2026-09-26): `qwen-3.8-27b-high` (overall mean 3.29) does not beat the standing result of `gpt5.6-sol-xhigh` (4.57), so the winner line is unchanged.

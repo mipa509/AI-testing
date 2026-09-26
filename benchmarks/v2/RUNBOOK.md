@@ -34,6 +34,7 @@ Use these exact model IDs for the current scored slate:
 - `tencent-hy4-preview` (2026-09-18 addendum)
 - `claude-fable-5.1-high` (2026-09-19 addendum)
 - `gemma4:26b-local` (2026-09-19 addendum; local Ollama, all tasks)
+- `qwen-3.8-27b-high` (2026-09-26 addendum; OpenRouter via GitHub Copilot, all tasks)
 
 ## 3. Folder Convention While Running
 

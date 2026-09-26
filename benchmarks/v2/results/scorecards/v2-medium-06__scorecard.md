@@ -20,6 +20,7 @@
 | `gpt5.6-sol-xhigh` | 4 | 4 | 3 | 4 | 4 | 4 | 3 | Most decisive on the mm/m unit bug (converts to a dimensionless slope) with clean tests, but delivers a 1000x output change and an exactly-two-points restriction under the same function name and wrongly claims NaN yields PASS in the current code. |
 | `gpt5.6-luna-max` | 4 | 5 | 4 | 4 | 4 | 4 | 3 | Complete and accurate bug list (zero allowable, sign, equality boundary, spacing, NaN/inf, fewer than two readings, mm/m) with proportionate fixes and tests consistent with them; the unit inconsistency is documented rather than resolved in code. |
 | `gemma4:26b-local` | 3 | 3 | 2 | 3 | 3 | 4 | 3 | Finds the zero-allowable false PASS and the multi-point spacing ambiguity, but its `differential_slope` fix returns 0.0 for invalid spacing, the silent-benign default it called catastrophic elsewhere, one test expects 5.0 where both the original and the fixed code give 10.0, the mm/m unit mixing is a footnote rather than a finding, and no sign convention for heave is stated. |
+| `qwen-3.8-27b-high` | 4 | 4 | 4 | 4 | 4 | 5 | 3 | Headlines the mm/m slope unit issue, the zero and negative allowable false PASS and the boundary with proportionate raising fixes and ten runnable tests, but one test (`status_from_ratio(-0.5) == "FAIL"`) fails against its own fix and the heave guard it implies is never added. |
 
 ## Judge Output Summary
 
@@ -40,6 +41,13 @@ Task summary: Review a foundation-settlement helper for hidden numerical failure
 - Judge's deduction: `differential_slope` fix returns `0.0` when `spacing_m <= 0` — a silent benign default for invalid input, exactly the failure class it called "catastrophic" in `settlement_ratio`; a downstream check would see zero distortion and pass.
 - Judge's deduction: Test "Sequence Expansion" expects `differential_slope([10, 5, 0], 1) == 5.0`; both the original and A's fixed code return `10.0` (max−min = 10, /1). The test would fail against A's own fix, and the "validates if user is aware" wording is not a test.
 - Judge's deduction: Does not flag the mm/m unit mixing as a bug; it only appears as a footnote. No unit-conversion test, no negative-allowable guard, and the sign convention for heave is never stated despite the prompt asking for it.
+
+### Qwen 3.8 27B addendum (2026-09-26)
+
+- Blind pack (one judging round, 2026-09-26): `qwen-3.8-27b-high` 4.17, `gpt5.6-sol-xhigh` 3.83, `gpt5.4-xhigh` 3.17, `deepseek-v3.2` 1.67 on the six technical criteria; the judge ranked `qwen-3.8-27b-high` first in its pack.
+- Judge's one-line reading of the response: Finds all planted issues, headlines the 1000x unit bug correctly and keeps fixes proportionate, but ships one test (`status_from_ratio(-0.5) == "FAIL"`) that fails against its own fixed code.
+- Judge's deduction: `test_status_negative_ratio_fails` asserts `status_from_ratio(-0.5) == "FAIL"`, but the proposed `<= 1.0` fix returns PASS for -0.5, so the suite is red against the proposed code; negative settlement is never guarded.
+- Judge's deduction: Changes `<` to `<=` and converts the slope output to m/m without caller context, though it flags both as decisions.
 
 ## Manual Override Notes
 
@@ -91,6 +99,12 @@ Provisional `gemma4:31b-cloud` review:
 - Manual overrides: none. The judge's claims about the response were checked against the response text; the defects it names are present as described.
 - Practicality `gemma4:26b-local` = 3: free local inference on the user's own hardware, no API cost, no refusal, the two-message protocol followed; on the timed tasks the answer took 3 min 35 s to 7 min 32 s after a 30 to 45 s prompt-only reply (7.7 to 10.8 generated tokens per second, CPU-bound on an 8 GB card), so on the latency-only reading that applies to routes where cost is not counted it is scored as the 3 to 6 minute runs of `gpt5.6-luna-max` and the 2026-09-18 addendum models, not the 4 to 5 April gave the free cloud route for one-to-two-minute answers.
 
+### Qwen 3.8 27B addendum (2026-09-26)
+
+- Scoring: technical criteria for `qwen-3.8-27b-high` were scored blind on 2026-09-26 by the same judge family as the September refresh (a Claude Fable 5.1 subagent), in a pack with the two April anchors plus `gpt5.6-sol-xhigh` as a consistency check. Over the model's eight packs the anchors failed the calibration gate (MAD 0.72, worst row 1.17), so the blind scores [4, 4, 4, 4, 4, 5] were shifted onto the April scale with the September per-task offset of +0.17, the standing user decision (see `benchmarks/addendum_2026-09-26_qwen-3.8-27b-high.md`). Earlier rows above are unchanged.
+- Manual review: Execution (2026-09-26, pytest): with the response's own fixed functions, 9 of its 10 tests pass and `test_status_negative_ratio_fails` fails, as the judge says. No override.
+- Practicality `qwen-3.8-27b-high` = 3: paid API route (OpenRouter through the GitHub Copilot agent in VS Code, list price $0.42 / $3.00 per 1M input / output tokens), 1 min 56 s and about $0.039, no refusal or truncation. Scored as `tencent-hy4-preview`, `deepseek-v4.1-flash` and `glm-5.3-flash` on the same route: no paid-API run has scored above 3 on a v2 task, and Hy4's near-identical deep-02 run (1 min 59 s) got 3 (user decision, 2026-09-26: score this route consistently).
+
 ## Winner
 
 - Winner: `gpt5.6-luna-max`
@@ -100,3 +114,5 @@ Provisional `gemma4:31b-cloud` review:
 September 2026 refresh: `gpt5.6-luna-max` (overall mean 4.00) beats the April result, so the winner line above was updated. April 2026 result for the seven original models: winner `glm-5.1:cloud` (overall mean 2.86); Difference size: `Small`; Why it matters in practice: `No model was ideal on task 6, but glm still stayed slightly closer to the real helper semantics than minimax, qwen, kimi, deepseek, or gemma.`
 
 Gemma 4 26B local addendum (2026-09-19): `gemma4:26b-local` (overall mean 3.00) does not beat the April result of `gpt5.6-luna-max` (4.00), so the winner line is unchanged.
+
+Qwen 3.8 27B addendum (2026-09-26): `qwen-3.8-27b-high` (overall mean 4.00) ties the standing result of `gpt5.6-luna-max` (4.00) but does not beat it, so the winner line is unchanged.

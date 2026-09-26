@@ -24,6 +24,7 @@
 | `tencent-hy4-preview` | 4 | 4 | 2 | 2 | 3 | 3 | 2 | Finds and explains both planted faults, uses the tabulated Wpl,y = 353 cm3 with a geometric cross-check and reaches the cross-section PASS, but headlines the verdict as not adequate on LTB and deflection checks the task did not pose, silently adds factored self-weight to the input load, and replaces the snippet with a full design script; web lookup appears to have been used. |
 | `claude-fable-5.1-high` | 4.5 | 4.5 | 4 | 3.5 | 4 | 4 | 2 | Finds both planted faults, uses the tabulated Wpl,y = 353 cm3 with the full Blue Book property set, reaches the cross-section PASS at 0.92 and keeps the headline conditional on restraint (fails LTB at 2.83 if unrestrained over 6.2 m, with the working shown), but expands a snippet review into classification, shear, M_cr and an indicative deflection check built on assumed load factors that appears as Likely FAIL in the adequacy table, and the corrected script grows into a bending-plus-shear script. |
 | `gemma4:26b-local` | 1 | 1 | 2 | 1 | 2 | 2 | 3 | Reaches PASS but by a wrong route: it never identifies the wrong-axis fault (keeps `Wpl_z` and calls the y/z notation interchangeable), replaces the planted value with a fabricated Wpl of about 440 cm3 attributed to the Blue Book (tabulated 353), so its 0.738 utilisation overstates capacity by a quarter; it misdescribes the original code as printing FAIL and as working because errors cancelled, treats the missing N.mm conversion as safer practice rather than a fault, and gives two different wrong values for M_Ed. |
+| `qwen-3.8-27b-high` | 2 | 3 | 2 | 2 | 4 | 4 | 3 | Names both planted errors (minor-axis modulus, missing N.mm to kN.m conversion) and reproduces what the snippet prints, but substitutes a wrong Wpl,y of 588 cm3 (tabulated 353 cm3) backed by an invented property table, giving an unconservative utilisation of 0.55 against the correct 0.92. |
 
 ## Judge Output Summary
 
@@ -66,6 +67,14 @@ Task summary: Re-run the old EC3 beam-check trap unchanged and compare whether m
 - Blind pack (one judging round, 2026-09-19): `gpt5.6-sol-xhigh` 4.83, `gpt5.4-xhigh` 4.67, `minimax-m2.7-cloud` 2.50, `gemma4:26b-local` 1.50 on the six technical criteria; the judge ranked the local model last, below minimax, because minimax at least named both planted faults and described the original code correctly.
 - Gemma 4 26B (local) saw that 49.0 cm3 is far too small for a 254x102x28 UB, added an explicit N.mm to kN.m conversion, and concluded PASS.
 - Deductions: the wrong-axis fault is never identified (the corrected code keeps `Wpl_z`), the replacement Wpl of about 440 cm3 is not the tabulated 353 and is attributed to the SCI Blue Book without web access, so the 0.738 utilisation overstates capacity by 25 percent; the response says the original code prints FAIL at 13.5 kN.m (it prints PASS at 6.6e-6) and that it worked because the errors cancelled (nothing cancels); M_Ed is given as 88.76 and then 89.31 (it is 88.89); the unit fault is framed as safer practice.
+
+### Qwen 3.8 27B addendum (2026-09-26)
+
+- Blind pack (one judging round, 2026-09-26): `gpt5.4-xhigh` 4.67, `gpt5.6-sol-xhigh` 4.50, `qwen-3.8-27b-high` 2.83, `minimax-m2.7-cloud` 2.00 on the six technical criteria; the judge ranked `qwen-3.8-27b-high` third in its pack.
+- Judge's one-line reading of the response: Diagnoses both planted faults correctly but substitutes a wrong Wpl,y (588 cm3) backed by a fabricated property table, giving a non-conservative util 0.55.
+- Judge's deduction: "Wpl,y = 588 cm3" is not the 254x102x28 UB value (353 cm3); the resulting M_Rd 161.70 kN.m and utilisation 0.5497 overstate capacity by about 67 percent, a non-conservative error.
+- Judge's deduction: The property table (I_y 6920 cm4, Z_y 545 cm3, section dimensions) is presented as standard published values but does not match this section, and the sourcing is vague.
+- Judge's deduction: Redeeming detail: it correctly reproduces what the original prints (M_Rd = 13475000.00, Util = 6.6e-06).
 
 ## Manual Override Notes
 
@@ -146,6 +155,12 @@ Provisional `deepseek-v3.2` review:
 - Two-judge mean (user decision, 2026-09-19): after a judge from another family (GPT-6 Astra, xhigh, Codex) scored the same packs level or more lenient on every other response and lower on all three Fable responses, the user chose to record Fable's technical rows as the mean of the two judges. Each judge is first put on the April scale through its own anchors (judge 1: September per-task offset; judge 2: the offset from its own anchor rows), the two rows are averaged per criterion and recorded unrounded, so a 4.5 marks a criterion where the two judges differ by one point. Every other model keeps its single same-family judge. Full working in section 7 of the record.
 - This task: judge 1 blind [5, 5, 4, 4, 4, 4] +0.08 -> [5, 5, 4, 4, 4, 4] (4.33); judge 2 blind [4, 4, 4, 3, 4, 4] +0.42 -> [4, 4, 4, 3, 4, 4] (3.83); recorded mean [4.5, 4.5, 4, 3.5, 4, 4] (4.08). Practicality unchanged at 2; overall 3.79 (was 4.00).
 
+### Qwen 3.8 27B addendum (2026-09-26)
+
+- Scoring: technical criteria for `qwen-3.8-27b-high` were scored blind on 2026-09-26 by the same judge family as the September refresh (a Claude Fable 5.1 subagent), in a pack with the two April anchors plus `gpt5.6-sol-xhigh` as a consistency check. Over the model's eight packs the anchors failed the calibration gate (MAD 0.72, worst row 1.17), so the blind scores [2, 3, 2, 2, 4, 4] were shifted onto the April scale with the September per-task offset of +0.08, the standing user decision (see `benchmarks/addendum_2026-09-26_qwen-3.8-27b-high.md`). Earlier rows above are unchanged.
+- Manual review: Checked against the evaluator notes: the tabulated Wpl,y for 254x102x28 UB is 353 cm3 (M_c,Rd 97.1 kN.m, utilisation about 0.92); the response's 588 cm3 is wrong and unconservative. No web lookup was reported for this run. No override.
+- Practicality `qwen-3.8-27b-high` = 3: paid API route (OpenRouter through the GitHub Copilot agent in VS Code, list price $0.42 / $3.00 per 1M input / output tokens), 2 min 5 s and about $0.034, the fastest anchor run on a paid route, so the 2 used for the 6 to 15 minute anchor runs does not apply, no refusal or truncation. Scored as `tencent-hy4-preview`, `deepseek-v4.1-flash` and `glm-5.3-flash` on the same route: no paid-API run has scored above 3 on a v2 task, and Hy4's near-identical deep-02 run (1 min 59 s) got 3 (user decision, 2026-09-26: score this route consistently).
+
 ## Winner
 
 - Winner: `gpt5.4-xhigh`
@@ -163,3 +178,5 @@ Tencent Hy4 Preview addendum (2026-09-18): `tencent-hy4-preview` (overall mean 2
 Claude Fable 5.1 addendum (2026-09-19): `claude-fable-5.1-high` (overall mean 3.79, two-judge mean; 4.00 on judge 1 alone)) does not beat the April result of `gpt5.4-xhigh` (4.43), so the winner line is unchanged.
 
 Gemma 4 26B local addendum (2026-09-19): `gemma4:26b-local` (overall mean 1.71, revised the same day from 1.86) does not beat the April result of `gpt5.4-xhigh` (4.43), so the winner line is unchanged.
+
+Qwen 3.8 27B addendum (2026-09-26): `qwen-3.8-27b-high` (overall mean 2.86) does not beat the standing result of `gpt5.4-xhigh` (4.43), so the winner line is unchanged.

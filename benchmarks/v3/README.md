@@ -17,8 +17,9 @@ Current scored model slate:
 - `tencent-hy4-preview` (2026-09-18 addendum; OpenRouter API)
 - `claude-fable-5.1-high` (2026-09-19 addendum; Anthropic, Claude Code subscription)
 - `gemma4:26b-local` (2026-09-19 addendum; Ollama local, free)
+- `qwen-3.8-27b-high` (2026-09-26 addendum; OpenRouter via GitHub Copilot)
 
-The September 2026 rows were scored blind with calibration against the April results; see `benchmarks/refresh_2026-09_summary.md` and `benchmarks/refresh_2026-09_calibration.md`. The 2026-09-18 addendum row (`deepseek-v4.1-flash`) followed the same procedure; see `benchmarks/addendum_2026-09-18_deepseek-v4.1-flash.md` , `benchmarks/addendum_2026-09-18_glm-5.3-flash.md` and `benchmarks/addendum_2026-09-18_tencent-hy4-preview.md`. The 2026-09-19 addendum rows (`claude-fable-5.1-high`, `gemma4:26b-local`) followed the same procedure; see `benchmarks/addendum_2026-09-19_claude-fable-5.1-high.md` and `benchmarks/addendum_2026-09-19_gemma4-26b-local.md`.
+The September 2026 rows were scored blind with calibration against the April results; see `benchmarks/refresh_2026-09_summary.md` and `benchmarks/refresh_2026-09_calibration.md`. The 2026-09-18 addendum row (`deepseek-v4.1-flash`) followed the same procedure; see `benchmarks/addendum_2026-09-18_deepseek-v4.1-flash.md` , `benchmarks/addendum_2026-09-18_glm-5.3-flash.md` and `benchmarks/addendum_2026-09-18_tencent-hy4-preview.md`. The 2026-09-19 addendum rows (`claude-fable-5.1-high`, `gemma4:26b-local`) followed the same procedure; see `benchmarks/addendum_2026-09-19_claude-fable-5.1-high.md` and `benchmarks/addendum_2026-09-19_gemma4-26b-local.md`. The 2026-09-26 addendum row (`qwen-3.8-27b-high`) followed the same procedure; see `benchmarks/addendum_2026-09-26_qwen-3.8-27b-high.md`.
 
 Benchmark shape:
 - `1` deterministic notebook-style task

@@ -24,6 +24,7 @@
 | `tencent-hy4-preview` | 5 | 5 | 3 | 4 | 4 | 4 | 3 | Found all three planted blockers with correct worked numbers and was the only response in its pack to explain that the two arithmetic errors act in opposite directions, but it runs far beyond the short high-signal brief, proposes minimum fixes that are not minimum (a mandatory section-class key, a new row schema, packaging rework) and rests some findings on assumptions the three supplied files cannot support. |
 | `claude-fable-5.1-high` | 5 | 5 | 4 | 4 | 4.5 | 4 | 3 | Found all three planted blockers and verified them with a fully correct worked example (25.5 vs 21.5 kN/m, 521.9 vs 0.522 kNm), and was the only response in its pack to explain that the two arithmetic errors pull in opposite directions so a partial fix is more dangerous than the current state; ranked first in the pack, with deductions for running past the short high-signal brief, grading the unused combination label High on inference, and two later findings that drift from minimum fixes into design recommendations. |
 | `gemma4:26b-local` | 5 | 4 | 5 | 4 | 3 | 4 | 3 | Found all three planted blockers with the correct fix directions and a correct dimensional argument for the 1000x resistance error, in a short four-part review that follows the brief, but gives no line references, no worked numbers and no regression tests, never examines the combination column, and waves the rounding-before-status defect through as an accepted margin. |
+| `qwen-3.8-27b-high` | 5 | 5 | 5 | 5 | 4 | 4 | 3 | Finds all three planted blockers with correct severity, adds the unused combination label and the rounding-before-status point, and notes that the unfactored load and the resistance error partly mask each other; one garbled derivation line and no worked numbers or tests. |
 
 ## Judge Output Summary
 
@@ -66,6 +67,13 @@ Task summary: Review a steel beam ULS screening package for unit conversion, loa
 - Blind pack (one judging round, 2026-09-19): `gpt5.6-sol-xhigh` 4.67, `gpt5.4-xhigh` 4.67, `gemma4:26b-local` 4.17, `minimax-m2.7-cloud` 2.67 on the six technical criteria; the judge ranked the local model third, behind Sol and `gpt5.4-xhigh` and well clear of minimax.
 - Gemma 4 26B (local) found all three planted blockers: the one-row report (critical, ascending sort explained), the unapplied gamma_Q (critical, unconservative) and the 1e6 divisor (high, with a correct cm3 x MPa = N.m argument), each with a minimal correct fix, and it kept the simply supported UDL assumption in scope.
 - Deductions: no line references, no worked numeric example, no regression tests, the combination column is never examined despite the brief's combinations focus, and the rounding-before-status defect is left non-escalated on the assumption that the user accepts the margin; the reporting fix keeps the ascending sort.
+
+### Qwen 3.8 27B addendum (2026-09-26)
+
+- Blind pack (one judging round, 2026-09-26): `qwen-3.8-27b-high` 4.67, `gpt5.4-xhigh` 4.50, `gpt5.6-sol-xhigh` 4.50, `minimax-m2.7-cloud` 2.33 on the six technical criteria; the judge ranked `qwen-3.8-27b-high` first in its pack.
+- Judge's one-line reading of the response: Finds all three planted bugs with correct severity, adds the combination-label and rounding points, and notes that bugs 1 and 2 mask each other; slightly long with one garbled derivation line.
+- Judge's deduction: The unit derivation in Finding 2 contains a half-finished line; the conclusion (`/1000`) is right but the working would confuse a checker.
+- Judge's deduction: Longest of the four responses in its pack; the summary table repeats content already stated.
 
 ## Manual Override Notes
 
@@ -146,6 +154,12 @@ Provisional `gemma4:31b-cloud` review:
 - Two-judge mean (user decision, 2026-09-19): after a judge from another family (GPT-6 Astra, xhigh, Codex) scored the same packs level or more lenient on every other response and lower on all three Fable responses, the user chose to record Fable's technical rows as the mean of the two judges. Each judge is first put on the April scale through its own anchors (judge 1: September per-task offset; judge 2: the offset from its own anchor rows), the two rows are averaged per criterion and recorded unrounded, so a 4.5 marks a criterion where the two judges differ by one point. Every other model keeps its single same-family judge. Full working in section 7 of the record.
 - This task: judge 1 blind [5, 5, 4, 5, 5, 4] +0.42 -> [5, 5, 4, 5, 5, 4] (4.67); judge 2 blind [4, 4, 3, 2, 3, 3] +0.67 -> [5, 5, 4, 3, 4, 4] (4.17); recorded mean [5, 5, 4, 4, 4.5, 4] (4.42). Practicality unchanged at 3; overall 4.21 (was 4.43).
 
+### Qwen 3.8 27B addendum (2026-09-26)
+
+- Scoring: technical criteria for `qwen-3.8-27b-high` were scored blind on 2026-09-26 by the same judge family as the September refresh (a Claude Fable 5.1 subagent), in a pack with the two April anchors plus `gpt5.6-sol-xhigh` as a consistency check. Over the model's eight packs the anchors failed the calibration gate (MAD 0.72, worst row 1.17), so the blind scores [5, 5, 5, 5, 4, 4] were shifted onto the April scale with the September per-task offset of +0.42, the standing user decision (see `benchmarks/addendum_2026-09-26_qwen-3.8-27b-high.md`). Earlier rows above are unchanged.
+- Manual review: Checked against the response text: all three planted findings present with the correct fix directions (factor Q, divide by 1000, return the full table). No override.
+- Practicality `qwen-3.8-27b-high` = 3: paid API route (OpenRouter through the GitHub Copilot agent in VS Code, list price $0.42 / $3.00 per 1M input / output tokens), 1 min 56 s and about $0.033, no refusal or truncation. Scored as `tencent-hy4-preview`, `deepseek-v4.1-flash` and `glm-5.3-flash` on the same route: no paid-API run has scored above 3 on a v2 task, and Hy4's near-identical deep-02 run (1 min 59 s) got 3 (user decision, 2026-09-26: score this route consistently).
+
 ## Winner
 
 - Winner: `gemma4:31b-cloud`
@@ -163,3 +177,5 @@ Tencent Hy4 Preview addendum (2026-09-18): `tencent-hy4-preview` (overall mean 4
 Claude Fable 5.1 addendum (2026-09-19): `claude-fable-5.1-high` (overall mean 4.21, two-judge mean; 4.43 on judge 1 alone) does not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.
 
 Gemma 4 26B local addendum (2026-09-19): `gemma4:26b-local` (overall mean 4.00, revised the same day from 4.14) does not beat the April result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.
+
+Qwen 3.8 27B addendum (2026-09-26): `qwen-3.8-27b-high` (overall mean 4.43) does not beat the standing result of `gemma4:31b-cloud` (4.71), so the winner line is unchanged.

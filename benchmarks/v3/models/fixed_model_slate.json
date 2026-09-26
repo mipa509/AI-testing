@@ -236,5 +236,24 @@
       "source_model_id": "gemma4:26b",
       "note": "Local inference on the user's own hardware; no per-token price. Recorded as zero so the price chart can place it; electricity and hardware are not costed."
     }
+  },
+  {
+    "model_id": "qwen-3.8-27b-high",
+    "display_name": "Qwen 3.8 27B (high)",
+    "role": "low-cost candidate",
+    "provider": "OpenRouter API",
+    "cost_tier": 2,
+    "cost_label": "Paid API",
+    "cost_route": "api",
+    "notes": "September 2026 addition. OpenRouter model qwen/qwen3.8-27b at reasoning effort high, run from the GitHub Copilot agent chat in VS Code on a local sandbox folder, 2026-09-26. Run on all six v2 primary tasks, the anchor and the v3 notebook; 39 s to 3 min per v2 task, 8 min 18 s on v3.",
+    "pricing": {
+      "input_usd_per_1m": 0.42,
+      "output_usd_per_1m": 3.0,
+      "unit": "USD per 1M tokens, list price",
+      "as_of": "2026-09-26",
+      "source": "https://openrouter.ai/api/v1/models",
+      "source_model_id": "qwen/qwen3.8-27b",
+      "note": "OpenRouter paid listing (a rate-limited free variant qwen/qwen3.8-27b:free is also listed). Benchmark runs were billed through OpenRouter: $0.441 for all eight tasks, $0.021 to $0.073 per v2 task and $0.182 for v3."
+    }
   }
 ]

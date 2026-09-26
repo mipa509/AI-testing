@@ -94,7 +94,8 @@ def test_parse_scorecard_v2_deep01():
     # refresh rows are appended, not substituted
     assert task["scores"]["gpt5.6-sol-xhigh"]["Correctness"] == 5.0
     assert task["scores"]["gpt5.6-luna-max"]["Economics/practicality"] == 3.0
-    assert len(task["scores"]) == 10          # + gemma4:26b-local (2026-09-19 addendum)
+    assert len(task["scores"]) == 11          # + gemma4:26b-local (2026-09-19), qwen-3.8-27b-high (2026-09-26)
+    assert task["scores"]["qwen-3.8-27b-high"]["Economics/practicality"] == 3.0
     assert len(task["commentary"]) > 50
 
 
@@ -122,7 +123,7 @@ def test_discover_rounds():
     assert "v1" not in round_ids
 
     v2 = next(r for r in rounds if r["round_id"] == "v2")
-    assert len(v2["models"]) == 14
+    assert len(v2["models"]) == 15
     assert v2["models"][0]["model_id"] == "gemma4:31b-cloud"
     v2_model_ids = {m["model_id"] for m in v2["models"]}
     assert {"gpt5.6-sol-xhigh", "gpt5.6-luna-max"} <= v2_model_ids
@@ -150,7 +151,7 @@ def test_discover_rounds():
     for r in rounds:
         for model in r["models"]:
             assert model["blended_price_usd_per_1m"] is not None, model["model_id"]
-            assert model["pricing"]["as_of"] in {"2026-09-17", "2026-09-19"}
+            assert model["pricing"]["as_of"] in {"2026-09-17", "2026-09-19", "2026-09-26"}
             assert model["pricing"]["source"].startswith("https://")
     assert luna_model["blended_price_usd_per_1m"] == 0.45          # 0.75*0.20 + 0.25*1.20
     sol_model = next(m for m in v2["models"] if m["model_id"] == "gpt5.6-sol-xhigh")
@@ -269,7 +270,9 @@ def test_discover_rounds_collects_usage_only_where_tokens_were_recorded():
     assert usage["v2-anchor-07"]["gpt5.6-luna-max"]["tokens_k"] == 131
     assert usage["v2-anchor-07"]["gpt5.6-sol-xhigh"]["tokens_k"] == 85
     assert "gpt5.4-xhigh" not in usage["v2-anchor-07"]          # April records carry no token figure
-    assert set(usage["v2-deep-01"]) == {"gpt5.6-sol-xhigh", "gpt5.6-luna-max"}
+    assert set(usage["v2-deep-01"]) == {"gpt5.6-sol-xhigh", "gpt5.6-luna-max", "qwen-3.8-27b-high"}
+    # 2026-09-26 addendum: Copilot token totals
+    assert usage["v2-deep-01"]["qwen-3.8-27b-high"]["tokens_k"] == 37
     # 2026-09-18 addendum records carry token figures too
     assert usage["v2-deep-02"]["deepseek-v4.1-flash"]["tokens_k"] == 35
     assert usage["v2-anchor-07"]["deepseek-v4.1-flash"]["tokens_k"] == 55
@@ -278,3 +281,4 @@ def test_discover_rounds_collects_usage_only_where_tokens_were_recorded():
     v3 = next(r for r in rounds if r["round_id"] == "v3")
     assert v3["usage"]["v3-notebook-01"]["gpt5.6-sol-xhigh"]["tokens_k"] == 23
     assert v3["usage"]["v3-notebook-01"]["deepseek-v4.1-flash"]["tokens_k"] == 59
+    assert v3["usage"]["v3-notebook-01"]["qwen-3.8-27b-high"]["tokens_k"] == 49

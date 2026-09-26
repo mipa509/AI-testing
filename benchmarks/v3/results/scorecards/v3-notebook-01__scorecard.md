@@ -24,6 +24,7 @@
 | `tencent-hy4-preview` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Fully correct and executable (3.0 m, LC2 governing through uplift, 2.9 m rejected at -0.410 kPa) with an explicit M*c/I derivation, exact-fraction arithmetic, all four corner pressures and closed-form minimum-width bounds; ranked first in its blind pack, with deductions only for defining e_x = Mx/N and e_y = My/N (the reverse of the reference convention), a swapped second-moment subscript in the stated field equation, and length. |
 | `claude-fable-5.1-high` | 5 | 4.5 | 4 | 4.5 | 4.5 | 5 | 3 | Fully correct and executable (3.0 m, LC2 governing through uplift, 2.9 m rejected at -0.4 kPa; six code cells run end to end, verified by execution) with a Navier derivation from N/A + M*y/I, the kern validity limit, eccentricities defined as in the reference, a hand-check cell, a full pass/fail matrix with failure-type flags, a closed-form minimum-width cross-check (2.914 m) and reviewer commentary on the thin uplift margin and self-weight direction; ranked first in its blind pack, with only length, a SystemExit idiom and some loosely placed code citations noted against it. |
 | `gemma4:26b-local` | 2 | 2 | 3 | 4 | 3 | 3 | 3 | Correct hand derivation of the corner pressure from N/A +/- M*c/I, but the delivered notebook does not run (a non-breaking space inside the LC1 load literal is a SyntaxError in cell 1) and, with that character removed, scales the candidate widths twice to 0.24 to 0.32 m so no size is ever selected; the written conclusion states 2.9 m with LC1 governing by highest q_max, the trap answer the task is built around, and sections 2 and 3 are missing. |
+| `qwen-3.8-27b-high` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Full derivation from `q = N/A + Mx*y/Ix + My*x/Iy`, a justified rigid linear model, a complete sweep table matching the reference, 3.0 m with LC2 governing through no-uplift (2.9 m at -0.41 kPa) and the small LC2 margin flagged; the candidate list is float-accumulated and the pressure function assumes both moments add at one corner. |
 
 ## Judge Output Summary
 
@@ -68,6 +69,14 @@
 - Blind pack (one judging round, 2026-09-19): `gpt5.4-xhigh` 5.00, `gpt5.6-sol-xhigh` 4.33, `gemma4:31b-cloud` 3.33, `gemma4:26b-local` 1.83 on the six technical criteria; the judge ranked the local model last.
 - Gemma 4 26B (local) derived the corner pressure correctly from axial plus bending stress with I = B^4/12 and c = B/2, stated a compression-positive sign convention and an exclusions list, and its search loop tests both criteria.
 - Deductions: the delivered code does not run (a non-breaking space in the LC1 load literal is a SyntaxError), the candidate list is scaled twice to 0.24 to 0.32 m so even a repaired cell 1 selects nothing, the governing case is tracked by the largest q_max over every width, the conclusion states 2.9 m with LC1 governing, the trap answer, hedged as depending on execution, and the Input data and calculation-cell sections are missing; no sweep output, no explanation of any rejected width, no eccentricity definitions.
+
+### Qwen 3.8 27B addendum (2026-09-26)
+
+- Blind pack (one judging round, 2026-09-26): `gpt5.4-xhigh` 5.00, `qwen-3.8-27b-high` 4.83, `gpt5.6-sol-xhigh` 4.33, `gemma4:31b-cloud` 2.67 on the six technical criteria; the judge ranked `qwen-3.8-27b-high` second in its pack.
+- Judge's one-line reading of the response: Full derivation, the best model justification, a complete pre-stated sweep table matching the reference to 0.01 kPa, and a flagged small uplift margin; only a float-accumulated candidate list and a moment-sum shortcut hold the code back.
+- Judge's deduction: `B_CANDIDATES = [2.4 + 0.1 * i for i in range(9)]` accumulates float error; the table formatting masks it.
+- Judge's deduction: `pressures()` uses `6.0 * (Mx + My) / B**3`, valid only because the response declares that both moments add at the same corner; the code is not sign-general.
+- Judge's deduction: The expected-output sweep table is hand-stated in Markdown rather than computed output (it is correct).
 
 ## Manual Override Notes
 
@@ -117,6 +126,12 @@
 - Two-judge mean (user decision, 2026-09-19): after a judge from another family (GPT-6 Astra, xhigh, Codex) scored the same packs level or more lenient on every other response and lower on all three Fable responses, the user chose to record Fable's technical rows as the mean of the two judges. Each judge is first put on the April scale through its own anchors (judge 1: September per-task offset; judge 2: the offset from its own anchor rows), the two rows are averaged per criterion and recorded unrounded, so a 4.5 marks a criterion where the two judges differ by one point. Every other model keeps its single same-family judge. Full working in section 7 of the record.
 - This task: judge 1 blind [5, 5, 5, 5, 5, 5] +0.71 -> [5, 5, 5, 5, 5, 5] (5.00); judge 2 blind [5, 4, 3, 4, 4, 5] +0.08 -> [5, 4, 3, 4, 4, 5] (4.17); recorded mean [5, 4.5, 4, 4.5, 4.5, 5] (4.58). Practicality unchanged at 3; overall 4.36 (was 4.71).
 
+### Qwen 3.8 27B addendum (2026-09-26)
+
+- Scoring: technical criteria for `qwen-3.8-27b-high` were scored blind on 2026-09-26 by the same judge family as the September refresh (a Claude Fable 5.1 subagent), in a pack with the two April anchors plus `gpt5.6-sol-xhigh` as a consistency check. Over the model's eight packs the anchors failed the calibration gate (MAD 0.72, worst row 1.17), so the blind scores [5, 4, 5, 5, 5, 5] were shifted onto the April scale with the September per-task offset of +0.71, the standing user decision (see `benchmarks/addendum_2026-09-26_qwen-3.8-27b-high.md`). Earlier rows above are unchanged.
+- Manual review: Execution (2026-09-26, Python 3.13.2 standard library, the five fenced code cells in order): runs end to end, prints `Selected footing size B = 3.0 m` (the float-accumulated candidate prints as 3.0), and a sweep table matching the hand-typed one with 2.9 m failing LC2 at -0.41 kPa. The governing case is stated in prose only. The user's run note says the model miscalculated sizes and B values during the run and corrected several of its own errors before finishing; the delivered notebook is judged as delivered. No override.
+- Practicality `qwen-3.8-27b-high` = 3: paid API route (OpenRouter through the GitHub Copilot agent in VS Code, list price $0.42 / $3.00 per 1M input / output tokens), 8 min 18 s and about $0.18 with in-run self-corrections, the slowest run of this model, notebook runs end to end, no refusal or truncation. The three 2026-09-18 addendum models on the same route got 3 for 3 to 6 minute runs with runnable notebooks (user decision, 2026-09-26: score this route consistently).
+
 ## Winner
 
 - Winner: `gpt5.4-xhigh`
@@ -134,3 +149,5 @@ Tencent Hy4 Preview addendum (2026-09-18): `tencent-hy4-preview` (overall mean 4
 Claude Fable 5.1 addendum (2026-09-19): `claude-fable-5.1-high` (overall mean 4.36, two-judge mean; 4.71 on judge 1 alone)) does not beat the April result of `gpt5.4-xhigh` (4.86), so the winner line is unchanged.
 
 Gemma 4 26B local addendum (2026-09-19): `gemma4:26b-local` (overall mean 2.86, revised the same day from 2.00) does not beat the April result of `gpt5.4-xhigh` (4.86), so the winner line is unchanged.
+
+Qwen 3.8 27B addendum (2026-09-26): `qwen-3.8-27b-high` (overall mean 4.71) does not beat the standing result of `gpt5.4-xhigh` (4.86), so the winner line is unchanged.

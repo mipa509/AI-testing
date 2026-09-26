@@ -20,6 +20,7 @@
 | `gpt5.6-sol-xhigh` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Blind winner in both judging rounds: the most decision-complete additive plan, with an always-DataFrame contract, paired governing-row selection with a tie-break, fail-loud validation and precise tests; the only debatable calls are rejecting negative deflections and omitting an SLS pass/fail field. |
 | `gpt5.6-luna-max` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Same additive architecture as Sol with a good sign-convention caveat, but it leaves the orchestration helper optional, assumes a test layout that was not supplied and under-specifies the columns-present-but-all-null case. |
 | `gemma4:26b-local` | 4 | 4 | 5 | 4 | 4 | 4 | 3 | An additive plan that keeps `report_rows` stable through a `columns` parameter defaulting to `RESULT_COLUMNS`, with sensible risks and mitigations, but it never decides the per-group aggregation rule for the SLS columns, ignores a zero allowable deflection and the NaN left in ULS-only rows after the left merge, invents an unrequested `Status_SLS`, names the new function two different ways and writes the guard as invalid pseudo-code. |
+| `qwen-3.8-27b-high` | 5 | 5 | 5 | 5 | 5 | 5 | 3 | Thorough additive plan with a row-wise ratio then per-member max, explicit zero and NaN handling, golden-file tests and acceptance criteria, but it calls the new `report_rows` flag keyword-only when its own signature is not, offers two overlapping combined-report paths, and maps invalid allowables to inf or N/A instead of rejecting them. |
 
 ## Judge Output Summary
 
@@ -40,6 +41,14 @@ Task summary: Plan an optional serviceability summary that preserves existing UL
 - Judge's deduction: Names the new function `build_slli_summary` in section 1 and `build_sls_summary` everywhere else; guard written as `if all(cols in df.columns)` which is not valid pseudo-Python. Small, but signals carelessness.
 - Judge's deduction: No aggregation rule: `build_uls_summary` groups by `Member`/`Section`, so the SLS builder must too, yet A never says how `Deflection_mm`/`AllowableDeflection_mm` collapse per group or whether the ratio is taken before or after grouping.
 - Judge's deduction: No handling of `AllowableDeflection_mm == 0` or nulls; after the left merge, ULS-only members carry `NaN` in `Status_SLS`, which is not addressed.
+
+### Qwen 3.8 27B addendum (2026-09-26)
+
+- Blind pack (one judging round, 2026-09-26): `gpt5.6-sol-xhigh` 4.67, `qwen-3.8-27b-high` 4.33, `gpt5.4-xhigh` 3.83, `qwen-3.6plus` 2.67 on the six technical criteria; the judge ranked `qwen-3.8-27b-high` second in its pack.
+- Judge's one-line reading of the response: Thorough and well-gated plan with row-wise ratio then max, concrete edge cases and golden tests; slightly over-broad surface (two combined paths, extra status field) and a keyword-only claim its own snippet does not honour.
+- Judge's deduction: Claims a keyword-only opt-in flag, but `def report_rows(summary_df, include_serviceability: bool = False)` has no `*`, so the positional-caller mitigation rests on a property the code does not have.
+- Judge's deduction: Two overlapping combined paths (`report_rows(merged, include_serviceability=True)` and `report_rows_combined(uls_df, sls_df)`) are surface creep for a scoped feature.
+- Judge's deduction: Zero allowable deflection becomes `inf`/FAIL and NaN becomes N/A rather than invalid input; the N/A fill after the left join is asserted but not specified.
 
 ## Manual Override Notes
 
@@ -91,6 +100,12 @@ Provisional `gemma4:31b-cloud` review:
 - Manual overrides: none. The judge's claims about the response were checked against the response text; the defects it names are present as described.
 - Practicality `gemma4:26b-local` = 3: free local inference on the user's own hardware, no API cost, no refusal, the two-message protocol followed; on the timed tasks the answer took 3 min 35 s to 7 min 32 s after a 30 to 45 s prompt-only reply (7.7 to 10.8 generated tokens per second, CPU-bound on an 8 GB card), so on the latency-only reading that applies to routes where cost is not counted it is scored as the 3 to 6 minute runs of `gpt5.6-luna-max` and the 2026-09-18 addendum models, not the 4 to 5 April gave the free cloud route for one-to-two-minute answers.
 
+### Qwen 3.8 27B addendum (2026-09-26)
+
+- Scoring: technical criteria for `qwen-3.8-27b-high` were scored blind on 2026-09-26 by the same judge family as the September refresh (a Claude Fable 5.1 subagent), in a pack with the two April anchors plus `gpt5.6-sol-xhigh` as a consistency check. Over the model's eight packs the anchors failed the calibration gate (MAD 0.72, worst row 1.17), so the blind scores [4, 5, 4, 4, 4, 5] were shifted onto the April scale with the September per-task offset of +1.42, the standing user decision (see `benchmarks/addendum_2026-09-26_qwen-3.8-27b-high.md`). Earlier rows above are unchanged.
+- Manual review: Checked against the response text: the `report_rows` signature has no `*`, as the judge says, and `build_uls_summary` and `RESULT_COLUMNS` are untouched. No override.
+- Practicality `qwen-3.8-27b-high` = 3: paid API route (OpenRouter through the GitHub Copilot agent in VS Code, list price $0.42 / $3.00 per 1M input / output tokens), 1 min 16 s and about $0.037, no refusal or truncation. Scored as `tencent-hy4-preview`, `deepseek-v4.1-flash` and `glm-5.3-flash` on the same route: no paid-API run has scored above 3 on a v2 task, and Hy4's near-identical deep-02 run (1 min 59 s) got 3 (user decision, 2026-09-26: score this route consistently).
+
 ## Winner
 
 - Winner: `gpt5.6-sol-xhigh`
@@ -100,3 +115,5 @@ Provisional `gemma4:31b-cloud` review:
 September 2026 refresh: `gpt5.6-sol-xhigh` (overall mean 4.71) beats the April result, so the winner line above was updated. April 2026 result for the seven original models: winner `gpt5.4-xhigh` (overall mean 4.57); Difference size: `Small`; Why it matters in practice: `GPT-5.4 gave the cleanest file-by-file design that preserves current ULS contracts and adds serviceability only through explicit new paths, which is exactly what this task was testing.`
 
 Gemma 4 26B local addendum (2026-09-19): `gemma4:26b-local` (overall mean 4.00) does not beat the April result of `gpt5.6-sol-xhigh` (4.71), so the winner line is unchanged.
+
+Qwen 3.8 27B addendum (2026-09-26): `qwen-3.8-27b-high` (overall mean 4.71) ties the standing result of `gpt5.6-sol-xhigh` (4.71) but does not beat it, so the winner line is unchanged.
